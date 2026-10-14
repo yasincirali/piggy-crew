@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+# MCP sunucu sağlık kontrolü — SessionStart hook'undan çağrılır.
+#
+# NE YAPAR: `.mcp.json`'daki her sunucunun çalıştırılabilir dosyasının
+# yerinde olduğunu ve kod grafiği indeksinin bayat olmadığını denetler.
+#
+# NE YAPMAZ: sunucuları BAŞLATMAZ. MCP süreçlerini Claude Code'un kendisi
+# ayağa kaldırır; buradan ikinci bir kopya spawn etmek codebase-memory gibi
+# SQLite kilidi tutan sunucularda çakışma üretir. Bu betik yalnızca RAPOR
+# eder — bulduğunu Claude'a bildirir, o da kullanıcıya söyler.
+#
+# Elle:  bash tool/mcp_health.sh
+#
+# Çıktı: tek satır JSON (SessionStart hook sözleşmesi).
+
+set -uo pipefail
+cd "$(dirname "$0")/.." 2>/dev/null || exit 0
+
+CACHE="$HOME/.cache/codebase-memory-mcp"
+PROJE="C-projects-PiggyCrew"
+
+python - "$CACHE" "$PROJE" <<'PY'
+# -*- coding: utf-8 -*-
+import json, os, sqlite3, subprocess, sys
+from datetime import datetime, timezone
+
+# Windows konsolu cp1254'e düşüp Türkçe karakterleri bozuyor (ş → ?).
+# Çıktı JSON olarak Claude'a gidiyor; bozuk kodlama mesajı okunamaz kılar.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+cache, proje = sys.argv[1], sys.argv[2]
+sorunlar, notlar = [], []
+
+
+def kabuk(*a):
+    try:
+        return subprocess.run(a, capture_output=True, text=True,
+                              timeout=15).stdout.strip()
+    except Exception:
+        return ""
+
+
+# ── 1. Sunucu binary'leri yerinde mi ───────────────────────────────────
+# `.mcp.json` mutlak yol tutuyor. npm global güncellemesi ya da yeniden
+# kurulum bu yolu kaydırır; sunucu o zaman sessizce hiç başlamaz ve
+# araçlar "yok" gibi davranır.
+try:
+    with open('.mcp.json', encoding='utf-8') as f:
+        cfg = json.load(f).get('mcpServers', {})
+except FileNotFoundError:
+    cfg = {}
+    sorunlar.append('.mcp.json yok — proje MCP sunucuları tanımsız')
+except Exception as e:
+    cfg = {}
+    sorunlar.append('.mcp.json okunamadı: %s' % e)
+
+for ad, s in cfg.items():
+    # Uzak sunucu (heygen, 2026-10-10): yerelde binary yok, OAuth'u Claude
+    # Code yönetir; buradan denetlenecek bir şey yok — "command tanımsız"
+    # diye sahte sorun bildirmesin.
+    if s.get('type') in ('http', 'sse') or s.get('url'):
+        continue
+    komut = s.get('command', '')
+    if not komut:
+        sorunlar.append('%s: command tanımsız' % ad)
+        continue
+    # Mutlak yol ya da PATH'te çözülebilen bir ad kabul edilir.
+    varmi = os.path.isfile(komut) or any(
+        os.path.isfile(os.path.join(p, komut))
+        for p in os.environ.get('PATH', '').split(os.pathsep) if p
+    )
+    if not varmi:
+        sorunlar.append('%s: çalıştırılabilir bulunamadı (%s)' % (ad, komut))
+
+# ── 2. Kod grafiği indeksi bayat mı ────────────────────────────────────
+# İndeks bayatsa `search_graph` artık var olmayan sembolleri döndürür ya
+# da yenilerini hiç görmez — sessiz ve yanıltıcı. Ölçü: indeksleme zamanı
+# son commit'ten ESKİYSE indeks geride kalmış demektir.
+db = os.path.join(cache, proje + '.db')
+if not os.path.isfile(db):
+    notlar.append('kod grafiği indeksi yok — ilk indeksleme gerekebilir')
+else:
+    try:
+        con = sqlite3.connect('file:%s?mode=ro' % db.replace('\\', '/'),
+                              uri=True, timeout=3)
+        row = con.execute(
+            'select indexed_at from projects where name=?', (proje,)
+        ).fetchone()
+        con.close()
+        if row and row[0]:
+            idx = datetime.fromisoformat(row[0].replace('Z', '+00:00'))
+            son = kabuk('git', 'log', '-1', '--format=%cI')
+            if son:
+                # UTC'de atılan commit'te (ör. cloud oturumu) git %cI 'Z'
+                # soneki döndürür; Python 3.10 fromisoformat bunu tanımaz.
+                commit = datetime.fromisoformat(
+                    son.replace('Z', '+00:00')).astimezone(timezone.utc)
+                # Zaman damgası tek başına yanıltıyor: indeks çalışma
+                # ağacından commit'ten hemen ÖNCE alınmış olabilir (2026-09-24:
+                # commit'ten 50 sn önce alınan indeks, sembolleri eksiksiz
+                # içerdiği hâlde "geride" uyarısı üretti). Ölçüt içerik olsun:
+                # commit'in dokunduğu dosyalardan biri indeksten SONRA
+                # değişmişse indeks o hâli görmemiştir; hepsi önceyse günceldir.
+                if idx < commit:
+                    dokunulan = kabuk('git', 'show', '--name-only',
+                                      '--format=', 'HEAD').splitlines()
+                    idx_ts = idx.timestamp()
+                    gormedi = [d for d in dokunulan
+                               if os.path.isfile(d)
+                               and os.path.getmtime(d) > idx_ts]
+                    if gormedi:
+                        fark = commit - idx
+                        saat = int(fark.total_seconds() // 3600)
+                        notlar.append(
+                            'kod grafiği indeksi son commit\'ten %d saat geride, '
+                            '%d dosyanın son hâlini görmedi (ör. %s) '
+                            '— tazele: codebase-memory-mcp cli index_repository '
+                            '--repo-path "c:\\projects\\PortfoyTakip"'
+                            % (saat, len(gormedi), gormedi[0])
+                        )
+    except sqlite3.OperationalError:
+        # Kilit normal: sunucu o an yazıyor olabilir. Sorun sayma.
+        pass
+    except Exception as e:
+        notlar.append('indeks durumu okunamadı: %s' % e)
+
+# ── 3. Rapor ───────────────────────────────────────────────────────────
+if sorunlar:
+    mesaj = 'MCP SAĞLIK — SORUN:\n' + '\n'.join('  x ' + s for s in sorunlar)
+    if notlar:
+        mesaj += '\n' + '\n'.join('  ! ' + n for n in notlar)
+    mesaj += ('\nKullanıcıya bildir; bu sunucunun araçlarına güvenmeden '
+              'önce çöz.')
+elif notlar:
+    mesaj = 'MCP SAĞLIK — dikkat:\n' + '\n'.join('  ! ' + n for n in notlar)
+else:
+    mesaj = ('MCP sağlık: %d sunucu yerinde, kod grafiği indeksi güncel.'
+             % len(cfg))
+
+print(json.dumps({
+    'hookSpecificOutput': {
+        'hookEventName': 'SessionStart',
+        'additionalContext': mesaj,
+    },
+    'suppressOutput': True,
+}, ensure_ascii=False))
+PY

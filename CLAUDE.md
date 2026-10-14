@@ -17,3 +17,11 @@ sandık `CLAUDE.md` ile aynıdır; burada yalnız farklar ve bu repoya özgü ka
 - TestFlight: `main`'e birleşme → `ios-testflight.yml`. Push saatleri kuralı
   (hafta içi 09:00–18:30 TR push/PR/merge yok) bu repoda da geçerli.
 - Doğrulama: `flutter gen-l10n && flutter analyze && flutter test`.
+
+## Skill ve MCP (sandık ile aynı set, yasin 2026-10-14)
+
+`.claude/skills/` sandikapp'ten kopyadır (yönlendirme tablosu sandık `CLAUDE.md`'de;
+Supabase/SQL satırları bu uygulamada v1'de kullanılmaz). `.mcp.json` yerel Windows
+yollarını taşır; bulutta `bash tool/bulut_kurulum.sh || true` (Project settings ›
+Cloud environment › Setup script) üç sunucuyu Linux yollarıyla kurar; Perplexity
+yalnız ortamda `PERPLEXITY_API_KEY` varsa. Repoya hiçbir secret yazılmaz.
