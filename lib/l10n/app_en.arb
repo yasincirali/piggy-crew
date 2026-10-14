@@ -14,7 +14,6 @@
   "huyDolar": "I hop! Sometimes up, sometimes down. Patience wins.",
   "huyEuro": "I watch calmly. I keep the money of faraway countries.",
   "huyNakit": "I keep whatever you give me. But when prices rise, it buys less.",
-
   "karsilamaBaslik": "The Piggy Crew is waiting",
   "karsilamaAlt": "Your savings live in four friendly characters. Feed them and your campfire grows.",
   "karsilamaBasla": "Start",
@@ -35,55 +34,166 @@
   "veliPinUyusmaz": "The PINs don't match",
   "veliPinSonra": "Skip for now",
   "hazir": "I'm ready!",
-
   "sekmeKamp": "Camp",
   "sekmeOgren": "Learn",
   "sekmeCikartma": "Stickers",
   "sekmeAyarlar": "Settings",
-
   "kampSelam": "Hi {ad}",
-  "@kampSelam": {"placeholders": {"ad": {"type": "String"}}},
+  "@kampSelam": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      }
+    }
+  },
   "kampAtesim": "My campfire",
   "kampBos": "Your campfire isn't lit yet. Tap a character and feed it.",
   "kampFiyatYok": "Prices unavailable, value can't be shown.",
   "kampFiyatEski": "Prices as of {zaman}",
-  "@kampFiyatEski": {"placeholders": {"zaman": {"type": "String"}}},
+  "@kampFiyatEski": {
+    "placeholders": {
+      "zaman": {
+        "type": "String"
+      }
+    }
+  },
   "fark": "Change",
   "farkMutlu": "{karakter} is smiling: {fark}",
-  "@farkMutlu": {"placeholders": {"karakter": {"type": "String"}, "fark": {"type": "String"}}},
+  "@farkMutlu": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "farkUzgun": "{karakter} is a bit sad: {fark}",
-  "@farkUzgun": {"placeholders": {"karakter": {"type": "String"}, "fark": {"type": "String"}}},
+  "@farkUzgun": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "farkDuz": "{karakter} is calm: no change",
-  "@farkDuz": {"placeholders": {"karakter": {"type": "String"}}},
+  "@farkDuz": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besle": "Feed",
   "besleBaslik": "Feed {karakter}",
-  "@besleBaslik": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleBaslik": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besleTutar": "How much?",
   "besleBugunFiyat": "Today 1 {birim} = {fiyat}",
-  "@besleBugunFiyat": {"placeholders": {"birim": {"type": "String"}, "fiyat": {"type": "String"}}},
+  "@besleBugunFiyat": {
+    "placeholders": {
+      "birim": {
+        "type": "String"
+      },
+      "fiyat": {
+        "type": "String"
+      }
+    }
+  },
   "besleAlir": "{tutar} buys {miktar}",
-  "@besleAlir": {"placeholders": {"tutar": {"type": "String"}, "miktar": {"type": "String"}}},
+  "@besleAlir": {
+    "placeholders": {
+      "tutar": {
+        "type": "String"
+      },
+      "miktar": {
+        "type": "String"
+      }
+    }
+  },
   "besleVer": "Give to {karakter}",
-  "@besleVer": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleVer": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besleFiyatYok": "Today's price couldn't be loaded. Try again when you're online.",
   "besleGecersiz": "Enter an amount",
   "besleDoydu": "{karakter} is full!",
-  "@besleDoydu": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleDoydu": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "cikartmaAcildi": "New sticker: {ad}",
-  "@cikartmaAcildi": {"placeholders": {"ad": {"type": "String"}}},
-
+  "@cikartmaAcildi": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      }
+    }
+  },
   "detayVerdin": "You gave",
   "detayBugun": "Today",
   "detayMiktar": "You hold {miktar}",
-  "@detayMiktar": {"placeholders": {"miktar": {"type": "String"}}},
+  "@detayMiktar": {
+    "placeholders": {
+      "miktar": {
+        "type": "String"
+      }
+    }
+  },
   "detayBos": "{karakter} hasn't been fed yet.",
-  "@detayBos": {"placeholders": {"karakter": {"type": "String"}}},
+  "@detayBos": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenBaslik": "{karakter} explains",
-  "@detayNedenBaslik": {"placeholders": {"karakter": {"type": "String"}}},
+  "@detayNedenBaslik": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenMutlu": "Since you bought it, {varlik} gained value. The same amount is now worth more: {fark}.",
-  "@detayNedenMutlu": {"placeholders": {"varlik": {"type": "String"}, "fark": {"type": "String"}}},
+  "@detayNedenMutlu": {
+    "placeholders": {
+      "varlik": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenUzgun": "Since you bought it, {varlik} got a little cheaper. Your amount is the same, today's value is a bit lower: {fark}. Patience is part of the game.",
-  "@detayNedenUzgun": {"placeholders": {"varlik": {"type": "String"}, "fark": {"type": "String"}}},
+  "@detayNedenUzgun": {
+    "placeholders": {
+      "varlik": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenNakit": "Cash always shows the same number. But when prices rise, the same money buys less; that's called inflation.",
   "detayBeslemeler": "Your feedings",
   "detayBirazDaha": "Feed a bit more",
@@ -91,24 +201,45 @@
   "detaySilOnay": "Delete this feeding?",
   "iptal": "Cancel",
   "sil": "Delete",
-
   "ogrenBaslik": "Today's idea",
   "ogrenSayac": "{n} / {toplam}",
-  "@ogrenSayac": {"placeholders": {"n": {"type": "int"}, "toplam": {"type": "int"}}},
+  "@ogrenSayac": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "int"
+      }
+    }
+  },
   "ogrenSoru": "Question",
   "ogrenDogru": "Correct! {karakter} is proud of you.",
-  "@ogrenDogru": {"placeholders": {"karakter": {"type": "String"}}},
+  "@ogrenDogru": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "ogrenYanlis": "Think again. The hint is in the text.",
   "ogrenSonraki": "Next lesson",
   "ogrenBitti": "You finished every lesson. New ones are coming.",
   "ogrenBastan": "Read again",
-
   "cikartmaBaslik": "My stickers",
   "cikartmaAlt": "Earned for what you do, not for luck.",
   "cikartmaKilitli": "Locked",
   "cikartmaSayac": "{n} / {toplam} unlocked",
-  "@cikartmaSayac": {"placeholders": {"n": {"type": "int"}, "toplam": {"type": "int"}}},
-
+  "@cikartmaSayac": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "int"
+      }
+    }
+  },
   "ayarlarBaslik": "Settings",
   "ayarlarDunya": "Camp site",
   "ayarlarYas": "Age mode",
@@ -116,10 +247,15 @@
   "ayarlarDil": "Language",
   "ayarlarVeli": "Parents' corner",
   "ayarlarSurum": "Version {s}",
-  "@ayarlarSurum": {"placeholders": {"s": {"type": "String"}}},
+  "@ayarlarSurum": {
+    "placeholders": {
+      "s": {
+        "type": "String"
+      }
+    }
+  },
   "ayarlarKaynak": "Prices come from public market data providers and are not investment advice.",
   "dilCihaz": "Device language",
-
   "kilitBaslik": "Enter PIN",
   "kilitYanlis": "Wrong PIN",
   "kilitKur": "Create a PIN",
@@ -128,13 +264,48 @@
   "veliSilOnayDugme": "Yes, delete",
   "veliPinDegistir": "Change PIN",
   "veliOzet": "{ad} fed {n} times in total. Campfire: {toplam}.",
-  "@veliOzet": {"placeholders": {"ad": {"type": "String"}, "n": {"type": "int"}, "toplam": {"type": "String"}}},
+  "@veliOzet": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "String"
+      }
+    }
+  },
   "veliNot": "Kids' screens have no notifications, ads or purchases. Data stays on this device only.",
-
   "dunyaBahce": "Garden",
   "dunyaUzay": "Space",
   "dunyaOkyanus": "Ocean",
   "dunyaNeon": "Neon",
   "dunyaSeker": "Candy",
-  "dunyaSafari": "Safari"
+  "dunyaSafari": "Safari",
+  "ckIlkbeslemeAd": "First spark",
+  "ckIlkbeslemeAciklama": "You lit the campfire for the first time.",
+  "ckTortusapkaAd": "Tortu's hat",
+  "ckTortusapkaAciklama": "You fed Tortu three times.",
+  "ckZipzipatkiAd": "Zippy's scarf",
+  "ckZipzipatkiAciklama": "You fed Zippy three times.",
+  "ckBaykusgozlukAd": "Hoot's glasses",
+  "ckBaykusgozlukAciklama": "You fed Hoot three times.",
+  "ckSincapfularAd": "Nutty's bandana",
+  "ckSincapfularAciklama": "You fed Nutty three times.",
+  "ckTakimtamAd": "Full crew",
+  "ckTakimtamAciklama": "You fed every character.",
+  "ckAtes1000Ad": "Big fire",
+  "ckAtes1000Aciklama": "Your campfire passed 1,000 for the first time.",
+  "ckAtes5000Ad": "Bonfire",
+  "ckAtes5000Aciklama": "Your campfire passed 5,000 for the first time.",
+  "ckDers5Ad": "Curious",
+  "ckDers5Aciklama": "You finished five lessons.",
+  "ckDers10Ad": "Wise",
+  "ckDers10Aciklama": "You finished ten lessons.",
+  "ckSabir30Ad": "Patient",
+  "ckSabir30Aciklama": "30 days since your first feeding, and you're still here.",
+  "ckTortuparlakAd": "Shining Tortu",
+  "ckTortuparlakAciklama": "Tortu's value passed 1,500."
 }

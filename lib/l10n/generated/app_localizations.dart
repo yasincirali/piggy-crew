@@ -739,6 +739,150 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Safari'**
   String get dunyaSafari;
+
+  /// No description provided for @ckIlkbeslemeAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'İlk kıvılcım'**
+  String get ckIlkbeslemeAd;
+
+  /// No description provided for @ckIlkbeslemeAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamp ateşini ilk kez yaktın.'**
+  String get ckIlkbeslemeAciklama;
+
+  /// No description provided for @ckTortusapkaAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tortu\'nun şapkası'**
+  String get ckTortusapkaAd;
+
+  /// No description provided for @ckTortusapkaAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tortu\'yu üç kez besledin.'**
+  String get ckTortusapkaAciklama;
+
+  /// No description provided for @ckZipzipatkiAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zıpzıp\'ın atkısı'**
+  String get ckZipzipatkiAd;
+
+  /// No description provided for @ckZipzipatkiAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zıpzıp\'ı üç kez besledin.'**
+  String get ckZipzipatkiAciklama;
+
+  /// No description provided for @ckBaykusgozlukAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Baykuş\'un gözlüğü'**
+  String get ckBaykusgozlukAd;
+
+  /// No description provided for @ckBaykusgozlukAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Baykuş\'u üç kez besledin.'**
+  String get ckBaykusgozlukAciklama;
+
+  /// No description provided for @ckSincapfularAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sincap\'ın fuları'**
+  String get ckSincapfularAd;
+
+  /// No description provided for @ckSincapfularAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sincap\'ı üç kez besledin.'**
+  String get ckSincapfularAciklama;
+
+  /// No description provided for @ckTakimtamAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Takım tamam'**
+  String get ckTakimtamAd;
+
+  /// No description provided for @ckTakimtamAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bütün karakterleri besledin.'**
+  String get ckTakimtamAciklama;
+
+  /// No description provided for @ckAtes1000Ad.
+  ///
+  /// In tr, this message translates to:
+  /// **'Büyük ateş'**
+  String get ckAtes1000Ad;
+
+  /// No description provided for @ckAtes1000Aciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamp ateşin ilk kez 1.000\'i geçti.'**
+  String get ckAtes1000Aciklama;
+
+  /// No description provided for @ckAtes5000Ad.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şenlik ateşi'**
+  String get ckAtes5000Ad;
+
+  /// No description provided for @ckAtes5000Aciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamp ateşin ilk kez 5.000\'i geçti.'**
+  String get ckAtes5000Aciklama;
+
+  /// No description provided for @ckDers5Ad.
+  ///
+  /// In tr, this message translates to:
+  /// **'Meraklı'**
+  String get ckDers5Ad;
+
+  /// No description provided for @ckDers5Aciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Beş dersi bitirdin.'**
+  String get ckDers5Aciklama;
+
+  /// No description provided for @ckDers10Ad.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bilge'**
+  String get ckDers10Ad;
+
+  /// No description provided for @ckDers10Aciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'On dersi bitirdin.'**
+  String get ckDers10Aciklama;
+
+  /// No description provided for @ckSabir30Ad.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sabırlı'**
+  String get ckSabir30Ad;
+
+  /// No description provided for @ckSabir30Aciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'İlk beslemenden 30 gün geçti ve hâlâ buradasın.'**
+  String get ckSabir30Aciklama;
+
+  /// No description provided for @ckTortuparlakAd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Parlayan Tortu'**
+  String get ckTortuparlakAd;
+
+  /// No description provided for @ckTortuparlakAciklama.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tortu\'nun değeri 1.500\'ü geçti.'**
+  String get ckTortuparlakAciklama;
 }
 
 class _AppLocalizationsDelegate

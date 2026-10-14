@@ -381,4 +381,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dunyaSafari => 'Safari';
+
+  @override
+  String get ckIlkbeslemeAd => 'First spark';
+
+  @override
+  String get ckIlkbeslemeAciklama => 'You lit the campfire for the first time.';
+
+  @override
+  String get ckTortusapkaAd => 'Tortu\'s hat';
+
+  @override
+  String get ckTortusapkaAciklama => 'You fed Tortu three times.';
+
+  @override
+  String get ckZipzipatkiAd => 'Zippy\'s scarf';
+
+  @override
+  String get ckZipzipatkiAciklama => 'You fed Zippy three times.';
+
+  @override
+  String get ckBaykusgozlukAd => 'Hoot\'s glasses';
+
+  @override
+  String get ckBaykusgozlukAciklama => 'You fed Hoot three times.';
+
+  @override
+  String get ckSincapfularAd => 'Nutty\'s bandana';
+
+  @override
+  String get ckSincapfularAciklama => 'You fed Nutty three times.';
+
+  @override
+  String get ckTakimtamAd => 'Full crew';
+
+  @override
+  String get ckTakimtamAciklama => 'You fed every character.';
+
+  @override
+  String get ckAtes1000Ad => 'Big fire';
+
+  @override
+  String get ckAtes1000Aciklama =>
+      'Your campfire passed 1,000 for the first time.';
+
+  @override
+  String get ckAtes5000Ad => 'Bonfire';
+
+  @override
+  String get ckAtes5000Aciklama =>
+      'Your campfire passed 5,000 for the first time.';
+
+  @override
+  String get ckDers5Ad => 'Curious';
+
+  @override
+  String get ckDers5Aciklama => 'You finished five lessons.';
+
+  @override
+  String get ckDers10Ad => 'Wise';
+
+  @override
+  String get ckDers10Aciklama => 'You finished ten lessons.';
+
+  @override
+  String get ckSabir30Ad => 'Patient';
+
+  @override
+  String get ckSabir30Aciklama =>
+      '30 days since your first feeding, and you\'re still here.';
+
+  @override
+  String get ckTortuparlakAd => 'Shining Tortu';
+
+  @override
+  String get ckTortuparlakAciklama => 'Tortu\'s value passed 1,500.';
 }

@@ -381,4 +381,77 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dunyaSafari => 'Safari';
+
+  @override
+  String get ckIlkbeslemeAd => 'İlk kıvılcım';
+
+  @override
+  String get ckIlkbeslemeAciklama => 'Kamp ateşini ilk kez yaktın.';
+
+  @override
+  String get ckTortusapkaAd => 'Tortu\'nun şapkası';
+
+  @override
+  String get ckTortusapkaAciklama => 'Tortu\'yu üç kez besledin.';
+
+  @override
+  String get ckZipzipatkiAd => 'Zıpzıp\'ın atkısı';
+
+  @override
+  String get ckZipzipatkiAciklama => 'Zıpzıp\'ı üç kez besledin.';
+
+  @override
+  String get ckBaykusgozlukAd => 'Baykuş\'un gözlüğü';
+
+  @override
+  String get ckBaykusgozlukAciklama => 'Baykuş\'u üç kez besledin.';
+
+  @override
+  String get ckSincapfularAd => 'Sincap\'ın fuları';
+
+  @override
+  String get ckSincapfularAciklama => 'Sincap\'ı üç kez besledin.';
+
+  @override
+  String get ckTakimtamAd => 'Takım tamam';
+
+  @override
+  String get ckTakimtamAciklama => 'Bütün karakterleri besledin.';
+
+  @override
+  String get ckAtes1000Ad => 'Büyük ateş';
+
+  @override
+  String get ckAtes1000Aciklama => 'Kamp ateşin ilk kez 1.000\'i geçti.';
+
+  @override
+  String get ckAtes5000Ad => 'Şenlik ateşi';
+
+  @override
+  String get ckAtes5000Aciklama => 'Kamp ateşin ilk kez 5.000\'i geçti.';
+
+  @override
+  String get ckDers5Ad => 'Meraklı';
+
+  @override
+  String get ckDers5Aciklama => 'Beş dersi bitirdin.';
+
+  @override
+  String get ckDers10Ad => 'Bilge';
+
+  @override
+  String get ckDers10Aciklama => 'On dersi bitirdin.';
+
+  @override
+  String get ckSabir30Ad => 'Sabırlı';
+
+  @override
+  String get ckSabir30Aciklama =>
+      'İlk beslemenden 30 gün geçti ve hâlâ buradasın.';
+
+  @override
+  String get ckTortuparlakAd => 'Parlayan Tortu';
+
+  @override
+  String get ckTortuparlakAciklama => 'Tortu\'nun değeri 1.500\'ü geçti.';
 }

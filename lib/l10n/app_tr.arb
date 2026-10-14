@@ -14,7 +14,6 @@
   "huyDolar": "Zıplarım! Bazen yukarı, bazen aşağı. Sabırlı olan kazanır.",
   "huyEuro": "Sakin bakarım. Uzaktaki ülkelerin parası bende saklı.",
   "huyNakit": "Ne verirsen onu saklarım. Ama fiyatlar artarsa aldığım şey azalır.",
-
   "karsilamaBaslik": "Kumbara Takımı seni bekliyor",
   "karsilamaAlt": "Birikimlerin dört sevimli karakterde yaşar. Onları besle, kamp ateşin büyüsün.",
   "karsilamaBasla": "Başla",
@@ -35,55 +34,166 @@
   "veliPinUyusmaz": "İki PIN aynı değil",
   "veliPinSonra": "Şimdilik geç",
   "hazir": "Hazırım!",
-
   "sekmeKamp": "Kamp",
   "sekmeOgren": "Öğren",
   "sekmeCikartma": "Çıkartmalar",
   "sekmeAyarlar": "Ayarlar",
-
   "kampSelam": "Merhaba {ad}",
-  "@kampSelam": {"placeholders": {"ad": {"type": "String"}}},
+  "@kampSelam": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      }
+    }
+  },
   "kampAtesim": "Kamp ateşim",
   "kampBos": "Kamp ateşin henüz yanmadı. Bir karaktere dokun ve besle.",
   "kampFiyatYok": "Fiyat alınamadı, değer gösterilemiyor.",
   "kampFiyatEski": "Fiyatlar {zaman} itibarıyla",
-  "@kampFiyatEski": {"placeholders": {"zaman": {"type": "String"}}},
+  "@kampFiyatEski": {
+    "placeholders": {
+      "zaman": {
+        "type": "String"
+      }
+    }
+  },
   "fark": "Fark",
   "farkMutlu": "{karakter} gülüyor: {fark}",
-  "@farkMutlu": {"placeholders": {"karakter": {"type": "String"}, "fark": {"type": "String"}}},
+  "@farkMutlu": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "farkUzgun": "{karakter} biraz üzgün: {fark}",
-  "@farkUzgun": {"placeholders": {"karakter": {"type": "String"}, "fark": {"type": "String"}}},
+  "@farkUzgun": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "farkDuz": "{karakter} sakin: değişim yok",
-  "@farkDuz": {"placeholders": {"karakter": {"type": "String"}}},
+  "@farkDuz": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besle": "Besle",
   "besleBaslik": "{karakter}'yu besle",
-  "@besleBaslik": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleBaslik": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besleTutar": "Ne kadar?",
   "besleBugunFiyat": "Bugün 1 {birim} = {fiyat}",
-  "@besleBugunFiyat": {"placeholders": {"birim": {"type": "String"}, "fiyat": {"type": "String"}}},
+  "@besleBugunFiyat": {
+    "placeholders": {
+      "birim": {
+        "type": "String"
+      },
+      "fiyat": {
+        "type": "String"
+      }
+    }
+  },
   "besleAlir": "{tutar} ile {miktar} alırsın",
-  "@besleAlir": {"placeholders": {"tutar": {"type": "String"}, "miktar": {"type": "String"}}},
+  "@besleAlir": {
+    "placeholders": {
+      "tutar": {
+        "type": "String"
+      },
+      "miktar": {
+        "type": "String"
+      }
+    }
+  },
   "besleVer": "{karakter}'ya ver",
-  "@besleVer": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleVer": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "besleFiyatYok": "Bugünün fiyatı alınamadı. İnternete bağlanınca tekrar dene.",
   "besleGecersiz": "Bir tutar yaz",
   "besleDoydu": "{karakter} doydu!",
-  "@besleDoydu": {"placeholders": {"karakter": {"type": "String"}}},
+  "@besleDoydu": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "cikartmaAcildi": "Yeni çıkartma: {ad}",
-  "@cikartmaAcildi": {"placeholders": {"ad": {"type": "String"}}},
-
+  "@cikartmaAcildi": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      }
+    }
+  },
   "detayVerdin": "Verdin",
   "detayBugun": "Bugün",
   "detayMiktar": "Elinde {miktar}",
-  "@detayMiktar": {"placeholders": {"miktar": {"type": "String"}}},
+  "@detayMiktar": {
+    "placeholders": {
+      "miktar": {
+        "type": "String"
+      }
+    }
+  },
   "detayBos": "{karakter} henüz hiç beslenmedi.",
-  "@detayBos": {"placeholders": {"karakter": {"type": "String"}}},
+  "@detayBos": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenBaslik": "{karakter} anlatıyor",
-  "@detayNedenBaslik": {"placeholders": {"karakter": {"type": "String"}}},
+  "@detayNedenBaslik": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenMutlu": "Aldığın günden beri {varlik} değerlendi. Aynı miktar şimdi daha çok para ediyor: {fark}.",
-  "@detayNedenMutlu": {"placeholders": {"varlik": {"type": "String"}, "fark": {"type": "String"}}},
+  "@detayNedenMutlu": {
+    "placeholders": {
+      "varlik": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenUzgun": "Aldığın günden beri {varlik} biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: {fark}. Sabır işin bir parçası.",
-  "@detayNedenUzgun": {"placeholders": {"varlik": {"type": "String"}, "fark": {"type": "String"}}},
+  "@detayNedenUzgun": {
+    "placeholders": {
+      "varlik": {
+        "type": "String"
+      },
+      "fark": {
+        "type": "String"
+      }
+    }
+  },
   "detayNedenNakit": "Nakit hep aynı sayıyı gösterir. Ama fiyatlar artarsa aynı para daha az şey alır; buna enflasyon denir.",
   "detayBeslemeler": "Beslemelerin",
   "detayBirazDaha": "Biraz daha besle",
@@ -91,24 +201,45 @@
   "detaySilOnay": "Bu besleme silinsin mi?",
   "iptal": "Vazgeç",
   "sil": "Sil",
-
   "ogrenBaslik": "Bugünün kavramı",
   "ogrenSayac": "{n} / {toplam}",
-  "@ogrenSayac": {"placeholders": {"n": {"type": "int"}, "toplam": {"type": "int"}}},
+  "@ogrenSayac": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "int"
+      }
+    }
+  },
   "ogrenSoru": "Soru",
   "ogrenDogru": "Doğru! {karakter} seninle gurur duyuyor.",
-  "@ogrenDogru": {"placeholders": {"karakter": {"type": "String"}}},
+  "@ogrenDogru": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
   "ogrenYanlis": "Bir daha düşün. İpucu metinde gizli.",
   "ogrenSonraki": "Sonraki ders",
   "ogrenBitti": "Bütün dersleri bitirdin. Yenileri yolda.",
   "ogrenBastan": "Baştan oku",
-
   "cikartmaBaslik": "Çıkartmalarım",
   "cikartmaAlt": "Davranışın için verilir, şans için değil.",
   "cikartmaKilitli": "Kilitli",
   "cikartmaSayac": "{n} / {toplam} açıldı",
-  "@cikartmaSayac": {"placeholders": {"n": {"type": "int"}, "toplam": {"type": "int"}}},
-
+  "@cikartmaSayac": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "int"
+      }
+    }
+  },
   "ayarlarBaslik": "Ayarlar",
   "ayarlarDunya": "Kamp yeri",
   "ayarlarYas": "Yaş modu",
@@ -116,10 +247,15 @@
   "ayarlarDil": "Dil",
   "ayarlarVeli": "Anne baba köşesi",
   "ayarlarSurum": "Sürüm {s}",
-  "@ayarlarSurum": {"placeholders": {"s": {"type": "String"}}},
+  "@ayarlarSurum": {
+    "placeholders": {
+      "s": {
+        "type": "String"
+      }
+    }
+  },
   "ayarlarKaynak": "Fiyatlar kamuya açık piyasa verisi sağlayıcılarından alınır, yatırım tavsiyesi değildir.",
   "dilCihaz": "Cihaz dili",
-
   "kilitBaslik": "PIN gir",
   "kilitYanlis": "PIN yanlış",
   "kilitKur": "PIN oluştur",
@@ -128,13 +264,48 @@
   "veliSilOnayDugme": "Evet, sil",
   "veliPinDegistir": "PIN'i değiştir",
   "veliOzet": "{ad} toplam {n} kez besledi. Kamp ateşi: {toplam}.",
-  "@veliOzet": {"placeholders": {"ad": {"type": "String"}, "n": {"type": "int"}, "toplam": {"type": "String"}}},
+  "@veliOzet": {
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      },
+      "toplam": {
+        "type": "String"
+      }
+    }
+  },
   "veliNot": "Çocuk ekranlarında bildirim, reklam ve satın alma yoktur. Veri yalnız bu cihazda durur.",
-
   "dunyaBahce": "Bahçe",
   "dunyaUzay": "Uzay",
   "dunyaOkyanus": "Okyanus",
   "dunyaNeon": "Neon",
   "dunyaSeker": "Şeker",
-  "dunyaSafari": "Safari"
+  "dunyaSafari": "Safari",
+  "ckIlkbeslemeAd": "İlk kıvılcım",
+  "ckIlkbeslemeAciklama": "Kamp ateşini ilk kez yaktın.",
+  "ckTortusapkaAd": "Tortu'nun şapkası",
+  "ckTortusapkaAciklama": "Tortu'yu üç kez besledin.",
+  "ckZipzipatkiAd": "Zıpzıp'ın atkısı",
+  "ckZipzipatkiAciklama": "Zıpzıp'ı üç kez besledin.",
+  "ckBaykusgozlukAd": "Baykuş'un gözlüğü",
+  "ckBaykusgozlukAciklama": "Baykuş'u üç kez besledin.",
+  "ckSincapfularAd": "Sincap'ın fuları",
+  "ckSincapfularAciklama": "Sincap'ı üç kez besledin.",
+  "ckTakimtamAd": "Takım tamam",
+  "ckTakimtamAciklama": "Bütün karakterleri besledin.",
+  "ckAtes1000Ad": "Büyük ateş",
+  "ckAtes1000Aciklama": "Kamp ateşin ilk kez 1.000'i geçti.",
+  "ckAtes5000Ad": "Şenlik ateşi",
+  "ckAtes5000Aciklama": "Kamp ateşin ilk kez 5.000'i geçti.",
+  "ckDers5Ad": "Meraklı",
+  "ckDers5Aciklama": "Beş dersi bitirdin.",
+  "ckDers10Ad": "Bilge",
+  "ckDers10Aciklama": "On dersi bitirdin.",
+  "ckSabir30Ad": "Sabırlı",
+  "ckSabir30Aciklama": "İlk beslemenden 30 gün geçti ve hâlâ buradasın.",
+  "ckTortuparlakAd": "Parlayan Tortu",
+  "ckTortuparlakAciklama": "Tortu'nun değeri 1.500'ü geçti."
 }

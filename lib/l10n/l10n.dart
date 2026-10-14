@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../models/cikartma.dart';
 import '../models/varlik.dart';
 import '../theme/dunya.dart';
 import 'generated/app_localizations.dart';
@@ -49,5 +50,39 @@ extension VarlikAdlari on AppLocalizations {
         Dunya.neon => dunyaNeon,
         Dunya.seker => dunyaSeker,
         Dunya.safari => dunyaSafari,
+      };
+}
+
+extension CikartmaAdlari on AppLocalizations {
+  String cikartmaAd(Cikartma c) => switch (c.id) {
+        'ilk_besleme' => ckIlkbeslemeAd,
+        'tortu_sapka' => ckTortusapkaAd,
+        'zipzip_atki' => ckZipzipatkiAd,
+        'baykus_gozluk' => ckBaykusgozlukAd,
+        'sincap_fular' => ckSincapfularAd,
+        'takim_tam' => ckTakimtamAd,
+        'ates_1000' => ckAtes1000Ad,
+        'ates_5000' => ckAtes5000Ad,
+        'ders_5' => ckDers5Ad,
+        'ders_10' => ckDers10Ad,
+        'sabir_30' => ckSabir30Ad,
+        'tortu_parlak' => ckTortuparlakAd,
+        _ => c.id,
+      };
+
+  String cikartmaAciklama(Cikartma c) => switch (c.id) {
+        'ilk_besleme' => ckIlkbeslemeAciklama,
+        'tortu_sapka' => ckTortusapkaAciklama,
+        'zipzip_atki' => ckZipzipatkiAciklama,
+        'baykus_gozluk' => ckBaykusgozlukAciklama,
+        'sincap_fular' => ckSincapfularAciklama,
+        'takim_tam' => ckTakimtamAciklama,
+        'ates_1000' => ckAtes1000Aciklama,
+        'ates_5000' => ckAtes5000Aciklama,
+        'ders_5' => ckDers5Aciklama,
+        'ders_10' => ckDers10Aciklama,
+        'sabir_30' => ckSabir30Aciklama,
+        'tortu_parlak' => ckTortuparlakAciklama,
+        _ => '',
       };
 }

@@ -60,6 +60,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
   /// adını döner (birden fazlası aynı anda açılırsa diğerleri sessizce açılır,
   /// listede görünür).
   Future<String?> _cikartmalariKontrolEt() async {
+    final l = context.l10n;
     final hareketler = ref.read(hareketlerProvider);
     final k = ref.read(karakterlerProvider);
     final toplam = ref.read(toplamProvider);
@@ -67,7 +68,10 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     String? ilk;
     Future<void> dene(String id, bool kosul) async {
       if (!kosul) return;
-      if (await cik.ac(id)) ilk ??= Cikartma.bul(id)?.ad;
+      if (await cik.ac(id)) {
+        final c = Cikartma.bul(id);
+        if (c != null) ilk ??= l.cikartmaAd(c);
+      }
     }
 
     int sayi(VarlikTuru t) => hareketler.where((h) => h.tur == t).length;
@@ -84,7 +88,6 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     await dene('tortu_parlak', au >= 1500);
     final ilkTarih = hareketler.isEmpty ? null : hareketler.map((h) => h.tarih).reduce((a, b) => a.isBefore(b) ? a : b);
     await dene('sabir_30', ilkTarih != null && DateTime.now().difference(ilkTarih).inDays >= 30);
-    // Çıkartma adı yerelleşmiş değil (katalog Türkçe) — 2. kapıda arb'a taşınır.
     return ilk;
   }
 

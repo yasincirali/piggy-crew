@@ -41,7 +41,7 @@ class CikartmalarEkrani extends ConsumerWidget {
             final c = Cikartma.hepsi[i];
             final var_ = acik.contains(c.id);
             return Semantics(
-              label: '${c.ad}${var_ ? '' : ', ${l.cikartmaKilitli}'}',
+              label: '${l.cikartmaAd(c)}${var_ ? '' : ', ${l.cikartmaKilitli}'}',
               child: Kart(
                 padding: const EdgeInsets.all(Bosluk.m),
                 child: Opacity(
@@ -52,9 +52,9 @@ class CikartmalarEkrani extends ConsumerWidget {
                     else
                       Icon(var_ ? Icons.local_fire_department_rounded : Icons.lock_rounded, size: 48, color: var_ ? r.petal : r.sub),
                     const SizedBox(height: Bosluk.s),
-                    Text(c.ad, textAlign: TextAlign.center, style: context.t.titleMedium),
+                    Text(l.cikartmaAd(c), textAlign: TextAlign.center, style: context.t.titleMedium),
                     const SizedBox(height: Bosluk.xs),
-                    Text(c.aciklama, textAlign: TextAlign.center, style: context.t.bodySmall?.copyWith(color: r.sub)),
+                    Text(l.cikartmaAciklama(c), textAlign: TextAlign.center, style: context.t.bodySmall?.copyWith(color: r.sub)),
                   ]),
                 ),
               ),

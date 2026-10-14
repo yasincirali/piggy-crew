@@ -6,25 +6,25 @@ import 'varlik.dart';
 /// "altın yükseldi" diye çıkartma YOK, çocuk fiyatı kontrol edemez.
 @immutable
 class Cikartma {
-  const Cikartma(this.id, this.ad, this.aciklama, this.tur);
+  const Cikartma(this.id, this.tur);
   final String id;
-  final String ad;
-  final String aciklama;
+
+  /// Ad ve açıklama .arb'da (`ckXAd`, `ckXAciklama`): global uygulama, metin kodda değil.
   final VarlikTuru? tur;
 
   static const hepsi = <Cikartma>[
-    Cikartma('ilk_besleme', 'İlk kıvılcım', 'Kamp ateşini ilk kez yaktın.', null),
-    Cikartma('tortu_sapka', 'Tortu\'nun şapkası', 'Tortu\'yu üç kez besledin.', VarlikTuru.altin),
-    Cikartma('zipzip_atki', 'Zıpzıp\'ın atkısı', 'Zıpzıp\'ı üç kez besledin.', VarlikTuru.dolar),
-    Cikartma('baykus_gozluk', 'Baykuş\'un gözlüğü', 'Baykuş\'u üç kez besledin.', VarlikTuru.euro),
-    Cikartma('sincap_fular', 'Sincap\'ın fuları', 'Sincap\'ı üç kez besledin.', VarlikTuru.nakit),
-    Cikartma('takim_tam', 'Takım tamam', 'Dört karakteri de besledin.', null),
-    Cikartma('ates_1000', 'Büyük ateş', 'Kamp ateşin ilk kez 1.000 ₺\'yi geçti.', null),
-    Cikartma('ates_5000', 'Şenlik ateşi', 'Kamp ateşin ilk kez 5.000 ₺\'yi geçti.', null),
-    Cikartma('ders_5', 'Meraklı', 'Beş dersi bitirdin.', null),
-    Cikartma('ders_10', 'Bilge', 'On dersi bitirdin.', null),
-    Cikartma('sabir_30', 'Sabırlı', 'İlk beslemenden 30 gün geçti ve hâlâ buradasın.', null),
-    Cikartma('tortu_parlak', 'Parlayan Tortu', 'Tortu\'nun değeri 1.500 ₺\'yi geçti.', VarlikTuru.altin),
+    Cikartma('ilk_besleme', null),
+    Cikartma('tortu_sapka', VarlikTuru.altin),
+    Cikartma('zipzip_atki', VarlikTuru.dolar),
+    Cikartma('baykus_gozluk', VarlikTuru.euro),
+    Cikartma('sincap_fular', VarlikTuru.nakit),
+    Cikartma('takim_tam', null),
+    Cikartma('ates_1000', null),
+    Cikartma('ates_5000', null),
+    Cikartma('ders_5', null),
+    Cikartma('ders_10', null),
+    Cikartma('sabir_30', null),
+    Cikartma('tortu_parlak', VarlikTuru.altin),
   ];
 
   static Cikartma? bul(String id) => hepsi.where((c) => c.id == id).firstOrNull;
