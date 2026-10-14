@@ -21,7 +21,30 @@ permissions:
   contents: read
 
 jobs:
+  # Secrets kapısı (ubuntu, saniyeler): Apple secret'ları girilmeden macOS
+  # runner'ı hiç başlamaz. Neden: depo PRIVATE, macOS dakikası GitHub kotasında
+  # 10× sayılır; kırmızı düşecek bir build 20–30 dk × 10 = kotanın yarısı.
+  # Secret'lar `if:` içinde doğrudan okunamaz, bu yüzden ayrı iş + çıktı.
+  kapi:
+    runs-on: ubuntu-latest
+    outputs:
+      hazir: ${{ steps.k.outputs.hazir }}
+    steps:
+      - id: k
+        env:
+          ASC: ${{ secrets.ASC_KEY_ID }}
+          MATCH: ${{ secrets.MATCH_PASSWORD }}
+        run: |
+          if [ -n "$ASC" ] && [ -n "$MATCH" ]; then
+            echo "hazir=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "hazir=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Apple secret'ları yok — TestFlight adımı atlandı (YAPMAN_GEREKENLER.md adım 3–4)."
+          fi
+
   build_and_upload:
+    needs: kapi
+    if: needs.kapi.outputs.hazir == 'true'
     runs-on: macos-latest
     timeout-minutes: 60
     steps:
