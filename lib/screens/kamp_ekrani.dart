@@ -1,0 +1,182 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import '../l10n/l10n.dart';
+import '../models/varlik.dart';
+import '../providers/saglayicilar.dart';
+import '../theme/dunya.dart';
+import '../utils/bicim.dart';
+import '../widgets/kamp_atesi.dart';
+import '../widgets/karakter.dart';
+import '../widgets/ortak.dart';
+import 'besle_sayfasi.dart';
+import 'varlik_detay_ekrani.dart';
+
+/// Kamp: ana ekran. Ortada ateş (toplam), çevresinde takım. Karaktere dokun →
+/// detay. Sayı az: toplam ve fark. Analiz, grafik, yüzde listesi yok (karar).
+class KampEkrani extends ConsumerStatefulWidget {
+  const KampEkrani({super.key});
+  @override
+  ConsumerState<KampEkrani> createState() => _KampState();
+}
+
+class _KampState extends ConsumerState<KampEkrani> {
+  final _hop = <VarlikTuru, int>{};
+
+  Future<void> _besle(VarlikTuru t) async {
+    final sonuc = await besleGoster(context, ref, t);
+    if (sonuc == null || !mounted) return;
+    setState(() => _hop[t] = (_hop[t] ?? 0) + 1);
+    final l = context.l10n;
+    final mesaj = sonuc.yeniCikartma == null
+        ? l.besleDoydu(l.karakter(t))
+        : l.cikartmaAcildi(sonuc.yeniCikartma!);
+    bildir(context, mesaj);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final r = context.r;
+    final cocuk = ref.watch(cocukProvider)!;
+    final k = ref.watch(karakterlerProvider);
+    final toplam = ref.watch(toplamProvider);
+    final fiyat = ref.watch(fiyatProvider);
+    final gorunur = k.keys.toList();
+    final bos = toplam.maliyetTl <= 0;
+
+    final sol = gorunur.where((t) => t != VarlikTuru.altin).toList();
+    // Yerleşim: üst satır (Baykuş · ateş · Zıpzıp), alt satır (Tortu büyük · Sincap).
+    // Ev birimi dolar/euro ise bir karakter eksik; kalanlar sırayla doldurur.
+    final ust = sol.take(2).toList();
+    final alt = sol.skip(2).toList();
+
+    Widget karakter(VarlikTuru t, {double boyut = 92, Duration gecikme = Duration.zero}) {
+      final d = k[t]!;
+      final cik = ref.watch(cikartmalarProvider);
+      return Basilabilir(
+        semantik: '${l.karakter(t)}, ${l.varlik(t)}',
+        onTap: () => Navigator.of(context).push(VarlikDetayEkrani.rota(t)),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Karakter(
+            tur: t,
+            ruh: d.ruh,
+            boyut: boyut,
+            gecikme: gecikme,
+            hopTetik: _hop[t] ?? 0,
+            pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
+            parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
+          ),
+          Text(l.karakter(t), style: context.t.labelLarge),
+          if (!d.bos && d.farkTl != null)
+            Text(
+              fmtFark(d.farkTl!, cocuk.para),
+              style: context.t.labelMedium?.copyWith(
+                color: d.ruh == Ruh.uzgun ? r.loss : (d.ruh == Ruh.mutlu ? r.gain : r.sub),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+        ]),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => ref.read(fiyatProvider.notifier).yenile(),
+      color: r.acc,
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
+        children: [
+          Text(l.kampSelam(cocuk.ad), style: context.t.titleMedium?.copyWith(color: r.sub)),
+          const SizedBox(height: Bosluk.xs),
+          BolumBasligi(l.kampAtesim),
+          const SizedBox(height: Bosluk.xs),
+          if (toplam.degerTl != null)
+            Text(fmtPara(toplam.degerTl!, cocuk.para), style: context.t.displayMedium)
+          else if (!bos)
+            Text(l.kampFiyatYok, style: context.t.bodyLarge?.copyWith(color: r.sub))
+          else
+            Text(fmtPara(0, cocuk.para), style: context.t.displayMedium),
+          if (toplam.farkTl != null && !bos)
+            Text(
+              '${l.fark}: ${fmtFark(toplam.farkTl!, cocuk.para)}',
+              style: context.t.titleMedium?.copyWith(
+                color: toplam.farkTl! < 0 ? r.loss : (toplam.farkTl! > 0 ? r.gain : r.sub),
+              ),
+            ),
+          const SizedBox(height: Bosluk.l),
+          // Kamp sahnesi.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (ust.isNotEmpty) karakter(ust[0], gecikme: const Duration(milliseconds: 700)) else const SizedBox(width: 92),
+              KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140),
+              if (ust.length > 1) karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) else const SizedBox(width: 92),
+            ],
+          ),
+          const SizedBox(height: Bosluk.s),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              karakter(VarlikTuru.altin, boyut: 120),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Bosluk.m),
+                  child: Text(
+                    bos ? l.kampBos : _fiyatNotu(l, fiyat.valueOrNull?.zaman),
+                    textAlign: TextAlign.center,
+                    style: context.t.bodySmall?.copyWith(color: r.sub),
+                  ),
+                ),
+              ),
+              if (alt.isNotEmpty) karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) else const SizedBox(width: 92),
+            ],
+          ),
+          const SizedBox(height: Bosluk.xl),
+          // Besle düğmeleri: her karakter için bir satır (44 pt+).
+          Kart(
+            padding: const EdgeInsets.all(Bosluk.s),
+            child: Column(children: [
+              for (final t in gorunur)
+                Basilabilir(
+                  onTap: () => _besle(t),
+                  semantik: l.besleBaslik(l.karakter(t)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
+                    child: Row(children: [
+                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh))),
+                      const SizedBox(width: Bosluk.m),
+                      Expanded(
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text('${l.karakter(t)} · ${l.varlik(t)}', style: context.t.titleMedium),
+                          if (!k[t]!.bos)
+                            Text(fmtMiktar(k[t]!.miktar, l.birim(t, cocuk.para), cocuk.para),
+                                style: context.t.bodyMedium),
+                        ]),
+                      ),
+                      Container(
+                        height: 40,
+                        padding: const EdgeInsets.symmetric(horizontal: Bosluk.l),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: r.acc, borderRadius: BorderRadius.circular(999)),
+                        child: Text(l.besle, style: context.t.labelLarge?.copyWith(color: r.accInk)),
+                      ),
+                    ]),
+                  ),
+                ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _fiyatNotu(AppLocalizations l, DateTime? z) {
+    if (z == null || z.millisecondsSinceEpoch == 0) return l.kampFiyatYok;
+    final f = DateFormat.Hm(Localizations.localeOf(context).toString());
+    final bugun = DateTime.now().difference(z).inHours < 20;
+    return l.kampFiyatEski(bugun ? f.format(z) : DateFormat.MMMd(Localizations.localeOf(context).toString()).format(z));
+  }
+}

@@ -1,0 +1,35 @@
+name: harcliklarim
+description: "Sandık: Harçlıklarım — çocuklar için birikim ve para bilinci (7–15 yaş)."
+publish_to: 'none'
+# Sürüm fastlane tarafından CI'da yükseltilir (sandık ile aynı düzen);
+# elle bump etme.
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  shared_preferences: ^2.3.2
+  http: ^1.2.1
+  intl: ^0.20.2
+  package_info_plus: ^8.0.0
+  # SVG yol dizelerini Flutter Path'e çevirir — karakterler CustomPainter ile
+  # çizilir (flutter_svg pattern/filter desteklemediği için SVG dosyası yok).
+  path_drawing: ^1.0.1
+  crypto: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/dersler.json

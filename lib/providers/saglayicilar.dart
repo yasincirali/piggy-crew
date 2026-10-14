@@ -1,0 +1,154 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/cocuk.dart';
+import '../models/varlik.dart';
+import '../services/depo.dart';
+import '../services/fiyat_servisi.dart';
+
+/// `main()` içinde override edilir (Depo.ac() async).
+final depoProvider = Provider<Depo>((_) => throw UnimplementedError('Depo override edilmeli'));
+final fiyatServisiProvider = Provider<FiyatServisi>((_) => FiyatServisi());
+
+/// Çocuk profili; null → karşılama akışı.
+class CocukNotifier extends Notifier<Cocuk?> {
+  @override
+  Cocuk? build() => ref.read(depoProvider).cocukOku();
+
+  Future<void> kaydet(Cocuk c) async {
+    state = c;
+    await ref.read(depoProvider).cocukYaz(c);
+  }
+
+  Future<void> guncelle(Cocuk Function(Cocuk) f) async {
+    final c = state;
+    if (c == null) return;
+    await kaydet(f(c));
+  }
+
+  /// Veli köşesi "veriyi sil": profil + hareketler + çıkartmalar gider.
+  Future<void> hepsiniSil() async {
+    await ref.read(depoProvider).hepsiniSil();
+    ref.invalidate(hareketlerProvider);
+    ref.invalidate(cikartmalarProvider);
+    state = null;
+  }
+}
+
+final cocukProvider = NotifierProvider<CocukNotifier, Cocuk?>(CocukNotifier.new);
+
+/// Fiyatlar: önce önbellek (anında), sonra ağ. `yenile()` çekmeyi tekrarlar.
+class FiyatNotifier extends AsyncNotifier<Fiyatlar> {
+  @override
+  Future<Fiyatlar> build() async {
+    final s = ref.read(fiyatServisiProvider);
+    final onb = await s.onbellek();
+    // Ağ sonucu geldiğinde state'i güncelle; önbellek varsa bekletme.
+    final agFuture = s.cek();
+    if (onb.yok) return (await agFuture) ?? onb;
+    agFuture.then((f) {
+      if (f != null) state = AsyncData(f);
+    });
+    return onb;
+  }
+
+  Future<void> yenile() async {
+    final f = await ref.read(fiyatServisiProvider).cek();
+    if (f != null) state = AsyncData(f);
+  }
+}
+
+final fiyatProvider = AsyncNotifierProvider<FiyatNotifier, Fiyatlar>(FiyatNotifier.new);
+
+class HareketlerNotifier extends Notifier<List<Hareket>> {
+  @override
+  List<Hareket> build() => ref.read(depoProvider).hareketleriOku();
+
+  Future<void> ekle(Hareket h) async {
+    state = [...state, h];
+    await ref.read(depoProvider).hareketleriYaz(state);
+  }
+
+  Future<void> sil(String id) async {
+    state = state.where((h) => h.id != id).toList();
+    await ref.read(depoProvider).hareketleriYaz(state);
+  }
+}
+
+final hareketlerProvider = NotifierProvider<HareketlerNotifier, List<Hareket>>(HareketlerNotifier.new);
+
+/// Karakter durumları — hesap burada, build() içinde değil.
+final karakterlerProvider = Provider<Map<VarlikTuru, KarakterDurumu>>((ref) {
+  final hareketler = ref.watch(hareketlerProvider);
+  final fiyatlar = ref.watch(fiyatProvider).valueOrNull ?? Fiyatlar.bos;
+  final ev = ref.watch(cocukProvider)?.para ?? ParaBirimi.tryy;
+  return {
+    for (final t in VarlikTuru.values.where((t) => t.gorunur(ev)))
+      t: () {
+        final h = hareketler.where((e) => e.tur == t);
+        return KarakterDurumu(
+          tur: t,
+          miktar: h.fold(0.0, (a, e) => a + e.miktar),
+          maliyetTl: h.fold(0.0, (a, e) => a + e.tutarTl),
+          fiyat: fiyatlar.fiyat(t, ev),
+        );
+      }(),
+  };
+});
+
+/// Toplam değer; bir karakterin fiyatı bilinmiyorsa o karakter toplamdan
+/// DÜŞÜLMEZ, toplam null olur — uydurma toplam en kötü sayıdır.
+@immutable
+class Toplam {
+  const Toplam({required this.degerTl, required this.maliyetTl});
+  final double? degerTl;
+  final double maliyetTl;
+  double? get farkTl => degerTl == null ? null : degerTl! - maliyetTl;
+}
+
+final toplamProvider = Provider<Toplam>((ref) {
+  final k = ref.watch(karakterlerProvider).values.where((d) => !d.bos);
+  double? deger = 0;
+  var maliyet = 0.0;
+  for (final d in k) {
+    maliyet += d.maliyetTl;
+    if (deger == null) continue;
+    final v = d.degerTl;
+    deger = v == null ? null : deger + v;
+  }
+  return Toplam(degerTl: deger, maliyetTl: maliyet);
+});
+
+class CikartmalarNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => ref.read(depoProvider).cikartmalariOku();
+
+  /// Yeni açıldıysa true döner (kutlama tetikleyici).
+  Future<bool> ac(String id) async {
+    if (state.contains(id)) return false;
+    state = {...state, id};
+    await ref.read(depoProvider).cikartmalariYaz(state);
+    return true;
+  }
+}
+
+final cikartmalarProvider = NotifierProvider<CikartmalarNotifier, Set<String>>(CikartmalarNotifier.new);
+
+class DersIlerlemeNotifier extends Notifier<int> {
+  @override
+  int build() => ref.read(depoProvider).dersIlerlemeOku();
+
+  Future<void> ilerle(int n) async {
+    if (n <= state) return;
+    state = n;
+    await ref.read(depoProvider).dersIlerlemeYaz(n);
+  }
+
+  /// Dersler bitince baştan okumak için.
+  Future<void> ilerleSifirla() async {
+    state = 0;
+    await ref.read(depoProvider).dersIlerlemeYaz(0);
+  }
+}
+
+final dersIlerlemeProvider = NotifierProvider<DersIlerlemeNotifier, int>(DersIlerlemeNotifier.new);
