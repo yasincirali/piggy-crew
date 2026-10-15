@@ -5,7 +5,10 @@ import 'package:flutter/foundation.dart';
 
 import '../models/varlik.dart';
 
-/// Ses efektleri. Dosyalar `tool/sesler_uret.py` ile sentezlenir (lisanssız).
+/// Ses efektleri. Gerçek kayıtlar (Kenney, Freesound, OpenGameArt; hepsi
+/// CC0), kaynak ve düzenleme `assets/sesler/LISANS.md`'de. Eskiden numpy ile
+/// sentezleniyordu; yapay duyuldu (yasin 2026-10-15), kaldırıldı. Yeni ses
+/// eklerken yalnız CC0/kamu malı al: Kids kategorisinde atıf ekranı yok.
 enum Ses { para, yum, yasasin, cikartma, tortu, zipzip, baykus, sincap }
 
 extension SesKarakter on VarlikTuru {
