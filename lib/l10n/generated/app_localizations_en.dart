@@ -316,6 +316,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ayarlarPara => 'Currency';
 
   @override
+  String get ayarlarSes => 'Sounds';
+
+  @override
+  String get sesAcik => 'On';
+
+  @override
+  String get sesKapali => 'Off';
+
+  @override
   String get ayarlarDil => 'Language';
 
   @override

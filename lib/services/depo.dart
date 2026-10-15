@@ -22,6 +22,7 @@ class Depo {
   static const _hareketler = 'hareketler_v1';
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
+  static const _sesAcik = 'ses_acik_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -53,6 +54,11 @@ class Depo {
 
   int dersIlerlemeOku() => _sp.getInt(_dersIlerleme) ?? 0;
   Future<void> dersIlerlemeYaz(int n) => _sp.setInt(_dersIlerleme, n);
+
+  /// Sesler varsayılan açık. Cihaz tercihidir, kişisel veri değil: "veriyi
+  /// sil" dokunmaz.
+  bool sesAcikOku() => _sp.getBool(_sesAcik) ?? true;
+  Future<void> sesAcikYaz(bool v) => _sp.setBool(_sesAcik, v);
 
   /// Tüm veriyi sil (veli köşesi). Fiyat önbelleği kalır, kişisel değil.
   Future<void> hepsiniSil() async {

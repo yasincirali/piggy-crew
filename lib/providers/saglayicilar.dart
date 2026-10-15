@@ -5,10 +5,26 @@ import '../models/cocuk.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
 import '../services/fiyat_servisi.dart';
+import '../services/ses_servisi.dart';
 
 /// `main()` içinde override edilir (Depo.ac() async).
 final depoProvider = Provider<Depo>((_) => throw UnimplementedError('Depo override edilmeli'));
 final fiyatServisiProvider = Provider<FiyatServisi>((_) => FiyatServisi());
+
+/// Sesler açık mı (Ayarlar). Değişince servis de güncellenir.
+class SesAcikNotifier extends Notifier<bool> {
+  @override
+  bool build() => ref.read(depoProvider).sesAcikOku();
+
+  Future<void> ayarla(bool v) async {
+    state = v;
+    ref.read(sesProvider).acik = v;
+    await ref.read(depoProvider).sesAcikYaz(v);
+  }
+}
+
+final sesAcikProvider = NotifierProvider<SesAcikNotifier, bool>(SesAcikNotifier.new);
+final sesProvider = Provider<SesServisi>((ref) => SesServisi(acik: ref.read(depoProvider).sesAcikOku()));
 
 /// Çocuk profili; null → karşılama akışı.
 class CocukNotifier extends Notifier<Cocuk?> {

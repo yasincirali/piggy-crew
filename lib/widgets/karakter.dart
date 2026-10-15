@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 import '../models/varlik.dart';
+import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 
 /// Kumbara Takımı çizimleri — prototipteki SVG'lerin birebir Dart karşılığı.
@@ -23,10 +25,19 @@ class KarakterPainter extends CustomPainter {
     this.pulSayisi = 0,
     this.parlak = false,
     this.gozKapali = false,
+    this.agizAcik = false,
+    this.bakis = Offset.zero,
   });
 
   final VarlikTuru tur;
   final Ruh ruh;
+
+  /// Beslenirken çiğneme: ağız yuvarlak açılır (ruh hâlinden bağımsız).
+  final bool agizAcik;
+
+  /// Bakış yönü (−1…1): göz bebekleri göz içinde bu yöne kayar. Boşta etrafa
+  /// bakma ve beslenirken düşen paraya bakma için.
+  final Offset bakis;
 
   /// Tortu kabuğundaki altın pullar (0–3): beslendikçe artar.
   final int pulSayisi;
@@ -120,9 +131,12 @@ class KarakterPainter extends CustomPainter {
       cv.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), _cizgi(1.5));
       return;
     }
-    cv.drawCircle(Offset(cx + 1, cy + 1), irisR, _dolgu(iris));
-    if (iris != _murekkep) cv.drawCircle(Offset(cx + 1, cy + 1), irisR * .55, _dolgu(_murekkep));
-    cv.drawCircle(Offset(cx + 3.5, cy - 2.5), 1.8, _dolgu(Colors.white));
+    // Bebek göz içinde kalır: kayma payı (r − irisR) ile sınırlı.
+    final pay = math.max(0.0, r - irisR - .8);
+    final b = Offset(cx + 1 + bakis.dx * pay, cy + 1 + bakis.dy * pay);
+    cv.drawCircle(b, irisR, _dolgu(iris));
+    if (iris != _murekkep) cv.drawCircle(b, irisR * .55, _dolgu(_murekkep));
+    cv.drawCircle(b + const Offset(2.5, -3.5), 1.8, _dolgu(Colors.white));
   }
 
   void _yanak(Canvas cv, double cx, double cy) {
@@ -132,6 +146,13 @@ class KarakterPainter extends CustomPainter {
 
   /// Ağız: ruh hâline göre tek yol. Konum karaktere göre (x,y) kaydırılır.
   void _agiz(Canvas cv, double dx, double dy) {
+    if (agizAcik) {
+      final o = Rect.fromCenter(center: Offset(55 + dx, 45 + dy), width: 13, height: 10);
+      cv.drawOval(o, _dolgu(_murekkep));
+      cv.drawOval(Rect.fromCenter(center: Offset(55 + dx, 48 + dy), width: 7, height: 3.5),
+          _dolgu(const Color(0xFFF28C8C)));
+      return;
+    }
     final d = switch (ruh) {
       Ruh.mutlu => 'M46 42q9 9 18 0',
       Ruh.duz => 'M48 45h14',
@@ -282,11 +303,56 @@ class KarakterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(KarakterPainter o) =>
-      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali;
+      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis;
 }
 
-/// Canlı karakter: yavaş salınım (bob), ara sıra göz kırpma, `hop` ile zıplama.
-/// Hareketi azalt açıksa salınım ve kırpma durur; yalnız durum değişir.
+/// Ağız merkezi (110×110 alanında) — besleme paraları buraya düşer.
+Offset _agizMerkezi(VarlikTuru t) => switch (t) {
+      VarlikTuru.altin => const Offset(55, 45),
+      VarlikTuru.dolar => const Offset(55, 81),
+      VarlikTuru.euro => const Offset(55, 83),
+      VarlikTuru.nakit => const Offset(46, 79),
+    };
+
+enum _Bosta { kipir, ziplama, gerinme, keyif, etrafaBak, dans }
+
+/// Çizgi film zıplaması (0–1 → dikey kayma, en/boy ölçeği).
+///
+/// Neden düz sinüs değil: sempati "hazırlık + abartı + yerleşme"den gelir.
+/// Önce çömelir (basılır, genişler), havada uzar, yere basık iner ve küçük
+/// bir yaylanmayla oturur. Aynı eğri dokunma, sevinç ve boşta zıplamasında.
+({double y, double sx, double sy}) ziplamaEgrisi(double t, double yukseklik) {
+  const hazirlik = .18, inis = .74;
+  if (t <= 0 || t >= 1) return (y: 0, sx: 1, sy: 1);
+  if (t < hazirlik) {
+    final c = math.sin(t / hazirlik * math.pi); // çömel, kalkışta bırak
+    return (y: 0, sx: 1 + .1 * c, sy: 1 - .13 * c);
+  }
+  if (t < inis) {
+    final u = (t - hazirlik) / (inis - hazirlik);
+    final uzama = .12 * math.sin(u * math.pi) * (1 - u) * 1.6; // kalkışta uzar, tepede toparlanır
+    return (y: -yukseklik * 4 * u * (1 - u), sx: 1 - uzama * .7, sy: 1 + uzama);
+  }
+  // Yere basma + sönen yaylanma (iki salınım).
+  final v = (t - inis) / (1 - inis);
+  final yay = math.sin(v * math.pi * 2.5) * math.pow(1 - v, 2);
+  return (y: 0, sx: 1 + .12 * yay, sy: 1 - .14 * yay);
+}
+
+/// Canlı karakter.
+///
+/// Katmanlar (hareketi azalt açıksa hepsi durur; sesler yine çalar):
+/// - Salınım ve ara sıra göz kırpma (her zaman).
+/// - Boşta (`bosta`): 6–13 sn'de bir kendiliğinden küçük bir hareket:
+///   kıpırdanma, minik zıplama, gerinip esneme, keyifle sallanma, etrafa
+///   bakma ya da iki adımlık dans. Yalnız
+///   kampta açık; sayfalarda ve listelerde kapalı ki ekran kalabalıklaşmasın.
+/// - Tepki (`tepkiTetik`): dokununca zıplar, kıpırdar, kendi sesini çıkarır.
+/// - Yeme (`yemeTetik`): besleme sonrası üç para yukarıdan ağzına düşer; her
+///   birinde ağız açılır, çiğner, "tın" sesi ve hafif titreşim gelir. Sonunda
+///   sevinç zıplaması ve kısa arpej. ~1,4 sn: her para tek tek sayılacak kadar
+///   uzun (tatmin bu sayımdan gelir), tekrar beslemek isteyecek kadar kısa.
+///   Konfeti yok (ürün kararı): ödül karakterin kendi sevinci.
 class Karakter extends StatefulWidget {
   const Karakter({
     super.key,
@@ -296,7 +362,10 @@ class Karakter extends StatefulWidget {
     this.pulSayisi = 0,
     this.parlak = false,
     this.gecikme = Duration.zero,
-    this.hopTetik = 0,
+    this.tepkiTetik = 0,
+    this.yemeTetik = 0,
+    this.bosta = false,
+    this.ses,
   });
 
   final VarlikTuru tur;
@@ -306,8 +375,17 @@ class Karakter extends StatefulWidget {
   final bool parlak;
   final Duration gecikme;
 
-  /// Her değişimde bir zıplama oynatır (üst widget sayaç artırır).
-  final int hopTetik;
+  /// Her artışta dokunma tepkisi oynar (üst widget sayaç artırır).
+  final int tepkiTetik;
+
+  /// Her artışta besleme (yeme) sahnesi oynar.
+  final int yemeTetik;
+
+  /// Kendiliğinden ara sıra hareket etsin mi (kamp).
+  final bool bosta;
+
+  /// Ses çalıcı; null ise sessiz (sayfalar, testler).
+  final void Function(Ses)? ses;
 
   @override
   State<Karakter> createState() => _KarakterState();
@@ -317,27 +395,49 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   late final AnimationController _bob =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 3400));
   late final AnimationController _hop =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 720));
+  late final AnimationController _kipir =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
+  late final AnimationController _bostaC =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
+  late final AnimationController _yeme =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..addListener(_yemeSesleri);
   bool _kapali = false;
+  _Bosta _bostaTur = _Bosta.kipir;
   final _rnd = math.Random();
   // Zamanlayıcılar alanda tutulur ve dispose'da iptal edilir; aksi hâlde
   // widget ağacı kalktıktan sonra sarkan timer kalır (testler yakalar).
   Timer? _bobGecikme;
   Timer? _kirpma;
+  Timer? _bostaZaman;
+  Timer? _sessizSevinc;
+
+  // Yeme zaman çizelgesi (0–1): paraların düşmeye başladığı anlar, düşüş
+  // süresi, "yum" ve sevinç zıplamasının başı.
+  static const _paraBasla = [0.0, 0.16, 0.32];
+  static const _dusus = 0.24;
+  static const _yumAni = 0.6;
+  static const _sevincAni = 0.66;
+  int _calinanPara = 0;
+  bool _yumCalindi = false;
+  bool _sevincCalindi = false;
+
+  bool get _hareketsiz => MediaQuery.of(context).disableAnimations;
 
   @override
   void initState() {
     super.initState();
     _bobGecikme = Timer(widget.gecikme, () {
-      if (mounted && !MediaQuery.of(context).disableAnimations) _bob.repeat(reverse: true);
+      if (mounted && !_hareketsiz) _bob.repeat(reverse: true);
     });
     _kirpmaPlanla();
+    if (widget.bosta) _bostaPlanla();
   }
 
   void _kirpmaPlanla() {
     _kirpma = Timer(Duration(milliseconds: 2500 + _rnd.nextInt(3500)), () {
       if (!mounted) return;
-      if (!MediaQuery.of(context).disableAnimations) {
+      if (!_hareketsiz) {
         setState(() => _kapali = true);
         _kirpma = Timer(const Duration(milliseconds: 140), () {
           if (!mounted) return;
@@ -350,11 +450,66 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     });
   }
 
+  void _bostaPlanla() {
+    _bostaZaman?.cancel();
+    _bostaZaman = Timer(Duration(milliseconds: 6000 + _rnd.nextInt(7000)), () {
+      if (!mounted || !widget.bosta) return;
+      final mesgul = _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating;
+      if (!_hareketsiz && !mesgul) {
+        _bostaTur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
+        _bostaC.forward(from: 0);
+      }
+      _bostaPlanla();
+    });
+  }
+
+  void _yemeSesleri() {
+    final t = _yeme.value;
+    while (_calinanPara < _paraBasla.length && t >= _paraBasla[_calinanPara] + _dusus) {
+      _calinanPara++;
+      widget.ses?.call(Ses.para);
+      HapticFeedback.lightImpact();
+    }
+    if (!_yumCalindi && t >= _yumAni) {
+      _yumCalindi = true;
+      widget.ses?.call(Ses.yum);
+    }
+    if (!_sevincCalindi && t >= _sevincAni) {
+      _sevincCalindi = true;
+      widget.ses?.call(Ses.yasasin);
+      HapticFeedback.mediumImpact();
+    }
+  }
+
   @override
   void didUpdateWidget(Karakter o) {
     super.didUpdateWidget(o);
-    if (o.hopTetik != widget.hopTetik && !MediaQuery.of(context).disableAnimations) {
-      _hop.forward(from: 0);
+    if (o.tepkiTetik != widget.tepkiTetik) {
+      widget.ses?.call(widget.tur.ses);
+      if (!_hareketsiz) {
+        _bostaC.stop();
+        _hop.forward(from: 0);
+        _kipir.forward(from: 0);
+      }
+    }
+    if (o.yemeTetik != widget.yemeTetik) {
+      if (_hareketsiz) {
+        // Hareket yok, sevinç sesle gelir.
+        widget.ses?.call(Ses.para);
+        _sessizSevinc?.cancel();
+        _sessizSevinc = Timer(const Duration(milliseconds: 280), () {
+          if (mounted) widget.ses?.call(Ses.yasasin);
+        });
+      } else {
+        _calinanPara = 0;
+        _yumCalindi = false;
+        _sevincCalindi = false;
+        _bostaC.stop();
+        _yeme.forward(from: 0);
+      }
+    }
+    if (o.bosta != widget.bosta) {
+      widget.bosta ? _bostaPlanla() : _bostaZaman?.cancel();
     }
   }
 
@@ -362,37 +517,197 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   void dispose() {
     _bobGecikme?.cancel();
     _kirpma?.cancel();
+    _bostaZaman?.cancel();
+    _sessizSevinc?.cancel();
     _bob.dispose();
     _hop.dispose();
+    _kipir.dispose();
+    _bostaC.dispose();
+    _yeme.dispose();
     super.dispose();
+  }
+
+  /// i. paranın düşüş ilerlemesi (0–1); düşmüyorsa null.
+  double? _paraIlerleme(int i) {
+    if (!_yeme.isAnimating) return null;
+    final p = (_yeme.value - _paraBasla[i]) / _dusus;
+    return (p > 0 && p < 1) ? p : null;
+  }
+
+  /// Çiğneme nabzı (0–1): bir para ağza vardıktan sonraki kısa sıkışma.
+  double _cigneme() {
+    if (!_yeme.isAnimating) return 0;
+    var c = 0.0;
+    for (final b in _paraBasla) {
+      final x = (_yeme.value - (b + _dusus)) / 0.07;
+      if (x > 0 && x < 1) c = math.max(c, math.sin(x * math.pi));
+    }
+    return c;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_bob, _hop]),
-      builder: (context, child) {
-        final bobY = -4 * Curves.easeInOut.transform(_bob.value);
-        final h = _hop.value;
-        // Zıplama: yukarı −14, hafif sıkış/genişle (squash & stretch).
-        final hopY = -14 * math.sin(h * math.pi);
-        final sx = 1 + .08 * math.sin(h * math.pi * 2);
-        final sy = 1 - .08 * math.sin(h * math.pi * 2);
-        return Transform.translate(
-          offset: Offset(0, bobY + hopY),
-          child: Transform.scale(scaleX: sx, scaleY: sy, alignment: Alignment.bottomCenter, child: child),
+      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme]),
+      builder: (context, _) {
+        // Salınım = nefes: hafif yükselme + göğüs şişmesi.
+        final nefes = Curves.easeInOut.transform(_bob.value);
+        var y = -4 * nefes;
+        var sx = 1.0 - .012 * nefes, sy = 1.0 + .02 * nefes, aci = 0.0;
+        var gozKapali = _kapali;
+        var bakis = Offset.zero;
+
+        void zipla(double t, double yukseklik) {
+          final z = ziplamaEgrisi(t, yukseklik);
+          y += z.y;
+          sx *= z.sx;
+          sy *= z.sy;
+        }
+
+        // Dokunma: çömel–zıpla–yaylan, üstüne sönen kıpırtı.
+        if (_hop.isAnimating) zipla(_hop.value, 16);
+        final k = _kipir.value;
+        aci += .09 * math.sin(k * math.pi * 4) * (1 - k);
+        if (_kipir.isAnimating && k > .1 && k < .7) gozKapali = true;
+
+        // Boşta.
+        if (_bostaC.isAnimating) {
+          final b = _bostaC.value;
+          switch (_bostaTur) {
+            case _Bosta.kipir:
+              aci += .06 * math.sin(b * math.pi * 4) * (1 - b);
+            case _Bosta.ziplama:
+              zipla(b, 9);
+            case _Bosta.gerinme:
+              // Yavaş uzan, tepede bir an dur, bırak (esneme gibi).
+              final g = math.sin(math.pi * Curves.easeInOut.transform(b));
+              sy += .09 * g;
+              sx -= .05 * g;
+              if (b > .3 && b < .75) gozKapali = true;
+            case _Bosta.keyif:
+              // Gözler kapalı, yana hafif yaslanıp mırlanır gibi sallanma.
+              if (b > .1 && b < .9) gozKapali = true;
+              aci += .07 * math.sin(b * math.pi) * math.sin(b * math.pi * 3);
+            case _Bosta.etrafaBak:
+              // Önce sola, sonra sağa bakar; baş bakışla aynı yana eğilir.
+              final d = b < .5 ? -math.sin(b * 2 * math.pi) : math.sin((b - .5) * 2 * math.pi);
+              bakis = Offset(d, -.2 * d.abs());
+              aci += .05 * d;
+            case _Bosta.dans:
+              // İki küçük sekme, her birinde başka yana eğilerek.
+              final yarim = b < .5 ? b * 2 : (b - .5) * 2;
+              zipla(yarim, 6);
+              aci += (b < .5 ? -.08 : .08) * math.sin(yarim * math.pi);
+          }
+        }
+
+        // Yeme: çiğneme sıkışması, ağız; sonda sevinç zıplaması.
+        var agizAcik = false;
+        if (_yeme.isAnimating) {
+          final c = _cigneme();
+          sx += .07 * c;
+          sy -= .07 * c;
+          for (var i = 0; i < _paraBasla.length; i++) {
+            final p = _paraIlerleme(i);
+            if (p != null && p > .45) agizAcik = true;
+            // Gözler düşen paraya kilitlenir: önce yukarı, para indikçe aşağı.
+            if (p != null) bakis = Offset(0, -1 + 1.6 * p * p);
+          }
+          final u = ((_yeme.value - _sevincAni) / (1 - _sevincAni)).clamp(0.0, 1.0);
+          if (u > 0) {
+            zipla(u, 22);
+            if (u > .1 && u < .9) gozKapali = true;
+          }
+        }
+
+        final karakter = Transform.translate(
+          offset: Offset(0, y),
+          child: Transform.rotate(
+            angle: aci,
+            alignment: Alignment.bottomCenter,
+            child: Transform.scale(
+              scaleX: sx,
+              scaleY: sy,
+              alignment: Alignment.bottomCenter,
+              child: CustomPaint(
+                size: Size.square(widget.boyut),
+                painter: KarakterPainter(
+                  tur: widget.tur,
+                  ruh: widget.ruh,
+                  pulSayisi: widget.pulSayisi,
+                  parlak: widget.parlak,
+                  gozKapali: gozKapali,
+                  agizAcik: agizAcik,
+                  bakis: bakis,
+                ),
+              ),
+            ),
+          ),
         );
+        if (!_yeme.isAnimating) return karakter;
+        return Stack(clipBehavior: Clip.none, children: [
+          karakter,
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                painter: _ParaYagmuru(
+                  agiz: _agizMerkezi(widget.tur),
+                  ilerlemeler: [for (var i = 0; i < _paraBasla.length; i++) _paraIlerleme(i)],
+                ),
+              ),
+            ),
+          ),
+        ]);
       },
-      child: CustomPaint(
-        size: Size.square(widget.boyut),
-        painter: KarakterPainter(
-          tur: widget.tur,
-          ruh: widget.ruh,
-          pulSayisi: widget.pulSayisi,
-          parlak: widget.parlak,
-          gozKapali: _kapali,
-        ),
-      ),
     );
   }
+}
+
+/// Besleme paraları: yukarıdan yerçekimiyle (p²) ağza düşer, dönerek gelir,
+/// son %20'de ağza girerken küçülür. Logodaki halkalı altın paranın aynısı.
+class _ParaYagmuru extends CustomPainter {
+  _ParaYagmuru({required this.agiz, required this.ilerlemeler});
+  final Offset agiz;
+  final List<double?> ilerlemeler;
+
+  static const _kaymalar = [-6.0, 7.0, 0.0];
+
+  @override
+  void paint(Canvas cv, Size size) {
+    final s = size.shortestSide / 110;
+    cv.save();
+    cv.scale(s);
+    for (var i = 0; i < ilerlemeler.length; i++) {
+      final p = ilerlemeler[i];
+      if (p == null) continue;
+      final bas = Offset(agiz.dx + _kaymalar[i], -34);
+      final y = bas.dy + (agiz.dy - bas.dy) * p * p;
+      final x = bas.dx + (agiz.dx - bas.dx) * p;
+      final olcek = 1 - .6 * ((p - .8) / .2).clamp(0.0, 1.0);
+      cv.save();
+      cv.translate(x, y);
+      // Dönüş: yatay basıklık (para kendi ekseninde döner gibi).
+      cv.scale(olcek * (.55 + .45 * math.cos(p * math.pi * 3).abs()), olcek);
+      cv.drawCircle(Offset.zero, 8.5, Paint()..color = const Color(0xFFF7D774));
+      cv.drawCircle(
+          Offset.zero,
+          8.5,
+          Paint()
+            ..color = DunyaRenkleri.murekkep
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2);
+      cv.drawCircle(
+          Offset.zero,
+          5,
+          Paint()
+            ..color = const Color(0xFFE0A800)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.6);
+      cv.restore();
+    }
+    cv.restore();
+  }
+
+  @override
+  bool shouldRepaint(_ParaYagmuru o) => true;
 }

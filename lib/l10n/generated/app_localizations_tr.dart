@@ -316,6 +316,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ayarlarPara => 'Para birimi';
 
   @override
+  String get ayarlarSes => 'Sesler';
+
+  @override
+  String get sesAcik => 'Açık';
+
+  @override
+  String get sesKapali => 'Kapalı';
+
+  @override
   String get ayarlarDil => 'Dil';
 
   @override

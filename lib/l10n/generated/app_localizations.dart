@@ -620,6 +620,24 @@ abstract class AppLocalizations {
   /// **'Para birimi'**
   String get ayarlarPara;
 
+  /// No description provided for @ayarlarSes.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sesler'**
+  String get ayarlarSes;
+
+  /// No description provided for @sesAcik.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık'**
+  String get sesAcik;
+
+  /// No description provided for @sesKapali.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kapalı'**
+  String get sesKapali;
+
   /// No description provided for @ayarlarDil.
   ///
   /// In tr, this message translates to:

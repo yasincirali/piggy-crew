@@ -28,6 +28,7 @@ class AyarlarEkrani extends ConsumerWidget {
     final cocuk = ref.watch(cocukProvider)!;
     final n = ref.read(cocukProvider.notifier);
     final surum = ref.watch(_surumProvider).valueOrNull;
+    final sesAcik = ref.watch(sesAcikProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
@@ -56,6 +57,21 @@ class AyarlarEkrani extends ConsumerWidget {
               metin: y == YasModu.kucuk ? l.yasKucuk : l.yasBuyuk,
               secili: cocuk.yas == y,
               onTap: () => n.guncelle((c) => c.copyWith(yas: y)),
+            ),
+        ]),
+        const SizedBox(height: Bosluk.xl),
+        // Sesler: sessiz anahtarı zaten susturur (ambient oturum); bu seçim
+        // telefon sesi açıkken de kapatmak isteyen için.
+        BolumBasligi(l.ayarlarSes),
+        const SizedBox(height: Bosluk.s),
+        Wrap(spacing: Bosluk.s, children: [
+          for (final v in const [true, false])
+            SecimCipi(
+              metin: v ? l.sesAcik : l.sesKapali,
+              secili: sesAcik == v,
+              onIkon: Icon(v ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                  size: 18, color: sesAcik == v ? r.accInk : r.fg),
+              onTap: () => ref.read(sesAcikProvider.notifier).ayarla(v),
             ),
         ]),
         const SizedBox(height: Bosluk.xl),
