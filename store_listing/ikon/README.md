@@ -3,12 +3,18 @@
 yasin 2026-10-15'te beş turluk seçimden sonra **Şeker Kavanozu**'nu seçti
 (seçenekler ve gerekçeler: proje artifact'i "Harçlıklarım Logo").
 
+Logo revizyonu (yasin 2026-10-15, "başarılı bir logo dizaynı olsun"):
+illüstrasyon dili bırakıldı, işaret logo diline indirildi. Kontur, yıldız ve
+zemin gölgesi yok; düz renk, dört şekil: kavanoz, kapak, yarığa giren para,
+içte üç para. Yarığa yarısı girmiş para "kumbara"yı tek başına anlatır;
+içteki paraların halkası onları şekerden ayırır. Topuz kaldırıldı (iksir
+şişesi gibi okunuyordu). 29 px'te kavanoz + altın + pembe kapak kalır.
+
 Neden bu biçim:
 - Yüz yok (yasin: "yüz olmak zorunda mı"); sevimlilik yuvarlak silüetten,
-  pembe topuzdan ve çikolata para gibi altınlardan gelir.
+  pembe kapaktan ve parlak altınlardan gelir.
 - Kavanoz "kumbara" olarak ilk bakışta okunur; kapaktaki yarık + düşen para
   biriktirmeyi anlatır. Domuz figürü bilerek yok (global pazar).
-- Mürekkep kontur (#2A1B14) Kumbara Takımı karakterleriyle aynı çizgi dili.
 - Lila zemin finans uygulamaları arasında yok, App Store ızgarasında ayrışır.
 
 Dosyalar (tek kaynak SVG, PNG'ler bunlardan üretilir):
