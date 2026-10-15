@@ -157,7 +157,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String farkUzgun(String karakter, String fark) {
-    return '$karakter biraz üzgün: $fark';
+    return '$karakter bulutların altında: $fark';
   }
 
   @override
@@ -236,7 +236,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String detayNedenUzgun(String varlik, String fark) {
-    return 'Aldığın günden beri $varlik biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: $fark. Sabır işin bir parçası.';
+    return 'Aldığın günden beri $varlik biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: $fark. Bulutlar gelir, geçer.';
   }
 
   @override
@@ -314,6 +314,15 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ayarlarPara => 'Para birimi';
+
+  @override
+  String get ayarlarSes => 'Sesler';
+
+  @override
+  String get sesAcik => 'Açık';
+
+  @override
+  String get sesKapali => 'Kapalı';
 
   @override
   String get ayarlarDil => 'Dil';
@@ -422,13 +431,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ckAtes1000Ad => 'Büyük ateş';
 
   @override
-  String get ckAtes1000Aciklama => 'Kamp ateşin ilk kez 1.000\'i geçti.';
+  String get ckAtes1000Aciklama => 'Takımı dört ayrı haftada besledin.';
 
   @override
   String get ckAtes5000Ad => 'Şenlik ateşi';
 
   @override
-  String get ckAtes5000Aciklama => 'Kamp ateşin ilk kez 5.000\'i geçti.';
+  String get ckAtes5000Aciklama => 'Takımı on iki ayrı haftada besledin.';
 
   @override
   String get ckDers5Ad => 'Meraklı';
@@ -453,5 +462,5 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ckTortuparlakAd => 'Parlayan Tortu';
 
   @override
-  String get ckTortuparlakAciklama => 'Tortu\'nun değeri 1.500\'ü geçti.';
+  String get ckTortuparlakAciklama => 'Tortu\'yu beş ayrı haftada besledin.';
 }

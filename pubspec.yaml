@@ -22,6 +22,7 @@ dependencies:
   # çizilir (flutter_svg pattern/filter desteklemediği için SVG dosyası yok).
   path_drawing: ^1.0.1
   crypto: ^3.0.3
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/dersler.json
+    # Ses efektleri: tool/sesler_uret.py ile sentezlenir (lisanssız).
+    - assets/sesler/
     - assets/fonts/OFL-Baloo2.txt
     - assets/fonts/OFL-Nunito.txt
   # Yazı tipleri pakete gömülü (Kids kategorisi: çalışma zamanında ağdan font

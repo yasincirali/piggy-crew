@@ -48,7 +48,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
       final f = d.farkTl;
       if (f == null || d.bos) return l.huy(tur);
       if (d.ruh == Ruh.mutlu) return l.detayNedenMutlu(l.varlik(tur), fmtFark(f, cocuk.para));
-      if (d.ruh == Ruh.uzgun) return l.detayNedenUzgun(l.varlik(tur), fmtFark(f, cocuk.para));
+      if (d.ruh == Ruh.bulutlu) return l.detayNedenUzgun(l.varlik(tur), fmtFark(f, cocuk.para));
       return l.huy(tur);
     }
 
@@ -103,7 +103,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                             etiket: l.detayBugun,
                             oran: degerOrani,
                             deger: fmtPara(d.degerTl!, cocuk.para),
-                            renk: d.ruh == Ruh.uzgun ? r.loss : r.acc,
+                            renk: r.acc,
                           ),
                           if (d.farkYuzde != null && cocuk.yas.anahtar == 'buyuk') ...[
                             const SizedBox(height: Bosluk.m),
@@ -111,7 +111,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 '${fmtFark(d.farkTl!, cocuk.para)} · ${fmtYuzde(d.farkYuzde!, cocuk.para)}',
-                                style: context.t.titleMedium?.copyWith(color: d.ruh == Ruh.uzgun ? r.loss : r.acc),
+                                style: context.t.titleMedium?.copyWith(color: r.acc),
                               ),
                             ),
                           ],

@@ -371,7 +371,7 @@ abstract class AppLocalizations {
   /// No description provided for @farkUzgun.
   ///
   /// In tr, this message translates to:
-  /// **'{karakter} biraz üzgün: {fark}'**
+  /// **'{karakter} bulutların altında: {fark}'**
   String farkUzgun(String karakter, String fark);
 
   /// No description provided for @farkDuz.
@@ -479,7 +479,7 @@ abstract class AppLocalizations {
   /// No description provided for @detayNedenUzgun.
   ///
   /// In tr, this message translates to:
-  /// **'Aldığın günden beri {varlik} biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: {fark}. Sabır işin bir parçası.'**
+  /// **'Aldığın günden beri {varlik} biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: {fark}. Bulutlar gelir, geçer.'**
   String detayNedenUzgun(String varlik, String fark);
 
   /// No description provided for @detayNedenNakit.
@@ -619,6 +619,24 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Para birimi'**
   String get ayarlarPara;
+
+  /// No description provided for @ayarlarSes.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sesler'**
+  String get ayarlarSes;
+
+  /// No description provided for @sesAcik.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık'**
+  String get sesAcik;
+
+  /// No description provided for @sesKapali.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kapalı'**
+  String get sesKapali;
 
   /// No description provided for @ayarlarDil.
   ///
@@ -821,7 +839,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckAtes1000Aciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Kamp ateşin ilk kez 1.000\'i geçti.'**
+  /// **'Takımı dört ayrı haftada besledin.'**
   String get ckAtes1000Aciklama;
 
   /// No description provided for @ckAtes5000Ad.
@@ -833,7 +851,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckAtes5000Aciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Kamp ateşin ilk kez 5.000\'i geçti.'**
+  /// **'Takımı on iki ayrı haftada besledin.'**
   String get ckAtes5000Aciklama;
 
   /// No description provided for @ckDers5Ad.
@@ -881,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckTortuparlakAciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Tortu\'nun değeri 1.500\'ü geçti.'**
+  /// **'Tortu\'yu beş ayrı haftada besledin.'**
   String get ckTortuparlakAciklama;
 }
 

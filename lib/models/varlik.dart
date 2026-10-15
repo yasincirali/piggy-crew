@@ -62,8 +62,16 @@ enum ParaBirimi {
       };
 }
 
-/// Yüz ifadesi — anlam yalnız renkle değil yüzle de verilir (renk körlüğü, HIG).
-enum Ruh { mutlu, duz, uzgun }
+/// Karakterin hâli — anlam yalnız renkle değil yüz ve sahneyle de verilir
+/// (renk körlüğü, HIG).
+///
+/// Neden "üzgün" yok (yasin kararı 2026-10-15, araştırma
+/// `harcliklarim/arastirma/02` ve `03`): değer düşüşü çocuğun kontrol
+/// edemediği piyasadan gelir. Üzgün yüz 7–10 yaşta güçlü kayıptan kaçınmayı
+/// tetikler; çocuk kendini suçlar ya da "boz" der. Yerine `bulutlu`: yüz
+/// sakin, başının üstünde bulut; dokununca güneş açar (teselli çocuktan
+/// gelir, suçluluk değil).
+enum Ruh { mutlu, duz, bulutlu }
 
 /// Bir besleme (yatırma). Fiyat o gün alınan birim fiyattır; sonradan değişmez.
 /// Çocuk tutarı EV para biriminde yazar, miktar = tutar / birimFiyat.
@@ -126,13 +134,18 @@ class KarakterDurumu {
   double? get farkYuzde =>
       (farkTl == null || maliyetTl <= 0) ? null : farkTl! / maliyetTl * 100;
 
-  /// Yüz: %±0,5 bandı "düz" sayılır ki küçük oynamalar çocuğu üzmesin.
+  /// Hâl: +%0,5 üstü gülümser; bulut ancak −%5'in altında gelir ki günlük
+  /// kur oynaması karakteri bulutlandırmasın (eskiden ±%0,5'te üzülüyordu).
+  /// Araştırmanın önerdiği "7 günlük pencere" fiyat geçmişi ister; v1 yalnız
+  /// bugünkü fiyatı tutuyor, geçmiş gelince pencere eklenir.
   /// Nakit her zaman düz bakar: TL'nin kârı/zararı yoktur, enflasyon dersi ayrı.
+  static const mutluEsik = .5, bulutEsik = -5.0;
+
   Ruh get ruh {
     final y = farkYuzde;
     if (y == null || bos || tur.nakitMi) return Ruh.duz;
-    if (y > .5) return Ruh.mutlu;
-    if (y < -.5) return Ruh.uzgun;
+    if (y > mutluEsik) return Ruh.mutlu;
+    if (y < bulutEsik) return Ruh.bulutlu;
     return Ruh.duz;
   }
 }

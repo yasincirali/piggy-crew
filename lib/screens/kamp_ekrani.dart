@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../l10n/l10n.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
+import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
 import '../widgets/kamp_atesi.dart';
@@ -22,12 +25,18 @@ class KampEkrani extends ConsumerStatefulWidget {
 }
 
 class _KampState extends ConsumerState<KampEkrani> {
-  final _hop = <VarlikTuru, int>{};
+  final _yeme = <VarlikTuru, int>{};
+  final _tepki = <VarlikTuru, int>{};
+  bool _aciliyor = false;
 
   Future<void> _besle(VarlikTuru t) async {
     final sonuc = await besleGoster(context, ref, t);
     if (sonuc == null || !mounted) return;
-    setState(() => _hop[t] = (_hop[t] ?? 0) + 1);
+    setState(() => _yeme[t] = (_yeme[t] ?? 0) + 1);
+    if (sonuc.yeniCikartma != null) {
+      // Çıkartma sesi yeme sahnesinin arpejinden sonra gelsin, üst üste binmesin.
+      Future.delayed(const Duration(milliseconds: 1500), () => ref.read(sesProvider).cal(Ses.cikartma));
+    }
     final l = context.l10n;
     final mesaj = sonuc.yeniCikartma == null
         ? l.besleDoydu(l.karakter(t))
@@ -57,14 +66,30 @@ class _KampState extends ConsumerState<KampEkrani> {
       final cik = ref.watch(cikartmalarProvider);
       return Basilabilir(
         semantik: '${l.karakter(t)}, ${l.varlik(t)}',
-        onTap: () => Navigator.of(context).push(VarlikDetayEkrani.rota(t)),
+        // Dokununca önce karakter tepki verir (ses + zıplama), detay ardından
+        // açılır: tepki görünsün diye kısa bekleme. Çift dokunma iki sayfa
+        // açmasın diye bekleme sırasında yeni dokunma yalnız tepki verir.
+        onTap: () {
+          setState(() => _tepki[t] = (_tepki[t] ?? 0) + 1);
+          if (_aciliyor) return;
+          _aciliyor = true;
+          final nav = Navigator.of(context);
+          Future.delayed(Devinim.sure(context, const Duration(milliseconds: 420)), () async {
+            if (!mounted) return;
+            await nav.push(VarlikDetayEkrani.rota(t));
+            _aciliyor = false;
+          });
+        },
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Karakter(
             tur: t,
             ruh: d.ruh,
             boyut: boyut,
             gecikme: gecikme,
-            hopTetik: _hop[t] ?? 0,
+            yemeTetik: _yeme[t] ?? 0,
+            tepkiTetik: _tepki[t] ?? 0,
+            bosta: true,
+            ses: ref.read(sesProvider).cal,
             pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
           ),
@@ -73,7 +98,7 @@ class _KampState extends ConsumerState<KampEkrani> {
             Text(
               fmtFark(d.farkTl!, cocuk.para),
               style: context.t.labelMedium?.copyWith(
-                color: d.ruh == Ruh.uzgun ? r.loss : (d.ruh == Ruh.mutlu ? r.gain : r.sub),
+                color: d.ruh == Ruh.mutlu ? r.gain : r.sub,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -101,7 +126,7 @@ class _KampState extends ConsumerState<KampEkrani> {
             Text(
               '${l.fark}: ${fmtFark(toplam.farkTl!, cocuk.para)}',
               style: context.t.titleMedium?.copyWith(
-                color: toplam.farkTl! < 0 ? r.loss : (toplam.farkTl! > 0 ? r.gain : r.sub),
+                color: toplam.farkTl! > 0 ? r.gain : r.sub,
               ),
             ),
           const SizedBox(height: Bosluk.l),
@@ -116,7 +141,13 @@ class _KampState extends ConsumerState<KampEkrani> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
-                  _sigdir(140, KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140)),
+                  _sigdir(140, KampAtesi(
+                        // Ateş piyasa düşüşünde küçülmez: en az verilen kadar
+                        // yanar (çocuğun emeği sönmez), kazançla büyür.
+                        toplamTl: math.max(toplam.degerTl ?? 0, toplam.maliyetTl),
+                        boyut: 140,
+                        parlamaTetik: _yeme.values.fold(0, (a, b) => a + b),
+                      )),
                   _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) : const SizedBox(width: 92)),
                 ],
               ),

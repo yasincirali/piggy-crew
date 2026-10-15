@@ -157,7 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String farkUzgun(String karakter, String fark) {
-    return '$karakter is a bit sad: $fark';
+    return '$karakter is under a cloud: $fark';
   }
 
   @override
@@ -236,7 +236,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String detayNedenUzgun(String varlik, String fark) {
-    return 'Since you bought it, $varlik got a little cheaper. Your amount is the same, today\'s value is a bit lower: $fark. Patience is part of the game.';
+    return 'Since you bought it, $varlik got a little cheaper. That\'s not your fault; prices change like the weather. Your amount is still the same, today\'s value is a bit lower: $fark. Clouds come and go.';
   }
 
   @override
@@ -314,6 +314,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ayarlarPara => 'Currency';
+
+  @override
+  String get ayarlarSes => 'Sounds';
+
+  @override
+  String get sesAcik => 'On';
+
+  @override
+  String get sesKapali => 'Off';
 
   @override
   String get ayarlarDil => 'Language';
@@ -422,15 +431,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ckAtes1000Ad => 'Big fire';
 
   @override
-  String get ckAtes1000Aciklama =>
-      'Your campfire passed 1,000 for the first time.';
+  String get ckAtes1000Aciklama => 'You fed the team in four different weeks.';
 
   @override
   String get ckAtes5000Ad => 'Bonfire';
 
   @override
   String get ckAtes5000Aciklama =>
-      'Your campfire passed 5,000 for the first time.';
+      'You fed the team in twelve different weeks.';
 
   @override
   String get ckDers5Ad => 'Curious';
@@ -455,5 +463,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ckTortuparlakAd => 'Shining Tortu';
 
   @override
-  String get ckTortuparlakAciklama => 'Tortu\'s value passed 1,500.';
+  String get ckTortuparlakAciklama => 'You fed Tortu in five different weeks.';
 }

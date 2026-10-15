@@ -69,7 +69,7 @@
       }
     }
   },
-  "farkUzgun": "{karakter} biraz üzgün: {fark}",
+  "farkUzgun": "{karakter} bulutların altında: {fark}",
   "@farkUzgun": {
     "placeholders": {
       "karakter": {
@@ -183,7 +183,7 @@
       }
     }
   },
-  "detayNedenUzgun": "Aldığın günden beri {varlik} biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: {fark}. Sabır işin bir parçası.",
+  "detayNedenUzgun": "Aldığın günden beri {varlik} biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: {fark}. Bulutlar gelir, geçer.",
   "@detayNedenUzgun": {
     "placeholders": {
       "varlik": {
@@ -244,6 +244,9 @@
   "ayarlarDunya": "Kamp yeri",
   "ayarlarYas": "Yaş modu",
   "ayarlarPara": "Para birimi",
+  "ayarlarSes": "Sesler",
+  "sesAcik": "Açık",
+  "sesKapali": "Kapalı",
   "ayarlarDil": "Dil",
   "ayarlarVeli": "Anne baba köşesi",
   "ayarlarSurum": "Sürüm {s}",
@@ -297,9 +300,9 @@
   "ckTakimtamAd": "Takım tamam",
   "ckTakimtamAciklama": "Bütün karakterleri besledin.",
   "ckAtes1000Ad": "Büyük ateş",
-  "ckAtes1000Aciklama": "Kamp ateşin ilk kez 1.000'i geçti.",
+  "ckAtes1000Aciklama": "Takımı dört ayrı haftada besledin.",
   "ckAtes5000Ad": "Şenlik ateşi",
-  "ckAtes5000Aciklama": "Kamp ateşin ilk kez 5.000'i geçti.",
+  "ckAtes5000Aciklama": "Takımı on iki ayrı haftada besledin.",
   "ckDers5Ad": "Meraklı",
   "ckDers5Aciklama": "Beş dersi bitirdin.",
   "ckDers10Ad": "Bilge",
@@ -307,5 +310,5 @@
   "ckSabir30Ad": "Sabırlı",
   "ckSabir30Aciklama": "İlk beslemenden 30 gün geçti ve hâlâ buradasın.",
   "ckTortuparlakAd": "Parlayan Tortu",
-  "ckTortuparlakAciklama": "Tortu'nun değeri 1.500'ü geçti."
+  "ckTortuparlakAciklama": "Tortu'yu beş ayrı haftada besledin."
 }
