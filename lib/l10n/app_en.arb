@@ -69,7 +69,7 @@
       }
     }
   },
-  "farkUzgun": "{karakter} is a bit sad: {fark}",
+  "farkUzgun": "{karakter} is under a cloud: {fark}",
   "@farkUzgun": {
     "placeholders": {
       "karakter": {
@@ -183,7 +183,7 @@
       }
     }
   },
-  "detayNedenUzgun": "Since you bought it, {varlik} got a little cheaper. Your amount is the same, today's value is a bit lower: {fark}. Patience is part of the game.",
+  "detayNedenUzgun": "Since you bought it, {varlik} got a little cheaper. That's not your fault; prices change like the weather. Your amount is still the same, today's value is a bit lower: {fark}. Clouds come and go.",
   "@detayNedenUzgun": {
     "placeholders": {
       "varlik": {

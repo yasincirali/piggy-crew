@@ -157,7 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String farkUzgun(String karakter, String fark) {
-    return '$karakter is a bit sad: $fark';
+    return '$karakter is under a cloud: $fark';
   }
 
   @override
@@ -236,7 +236,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String detayNedenUzgun(String varlik, String fark) {
-    return 'Since you bought it, $varlik got a little cheaper. Your amount is the same, today\'s value is a bit lower: $fark. Patience is part of the game.';
+    return 'Since you bought it, $varlik got a little cheaper. That\'s not your fault; prices change like the weather. Your amount is still the same, today\'s value is a bit lower: $fark. Clouds come and go.';
   }
 
   @override

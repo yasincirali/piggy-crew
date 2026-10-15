@@ -29,13 +29,16 @@ void main() {
   });
 
   group('karakter durumu', () {
-    test('yüz ifadesi ±0,5 bandı', () {
+    test('hâl: gülümseme +%0,5, bulut ancak −%5 altında', () {
       const d = KarakterDurumu(tur: VarlikTuru.altin, miktar: 1, maliyetTl: 1000, fiyat: 1004);
       expect(d.ruh, Ruh.duz);
       const m = KarakterDurumu(tur: VarlikTuru.altin, miktar: 1, maliyetTl: 1000, fiyat: 1060);
       expect(m.ruh, Ruh.mutlu);
       const u = KarakterDurumu(tur: VarlikTuru.altin, miktar: 1, maliyetTl: 1000, fiyat: 940);
-      expect(u.ruh, Ruh.uzgun);
+      expect(u.ruh, Ruh.bulutlu);
+      // Günlük oynama (−%3) bulut getirmez.
+      const g = KarakterDurumu(tur: VarlikTuru.altin, miktar: 1, maliyetTl: 1000, fiyat: 970);
+      expect(g.ruh, Ruh.duz);
     });
 
     test('nakit hep düz; fiyat yoksa değer null', () {

@@ -89,7 +89,7 @@ void main() {
   testWidgets('açık ağız dört karakterde çizilir', (t) async {
     for (final tur in VarlikTuru.values) {
       await t.pumpWidget(MaterialApp(
-        home: CustomPaint(size: const Size(110, 110), painter: KarakterPainter(tur: tur, ruh: Ruh.uzgun, agizAcik: true)),
+        home: CustomPaint(size: const Size(110, 110), painter: KarakterPainter(tur: tur, ruh: Ruh.bulutlu, agizAcik: true)),
       ));
       expect(t.takeException(), isNull);
     }
