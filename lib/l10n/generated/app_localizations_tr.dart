@@ -157,7 +157,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String farkUzgun(String karakter, String fark) {
-    return '$karakter biraz üzgün: $fark';
+    return '$karakter bulutların altında: $fark';
   }
 
   @override
@@ -236,7 +236,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String detayNedenUzgun(String varlik, String fark) {
-    return 'Aldığın günden beri $varlik biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: $fark. Sabır işin bir parçası.';
+    return 'Aldığın günden beri $varlik biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: $fark. Bulutlar gelir, geçer.';
   }
 
   @override

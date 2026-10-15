@@ -69,7 +69,7 @@
       }
     }
   },
-  "farkUzgun": "{karakter} biraz üzgün: {fark}",
+  "farkUzgun": "{karakter} bulutların altında: {fark}",
   "@farkUzgun": {
     "placeholders": {
       "karakter": {
@@ -183,7 +183,7 @@
       }
     }
   },
-  "detayNedenUzgun": "Aldığın günden beri {varlik} biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: {fark}. Sabır işin bir parçası.",
+  "detayNedenUzgun": "Aldığın günden beri {varlik} biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: {fark}. Bulutlar gelir, geçer.",
   "@detayNedenUzgun": {
     "placeholders": {
       "varlik": {

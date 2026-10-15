@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -96,7 +98,7 @@ class _KampState extends ConsumerState<KampEkrani> {
             Text(
               fmtFark(d.farkTl!, cocuk.para),
               style: context.t.labelMedium?.copyWith(
-                color: d.ruh == Ruh.uzgun ? r.loss : (d.ruh == Ruh.mutlu ? r.gain : r.sub),
+                color: d.ruh == Ruh.mutlu ? r.gain : r.sub,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -124,7 +126,7 @@ class _KampState extends ConsumerState<KampEkrani> {
             Text(
               '${l.fark}: ${fmtFark(toplam.farkTl!, cocuk.para)}',
               style: context.t.titleMedium?.copyWith(
-                color: toplam.farkTl! < 0 ? r.loss : (toplam.farkTl! > 0 ? r.gain : r.sub),
+                color: toplam.farkTl! > 0 ? r.gain : r.sub,
               ),
             ),
           const SizedBox(height: Bosluk.l),
@@ -140,7 +142,9 @@ class _KampState extends ConsumerState<KampEkrani> {
                 children: [
                   _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
                   _sigdir(140, KampAtesi(
-                        toplamTl: toplam.degerTl ?? toplam.maliyetTl,
+                        // Ateş piyasa düşüşünde küçülmez: en az verilen kadar
+                        // yanar (çocuğun emeği sönmez), kazançla büyür.
+                        toplamTl: math.max(toplam.degerTl ?? 0, toplam.maliyetTl),
                         boyut: 140,
                         parlamaTetik: _yeme.values.fold(0, (a, b) => a + b),
                       )),

@@ -155,8 +155,8 @@ class KarakterPainter extends CustomPainter {
     }
     final d = switch (ruh) {
       Ruh.mutlu => 'M46 42q9 9 18 0',
-      Ruh.duz => 'M48 45h14',
-      Ruh.uzgun => 'M47 48q8-7 16 0',
+      // Bulutlu yüz sakin: düz ağız, ağlama/küskünlük yok.
+      Ruh.duz || Ruh.bulutlu => 'M48 45h14',
     };
     cv.save();
     cv.translate(dx, dy);
@@ -400,6 +400,13 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
   late final AnimationController _bostaC =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
+  // Teselli: bulutluyken dokununca bulut çekilir, güneş açar, sonra bulut
+  // yavaşça geri gelir (fiyat değişmedi; yalan söylemeyiz, ama karakter
+  // çocuğun ilgisine sevinir).
+  late final AnimationController _teselli =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
+  Timer? _gunesSabit;
+  bool _gunesAcik = false;
   late final AnimationController _yeme =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..addListener(_yemeSesleri);
   bool _kapali = false;
@@ -486,6 +493,17 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     super.didUpdateWidget(o);
     if (o.tepkiTetik != widget.tepkiTetik) {
       widget.ses?.call(widget.tur.ses);
+      if (widget.ruh == Ruh.bulutlu) {
+        if (_hareketsiz) {
+          setState(() => _gunesAcik = true);
+          _gunesSabit?.cancel();
+          _gunesSabit = Timer(const Duration(milliseconds: 2600), () {
+            if (mounted) setState(() => _gunesAcik = false);
+          });
+        } else {
+          _teselli.forward(from: 0);
+        }
+      }
       if (!_hareketsiz) {
         _bostaC.stop();
         _hop.forward(from: 0);
@@ -519,6 +537,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _kirpma?.cancel();
     _bostaZaman?.cancel();
     _sessizSevinc?.cancel();
+    _gunesSabit?.cancel();
+    _teselli.dispose();
     _bob.dispose();
     _hop.dispose();
     _kipir.dispose();
@@ -548,7 +568,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme]),
+      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli]),
       builder: (context, _) {
         // Salınım = nefes: hafif yükselme + göğüs şişmesi.
         final nefes = Curves.easeInOut.transform(_bob.value);
@@ -620,6 +640,17 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
           }
         }
 
+        // Hava: bulutluyken başın üstünde süzülen bulut; teselli anında güneş.
+        double? gunes;
+        if (widget.ruh == Ruh.bulutlu) {
+          final t = _teselli.value;
+          gunes = _gunesAcik
+              ? 1
+              : _teselli.isAnimating
+                  ? Curves.easeOut.transform((t / .15).clamp(0.0, 1.0)) *
+                      (1 - Curves.easeIn.transform(((t - .75) / .25).clamp(0.0, 1.0)))
+                  : 0;
+        }
         final karakter = Transform.translate(
           offset: Offset(0, y),
           child: Transform.rotate(
@@ -633,7 +664,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                 size: Size.square(widget.boyut),
                 painter: KarakterPainter(
                   tur: widget.tur,
-                  ruh: widget.ruh,
+                  // Güneş açınca karakter de gülümser (teselliye karşılık).
+                  ruh: (gunes ?? 0) > .5 ? Ruh.mutlu : widget.ruh,
                   pulSayisi: widget.pulSayisi,
                   parlak: widget.parlak,
                   gozKapali: gozKapali,
@@ -644,9 +676,16 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
             ),
           ),
         );
-        if (!_yeme.isAnimating) return karakter;
+        if (!_yeme.isAnimating && gunes == null) return karakter;
         return Stack(clipBehavior: Clip.none, children: [
           karakter,
+          if (gunes != null)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(painter: HavaPainter(gunes: gunes, kayma: 3 * (_bob.value - .5))),
+              ),
+            ),
+          if (_yeme.isAnimating)
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
@@ -661,6 +700,63 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       },
     );
   }
+}
+
+/// Bulut ve güneş (110×110 alanında, sağ üst köşe). [gunes] 0 = yalnız bulut,
+/// 1 = bulut çekilmiş, güneş açmış. Bulut gri-mavi ve yumuşak: fırtına, yağmur,
+/// şimşek YOK; amaç "hava kapalı", korku değil.
+class HavaPainter extends CustomPainter {
+  HavaPainter({required this.gunes, this.kayma = 0});
+  final double gunes;
+  final double kayma;
+
+  static const _bulut = Color(0xFFDDE3EE);
+  static const _gunesRengi = Color(0xFFF7C948);
+
+  @override
+  void paint(Canvas cv, Size size) {
+    final s = size.shortestSide / 110;
+    cv.save();
+    cv.scale(s);
+    final cizgi = Paint()
+      ..color = DunyaRenkleri.murekkep
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6;
+    if (gunes > 0) {
+      cv.save();
+      cv.translate(88, 12);
+      cv.scale(.4 + .6 * gunes);
+      final isin = Paint()
+        ..color = _gunesRengi.withValues(alpha: gunes)
+        ..strokeWidth = 2.4
+        ..strokeCap = StrokeCap.round;
+      for (var i = 0; i < 8; i++) {
+        final a = i * math.pi / 4 + gunes;
+        cv.drawLine(Offset(math.cos(a) * 10, math.sin(a) * 10), Offset(math.cos(a) * 14, math.sin(a) * 14), isin);
+      }
+      cv.drawCircle(Offset.zero, 7.5, Paint()..color = _gunesRengi.withValues(alpha: gunes));
+      cv.restore();
+    }
+    final b = 1 - gunes;
+    if (b > 0) {
+      // Bulut kenara kayarak çekilir.
+      final x = 84 + kayma + 22 * gunes;
+      // Parçalar tek kontura birleştirilir ki iç çizgiler görünmesin.
+      final parcalar = [
+        Path()..addOval(Rect.fromCircle(center: Offset(x - 8, 14), radius: 6.5)),
+        Path()..addOval(Rect.fromCircle(center: Offset(x, 10), radius: 9)),
+        Path()..addOval(Rect.fromCircle(center: Offset(x + 9, 14), radius: 6)),
+        Path()..addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(x - 14, 13, 29, 7.5), const Radius.circular(4))),
+      ];
+      final birlesik = parcalar.reduce((a, b) => Path.combine(PathOperation.union, a, b));
+      cv.drawPath(birlesik, Paint()..color = _bulut.withValues(alpha: b));
+      cv.drawPath(birlesik, cizgi..color = DunyaRenkleri.murekkep.withValues(alpha: b));
+    }
+    cv.restore();
+  }
+
+  @override
+  bool shouldRepaint(HavaPainter o) => o.gunes != gunes || o.kayma != kayma;
 }
 
 /// Besleme paraları: yukarıdan yerçekimiyle (p²) ağza düşer, dönerek gelir,

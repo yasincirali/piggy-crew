@@ -371,7 +371,7 @@ abstract class AppLocalizations {
   /// No description provided for @farkUzgun.
   ///
   /// In tr, this message translates to:
-  /// **'{karakter} biraz üzgün: {fark}'**
+  /// **'{karakter} bulutların altında: {fark}'**
   String farkUzgun(String karakter, String fark);
 
   /// No description provided for @farkDuz.
@@ -479,7 +479,7 @@ abstract class AppLocalizations {
   /// No description provided for @detayNedenUzgun.
   ///
   /// In tr, this message translates to:
-  /// **'Aldığın günden beri {varlik} biraz ucuzladı. Miktarın aynı, bugünkü değeri biraz az: {fark}. Sabır işin bir parçası.'**
+  /// **'Aldığın günden beri {varlik} biraz ucuzladı. Bu senin hatan değil; fiyatlar hava gibi değişir. Miktarın aynı duruyor, bugünkü değeri biraz az: {fark}. Bulutlar gelir, geçer.'**
   String detayNedenUzgun(String varlik, String fark);
 
   /// No description provided for @detayNedenNakit.
