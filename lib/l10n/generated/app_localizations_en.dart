@@ -422,15 +422,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ckAtes1000Ad => 'Big fire';
 
   @override
-  String get ckAtes1000Aciklama =>
-      'Your campfire passed 1,000 for the first time.';
+  String get ckAtes1000Aciklama => 'You fed the team in four different weeks.';
 
   @override
   String get ckAtes5000Ad => 'Bonfire';
 
   @override
   String get ckAtes5000Aciklama =>
-      'Your campfire passed 5,000 for the first time.';
+      'You fed the team in twelve different weeks.';
 
   @override
   String get ckDers5Ad => 'Curious';
@@ -455,5 +454,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ckTortuparlakAd => 'Shining Tortu';
 
   @override
-  String get ckTortuparlakAciklama => 'Tortu\'s value passed 1,500.';
+  String get ckTortuparlakAciklama => 'You fed Tortu in five different weeks.';
 }

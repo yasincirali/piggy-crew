@@ -63,7 +63,6 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     final l = context.l10n;
     final hareketler = ref.read(hareketlerProvider);
     final k = ref.read(karakterlerProvider);
-    final toplam = ref.read(toplamProvider);
     final cik = ref.read(cikartmalarProvider.notifier);
     String? ilk;
     Future<void> dene(String id, bool kosul) async {
@@ -81,11 +80,13 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     await dene('baykus_gozluk', sayi(VarlikTuru.euro) >= 3);
     await dene('sincap_fular', sayi(VarlikTuru.nakit) >= 3);
     await dene('takim_tam', k.values.every((d) => !d.bos));
-    final deger = toplam.degerTl ?? toplam.maliyetTl;
-    await dene('ates_1000', deger >= 1000);
-    await dene('ates_5000', deger >= 5000);
-    final au = k[VarlikTuru.altin]?.degerTl ?? 0;
-    await dene('tortu_parlak', au >= 1500);
+    // Düzenlilik: tutar değil, kaç farklı haftada beslendi (bkz. Cikartma).
+    final haftalar = Cikartma.farkliHaftalar(hareketler.map((h) => h.tarih));
+    await dene('ates_1000', haftalar >= Cikartma.atesHafta);
+    await dene('ates_5000', haftalar >= Cikartma.senlikHafta);
+    final tortuHaftalar = Cikartma.farkliHaftalar(
+        hareketler.where((h) => h.tur == VarlikTuru.altin).map((h) => h.tarih));
+    await dene('tortu_parlak', tortuHaftalar >= Cikartma.tortuHafta);
     final ilkTarih = hareketler.isEmpty ? null : hareketler.map((h) => h.tarih).reduce((a, b) => a.isBefore(b) ? a : b);
     await dene('sabir_30', ilkTarih != null && DateTime.now().difference(ilkTarih).inDays >= 30);
     return ilk;

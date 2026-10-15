@@ -422,13 +422,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ckAtes1000Ad => 'Büyük ateş';
 
   @override
-  String get ckAtes1000Aciklama => 'Kamp ateşin ilk kez 1.000\'i geçti.';
+  String get ckAtes1000Aciklama => 'Takımı dört ayrı haftada besledin.';
 
   @override
   String get ckAtes5000Ad => 'Şenlik ateşi';
 
   @override
-  String get ckAtes5000Aciklama => 'Kamp ateşin ilk kez 5.000\'i geçti.';
+  String get ckAtes5000Aciklama => 'Takımı on iki ayrı haftada besledin.';
 
   @override
   String get ckDers5Ad => 'Meraklı';
@@ -453,5 +453,5 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ckTortuparlakAd => 'Parlayan Tortu';
 
   @override
-  String get ckTortuparlakAciklama => 'Tortu\'nun değeri 1.500\'ü geçti.';
+  String get ckTortuparlakAciklama => 'Tortu\'yu beş ayrı haftada besledin.';
 }

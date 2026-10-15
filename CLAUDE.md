@@ -12,6 +12,11 @@ sandık `CLAUDE.md` ile aynıdır; burada yalnız farklar ve bu repoya özgü ka
 - **Yerel-önce:** v1'de sunucu yok. Anonim hesap/yedek 2. kapıda, bayrakla.
 - **Kids kategorisi:** reklam, takip, üçüncü taraf analytics, bildirim yok. Veri
   cihazda. Veli köşesi PIN ardında.
+- **Karakter dili ve ödül (2026-10-15, araştırma `harcliklarim/arastirma/`):** karakter
+  çocuğu suçlamaz, talep etmez, yokluğu yüzüne vurmaz, zaman baskısı kurmaz
+  (`karakter_dili_test` .arb'ları tarar). Çıkartma davranışı ödüllendirir; tutar eşiği,
+  rastgelelik, süreli/kaçırılabilir ödül, seri ve başka çocukla kıyas yok. Açılan çıkartma
+  geri alınmaz. Yol haritası: `/mnt/project-files/harcliklarim/YOL_HARITASI.md`.
 - **Fiyat kaynağı** sandık ile aynı (truncgil v4). Kaynak değişirse yalnız
   `fiyat_servisi.dart`; "uydurma sayı yasak" kuralı korunur.
 - TestFlight: `main`'e birleşme → `ios-testflight.yml`. Push saatleri kuralı

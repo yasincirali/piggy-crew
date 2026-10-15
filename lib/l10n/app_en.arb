@@ -297,9 +297,9 @@
   "ckTakimtamAd": "Full crew",
   "ckTakimtamAciklama": "You fed every character.",
   "ckAtes1000Ad": "Big fire",
-  "ckAtes1000Aciklama": "Your campfire passed 1,000 for the first time.",
+  "ckAtes1000Aciklama": "You fed the team in four different weeks.",
   "ckAtes5000Ad": "Bonfire",
-  "ckAtes5000Aciklama": "Your campfire passed 5,000 for the first time.",
+  "ckAtes5000Aciklama": "You fed the team in twelve different weeks.",
   "ckDers5Ad": "Curious",
   "ckDers5Aciklama": "You finished five lessons.",
   "ckDers10Ad": "Wise",
@@ -307,5 +307,5 @@
   "ckSabir30Ad": "Patient",
   "ckSabir30Aciklama": "30 days since your first feeding, and you're still here.",
   "ckTortuparlakAd": "Shining Tortu",
-  "ckTortuparlakAciklama": "Tortu's value passed 1,500."
+  "ckTortuparlakAciklama": "You fed Tortu in five different weeks."
 }

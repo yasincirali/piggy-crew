@@ -2,8 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'varlik.dart';
 
 /// Çıkartmalar — rozet değil, karakterin KOSTÜMÜ. Her biri bir davranışı
-/// ödüllendirir (ilk besleme, düzenlilik, eşik), piyasa şansını değil:
+/// ödüllendirir (ilk besleme, düzenlilik), piyasa şansını değil:
 /// "altın yükseldi" diye çıkartma YOK, çocuk fiyatı kontrol edemez.
+///
+/// Tutar eşiği de YOK (2026-10-15, araştırma `harcliklarim/arastirma/02` ve
+/// `03`): "ateş 1.000'i geçti" ailenin harçlık miktarını ödüllendiriyordu,
+/// çocuğun davranışını değil. `ates_1000`, `ates_5000` ve `tortu_parlak`
+/// aynı id ile düzenliliğe bağlandı: kaç FARKLI haftada beslendiği. Hafta
+/// sayısı eksilmez (seri değil, kırılmaz); açılmış çıkartma asla geri alınmaz.
 @immutable
 class Cikartma {
   const Cikartma(this.id, this.tur);
@@ -28,4 +34,14 @@ class Cikartma {
   ];
 
   static Cikartma? bul(String id) => hepsi.where((c) => c.id == id).firstOrNull;
+
+  /// Düzenlilik eşikleri (farklı hafta sayısı).
+  static const atesHafta = 4, senlikHafta = 12, tortuHafta = 5;
+
+  /// Kaç farklı takvim haftasında (Pazartesi başlangıçlı) hareket var.
+  /// Ardışık olması gerekmez: ara vermek kazanılanı silmez.
+  static int farkliHaftalar(Iterable<DateTime> tarihler) => tarihler.map((t) {
+        final gun = DateTime.utc(t.year, t.month, t.day);
+        return gun.subtract(Duration(days: gun.weekday - 1)).millisecondsSinceEpoch;
+      }).toSet().length;
 }
