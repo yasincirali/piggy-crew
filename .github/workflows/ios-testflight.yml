@@ -73,11 +73,15 @@ jobs:
       - name: Flutter dependencies
         run: flutter pub get
 
+      # Eklentiler Swift Package Manager ile gelir (Flutter 3.47 varsayılanı),
+      # depoda Podfile yok; `pod install` Podfile'sız kırılıyordu. bundle
+      # install yine gerekli (fastlane). Bir eklenti CocoaPods isterse Flutter
+      # Podfile üretir ve adım kendiliğinden çalışır.
       - name: CocoaPods install
         working-directory: ios
         run: |
           bundle install
-          bundle exec pod install
+          if [ -f Podfile ]; then bundle exec pod install; else echo "Podfile yok (SwiftPM) — pod install atlandı"; fi
 
       - name: Flutter iOS release build (no codesign — fastlane resigns)
         run: flutter build ios --release --no-codesign
