@@ -10,7 +10,7 @@ import '../theme/dunya.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 
-final _derslerProvider = FutureProvider<List<Ders>>((_) => Ders.yukle());
+final _derslerProvider = FutureProvider.family<List<Ders>, String>((_, dil) => Ders.yukle(dil));
 
 /// Öğren: günde bir kavram, tek soru, üç seçenek. Yanlışta ceza yok; ipucu.
 class OgrenEkrani extends ConsumerStatefulWidget {
@@ -28,7 +28,7 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
     final l = context.l10n;
     final r = context.r;
     final cocuk = ref.watch(cocukProvider)!;
-    final dersler = ref.watch(_derslerProvider).valueOrNull;
+    final dersler = ref.watch(_derslerProvider(Localizations.localeOf(context).languageCode)).valueOrNull;
     final ilerleme = ref.watch(dersIlerlemeProvider);
     if (dersler == null) return const Center(child: CircularProgressIndicator());
 
@@ -48,6 +48,7 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
     }
 
     final ders = dersler[ilerleme];
+    String p(String s) => Ders.paraYerlestir(s, cocuk.para);
     final karakter = ders.karakter ?? VarlikTuru.euro;
 
     return ListView(
@@ -69,27 +70,27 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: Bosluk.m, vertical: Bosluk.xs),
                     decoration: BoxDecoration(color: r.accSoft, borderRadius: BorderRadius.circular(999)),
-                    child: Text(ders.kavram, style: context.t.labelLarge?.copyWith(color: r.fg)),
+                    child: Text(p(ders.kavram), style: context.t.labelLarge?.copyWith(color: r.fg)),
                   ),
                   const SizedBox(height: Bosluk.s),
-                  Text(ders.baslik, style: context.t.titleLarge),
+                  Text(p(ders.baslik), style: context.t.titleLarge),
                 ]),
               ),
             ]),
             const SizedBox(height: Bosluk.l),
-            Text(ders.metin(cocuk.yas), style: context.t.bodyLarge),
+            Text(p(ders.metin(cocuk.yas)), style: context.t.bodyLarge),
           ]),
         ),
         const SizedBox(height: Bosluk.l),
         BolumBasligi(l.ogrenSoru),
         const SizedBox(height: Bosluk.s),
-        Text(ders.soru, style: context.t.titleMedium),
+        Text(p(ders.soru), style: context.t.titleMedium),
         const SizedBox(height: Bosluk.m),
         for (final (i, s) in ders.secenekler.indexed)
           Padding(
             padding: const EdgeInsets.only(bottom: Bosluk.s),
             child: _Secenek(
-              metin: s,
+              metin: p(s),
               durum: _secim == null
                   ? _SecenekDurumu.bos
                   : (i == ders.dogru && _secim == i)

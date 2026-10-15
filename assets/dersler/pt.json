@@ -1,0 +1,152 @@
+[
+ {
+  "id": "birikim",
+  "kavram": "Poupar",
+  "baslik": "Por que o dinheiro espera?",
+  "metin_k": "Guarde {p:10} todo dia e em um mês você terá {p:300}. Dinheiro que espera cresce; dinheiro gasto acaba.",
+  "metin_b": "Poupar é segurar um desejo de hoje para realizar um desejo maior amanhã. Valores pequenos e regulares se somam com mais facilidade do que um valor grande de uma vez.",
+  "soru": "Se você guardar {p:50} toda semana, quanto terá depois de 10 semanas?",
+  "secenekler": [
+   "{p:50}",
+   "{p:500}",
+   "{p:5000}"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "enflasyon",
+  "kavram": "Inflação",
+  "baslik": "O dinheiro pode encolher?",
+  "metin_k": "No ano passado, um pão de queijo custava {p:10}; neste ano custa {p:15}. Seu dinheiro continuou o mesmo, mas compra menos.",
+  "metin_b": "Quando os preços sobem de modo geral, o mesmo dinheiro compra menos coisas; isso se chama inflação. Coisas como ouro e moeda estrangeira costumam subir junto, por isso guardar só dinheiro não basta.",
+  "soru": "Você tem {p:100} e os preços subiram 50%. Um ano depois, quantos pães de queijo você consegue comprar?",
+  "secenekler": [
+   "A mesma quantidade",
+   "Menos, o pão de queijo ficou mais caro",
+   "Mais, meu dinheiro cresceu"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "altin",
+  "kavram": "Ouro",
+  "baslik": "Por que o Jabu é devagar?",
+  "metin_k": "O ouro é valioso há milhares de anos. Ele não pula rápido, mas também não cai fácil.",
+  "metin_b": "As pessoas procuram o ouro quando confiam menos no dinheiro. Ele se mexe pouco no curto prazo e guarda seu valor no longo prazo. O ouro puro é chamado de ouro 24 quilates.",
+  "soru": "Como é o Jabu?",
+  "secenekler": [
+   "Pula rápido",
+   "Devagar, mas firme",
+   "Nunca muda"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "doviz",
+  "kavram": "Moeda estrangeira",
+  "baslik": "Para onde a Pipoca pula?",
+  "metin_k": "O dólar é o dinheiro de outro país. Tem dia que ele sobe, tem dia que ele desce.",
+  "metin_b": "O câmbio mostra quanto o dinheiro de um país vale no dinheiro de outro. Notícias, juros e confiança fazem ele se mexer. Pulos são normais; o que importa é o caminho longo.",
+  "soru": "Um dia a Pipoca caiu. O que você faz?",
+  "secenekler": [
+   "Desisto na hora",
+   "Espero com paciência",
+   "Vendo tudo"
+  ],
+  "dogru": 1,
+  "karakter": "dolar"
+ },
+ {
+  "id": "cesitlendirme",
+  "kavram": "Diversificar",
+  "baslik": "Por que quatro amigos?",
+  "metin_k": "Não se coloca tudo em uma cesta só. Enquanto um está tristinho, outro sorri.",
+  "metin_b": "Coisas diferentes sobem em momentos diferentes. Dividir suas economias impede que o dia ruim de um amigo afete o acampamento inteiro.",
+  "soru": "Dar todo o seu dinheiro para um amigo só é…",
+  "secenekler": [
+   "O mais seguro",
+   "Arriscado: se ele cai, tudo cai",
+   "Tanto faz"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "fiyat",
+  "kavram": "Preço",
+  "baslik": "Mesmo dinheiro, menos ouro",
+  "metin_k": "No mês passado, {p:250} compravam mais ouro. O ouro ficou mais caro, então o mesmo dinheiro compra menos.",
+  "metin_b": "Quando o preço de algo sobe, a mesma quantia de dinheiro compra menos dele, e o que você já tem passa a valer mais. Preço e quantidade andam em direções opostas.",
+  "soru": "O ouro ficou mais caro. Seus 0,5 grama…",
+  "secenekler": [
+   "Encolheram",
+   "Valem mais",
+   "Sumiram"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "hedef",
+  "kavram": "Meta",
+  "baslik": "Quanto falta para a bicicleta?",
+  "metin_k": "Esperar fica mais fácil quando você tem uma meta. Saiba o que você quer e conte quantas alimentações faltam.",
+  "metin_b": "Uma meta dá sentido a poupar. Uma meta com valor e data deixa cada alimentação mensurável: 'Já tenho 38% da minha bicicleta'.",
+  "soru": "Para uma meta de {p:3000}, guardando {p:150} por semana, quanto tempo vai levar?",
+  "secenekler": [
+   "10 semanas",
+   "20 semanas",
+   "30 semanas"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "ihtiyac",
+  "kavram": "Necessidades e desejos",
+  "baslik": "Precisa ou quer?",
+  "metin_k": "Água é uma necessidade. Um terceiro brinquedo é um desejo. Os dois estão bem, mas um vem primeiro.",
+  "metin_b": "Necessidades são obrigatórias, desejos são uma escolha. Usar a mesada primeiro para as necessidades, depois para poupar e depois para os desejos é uma ordem saudável.",
+  "soru": "Qual deles é um desejo?",
+  "secenekler": [
+   "Um caderno da escola",
+   "Uma figurinha nova",
+   "O almoço"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "paylasim",
+  "kavram": "Compartilhar",
+  "baslik": "O terceiro pote",
+  "metin_k": "Dividir parte da sua mesada também é uma escolha. Mesmo um pouquinho pode alegrar o dia de alguém.",
+  "metin_b": "Gastar · Poupar · Compartilhar. Três potes ensinam que o dinheiro não é só para nós. A parte compartilhada pode ser pequena, mas regular.",
+  "soru": "Quanto é 10% de uma mesada de {p:300}?",
+  "secenekler": [
+   "{p:3}",
+   "{p:30}",
+   "{p:300}"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "sabir",
+  "kavram": "Paciência",
+  "baslik": "O tempo é seu melhor amigo",
+  "metin_k": "Uma fogueira não cresce em um dia. Cada alimentação é um pedacinho de lenha. No fim do ano, olhe para trás e veja como ela ficou grande.",
+  "metin_b": "O tempo é a força mais poderosa para poupar. Uma criança que começa cedo e alimenta pouco, mas sempre, pode ficar à frente de quem começa tarde e coloca muito.",
+  "soru": "O que dá resultado?",
+  "secenekler": [
+   "Colocar muito de uma vez",
+   "Alimentações pequenas e regulares",
+   "Nunca esperar"
+  ],
+  "dogru": 1,
+  "karakter": null
+ }
+]

@@ -1,0 +1,152 @@
+[
+ {
+  "id": "birikim",
+  "kavram": "Sparen",
+  "baslik": "Warum wartet Geld?",
+  "metin_k": "Leg jeden Tag {p:10} zur Seite, dann hast du nach einem Monat {p:300}. Geld, das wartet, wächst. Geld, das ausgegeben ist, ist weg.",
+  "metin_b": "Sparen heißt: einen Wunsch von heute aufheben für einen größeren Wunsch morgen. Kleine Beträge, die regelmäßig dazukommen, sammeln sich leichter an als ein großer Betrag auf einmal.",
+  "soru": "Wenn du jede Woche {p:50} sparst, wie viel hast du nach 10 Wochen?",
+  "secenekler": [
+   "{p:50}",
+   "{p:500}",
+   "{p:5000}"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "enflasyon",
+  "kavram": "Inflation",
+  "baslik": "Kann Geld schrumpfen?",
+  "metin_k": "Letztes Jahr kostete eine Brezel {p:10}, dieses Jahr kostet sie {p:15}. Dein Geld ist gleich geblieben, aber du bekommst weniger dafür.",
+  "metin_b": "Wenn die Preise insgesamt steigen, kauft man mit demselben Geld weniger Dinge. Das nennt man Inflation. Gold und fremde Währungen steigen oft mit, darum reicht es nicht, nur Bargeld zu sparen.",
+  "soru": "Du hast {p:100} und die Preise sind um 50 % gestiegen. Wie viele Brezeln kannst du ein Jahr später kaufen?",
+  "secenekler": [
+   "Genauso viele",
+   "Weniger, Brezeln sind teurer geworden",
+   "Mehr, mein Geld ist gewachsen"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "altin",
+  "kavram": "Gold",
+  "baslik": "Warum ist Schildi langsam?",
+  "metin_k": "Gold ist seit Tausenden von Jahren wertvoll. Es springt nicht schnell hoch, aber es fällt auch nicht so leicht.",
+  "metin_b": "Wenn Menschen dem Geld weniger vertrauen, greifen sie zu Gold. Kurzfristig bewegt es sich wenig, langfristig behält es seinen Wert. Reines Gold nennt man 24 Karat.",
+  "soru": "Wie ist Schildi?",
+  "secenekler": [
+   "Springt schnell",
+   "Langsam, aber beständig",
+   "Ändert sich nie"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "doviz",
+  "kavram": "Währung",
+  "baslik": "Wohin hüpft Hoppel?",
+  "metin_k": "Der Dollar ist das Geld eines anderen Landes. An manchen Tagen steigt er, an manchen Tagen fällt er.",
+  "metin_b": "Der Wechselkurs sagt, wie viel das Geld eines Landes im Geld eines anderen Landes wert ist. Nachrichten, Zinsen und Vertrauen bewegen ihn. Sprünge sind normal; wichtig ist der lange Weg.",
+  "soru": "Hoppel ist an einem Tag gefallen. Was machst du?",
+  "secenekler": [
+   "Sofort aufgeben",
+   "Geduldig warten",
+   "Alles verkaufen"
+  ],
+  "dogru": 1,
+  "karakter": "dolar"
+ },
+ {
+  "id": "cesitlendirme",
+  "kavram": "Streuen",
+  "baslik": "Warum vier Figuren?",
+  "metin_k": "Man legt nicht alle Eier in einen Korb. Wenn eine Figur traurig schaut, lächelt eine andere.",
+  "metin_b": "Verschiedene Dinge steigen zu verschiedenen Zeiten. Wenn du dein Erspartes aufteilst, trifft der schlechte Tag einer Figur nicht das ganze Lager.",
+  "soru": "Dein ganzes Geld nur einer Figur zu geben, ist…",
+  "secenekler": [
+   "Am sichersten",
+   "Riskant: Fällt sie, fällt alles",
+   "Egal"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "fiyat",
+  "kavram": "Preis",
+  "baslik": "Gleiches Geld, weniger Gold",
+  "metin_k": "Letzten Monat bekam man für {p:250} mehr Gold. Gold ist teurer geworden, darum bekommst du für dasselbe Geld weniger.",
+  "metin_b": "Wenn der Preis von etwas steigt, bekommst du für denselben Betrag weniger davon. Was du schon hast, ist dann aber mehr wert. Preis und Menge laufen in entgegengesetzte Richtungen.",
+  "soru": "Gold ist teurer geworden. Deine 0,5 Gramm…",
+  "secenekler": [
+   "sind geschrumpft",
+   "sind mehr wert",
+   "sind verschwunden"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "hedef",
+  "kavram": "Ziel",
+  "baslik": "Wie lange bis zum Fahrrad?",
+  "metin_k": "Warten fällt leichter, wenn du ein Ziel hast. Wisse, was du willst, und zähle, wie viele Fütterungen du dafür brauchst.",
+  "metin_b": "Ein Ziel gibt dem Sparen einen Sinn. Ein Ziel mit Betrag und Datum macht jede Fütterung messbar: „Ich habe schon 38 % für mein Fahrrad.“",
+  "soru": "Für ein Ziel von {p:3000}: Wenn du jede Woche {p:150} sparst, wie lange dauert es?",
+  "secenekler": [
+   "10 Wochen",
+   "20 Wochen",
+   "30 Wochen"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "ihtiyac",
+  "kavram": "Brauchen und Wollen",
+  "baslik": "Brauchst du es oder willst du es?",
+  "metin_k": "Wasser brauchst du. Ein drittes Spielzeug willst du. Beides ist in Ordnung, aber eins kommt zuerst.",
+  "metin_b": "Was man braucht, muss sein; was man will, kann man sich aussuchen. Eine gesunde Reihenfolge fürs Taschengeld: zuerst das, was du brauchst, dann Sparen, dann Wünsche.",
+  "soru": "Was davon ist ein Wunsch?",
+  "secenekler": [
+   "Ein Schulheft",
+   "Eine neue Sammelkarte",
+   "Das Mittagessen"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "paylasim",
+  "kavram": "Teilen",
+  "baslik": "Das dritte Glas",
+  "metin_k": "Einen Teil deines Taschengelds zu teilen, ist auch eine Entscheidung. Schon ein kleiner Teil kann jemandem den Tag verschönern.",
+  "metin_b": "Ausgeben · Sparen · Teilen. Drei Gläser zeigen, dass Geld nicht nur für uns selbst da ist. Der geteilte Teil darf klein sein, aber regelmäßig.",
+  "soru": "Wie viel sind 10 % von {p:300} Taschengeld?",
+  "secenekler": [
+   "{p:3}",
+   "{p:30}",
+   "{p:300}"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "sabir",
+  "kavram": "Geduld",
+  "baslik": "Zeit ist deine beste Freundin",
+  "metin_k": "Ein Lagerfeuer wächst nicht an einem Tag. Jede Fütterung ist ein kleines Holzscheit. Schau am Ende des Jahres zurück und sieh, wie groß es geworden ist.",
+  "metin_b": "Zeit ist die stärkste Kraft beim Sparen. Ein Kind, das früh anfängt und wenig, aber regelmäßig füttert, kann eines überholen, das spät anfängt und viel auf einmal hineinsteckt.",
+  "soru": "Was zahlt sich aus?",
+  "secenekler": [
+   "An einem Tag viel hineinstecken",
+   "Kleine regelmäßige Fütterungen",
+   "Nie warten"
+  ],
+  "dogru": 1,
+  "karakter": null
+ }
+]

@@ -33,7 +33,7 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
-    - assets/dersler.json
+    - assets/dersler/
     # Ses efektleri: tool/sesler_uret.py ile sentezlenir (lisanssız).
     - assets/sesler/
     - assets/fonts/OFL-Baloo2.txt

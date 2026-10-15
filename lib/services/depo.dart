@@ -23,6 +23,7 @@ class Depo {
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
   static const _sesAcik = 'ses_acik_v1';
+  static const _sonRuh = 'son_ruh_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -60,12 +61,32 @@ class Depo {
   bool sesAcikOku() => _sp.getBool(_sesAcik) ?? true;
   Future<void> sesAcikYaz(bool v) => _sp.setBool(_sesAcik, v);
 
+  /// Son bilinen ruh hâlleri ("artıya geçti" sevinci bir kez oynasın diye).
+  Map<VarlikTuru, Ruh> sonRuhOku() {
+    final s = _sp.getString(_sonRuh);
+    if (s == null) return const {};
+    try {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return {
+        for (final e in m.entries)
+          if (VarlikTuru.values.any((t) => t.name == e.key) && Ruh.values.any((r) => r.name == e.value))
+            VarlikTuru.values.byName(e.key): Ruh.values.byName(e.value as String),
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<void> sonRuhYaz(Map<VarlikTuru, Ruh> m) =>
+      _sp.setString(_sonRuh, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
+
   /// Tüm veriyi sil (veli köşesi). Fiyat önbelleği kalır, kişisel değil.
   Future<void> hepsiniSil() async {
     await _sp.remove(_cocuk);
     await _sp.remove(_hareketler);
     await _sp.remove(_cikartmalar);
     await _sp.remove(_dersIlerleme);
+    await _sp.remove(_sonRuh);
   }
 
   /// PIN düz metin saklanmaz; tuzlu SHA-256 özeti saklanır. Tuz sabit ve

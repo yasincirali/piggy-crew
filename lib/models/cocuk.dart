@@ -36,7 +36,8 @@ class Cocuk {
   final DateTime olusturma;
   final ParaBirimi para;
 
-  /// Uygulama dili ('tr'/'en'); null → cihaz dili.
+  /// Uygulama dili (dil kodu, ör. 'tr', 'de'); null → cihaz dili, o da
+  /// desteklenmiyorsa İngilizce (`dilCoz`).
   final String? dil;
 
   bool get veliKilidiVar => pinOzeti != null && pinOzeti!.isNotEmpty;

@@ -1,0 +1,152 @@
+[
+ {
+  "id": "birikim",
+  "kavram": "Épargner",
+  "baslik": "Pourquoi l'argent attend-il ?",
+  "metin_k": "Mets {p:10} chaque jour et dans un mois tu as {p:300}. L'argent qui attend grandit ; l'argent dépensé est parti.",
+  "metin_b": "Épargner, c'est garder l'envie d'aujourd'hui pour une plus grande envie demain. De petites sommes régulières s'additionnent plus facilement qu'une seule grosse somme.",
+  "soru": "Si tu mets de côté {p:50} chaque semaine, combien as-tu après 10 semaines ?",
+  "secenekler": [
+   "{p:50}",
+   "{p:500}",
+   "{p:5000}"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "enflasyon",
+  "kavram": "Inflation",
+  "baslik": "L'argent peut-il rétrécir ?",
+  "metin_k": "L'an dernier, un croissant coûtait {p:10}, cette année il coûte {p:15}. Ton argent est resté le même, mais il achète moins.",
+  "metin_b": "Quand les prix montent en général, le même argent achète moins de choses : c'est l'inflation. L'or et les monnaies étrangères montent souvent en même temps, alors garder seulement des espèces ne suffit pas.",
+  "soru": "Tu as {p:100} et les prix ont monté de 50 %. Un an plus tard, combien de croissants peux-tu acheter ?",
+  "secenekler": [
+   "Le même nombre",
+   "Moins, les croissants sont plus chers",
+   "Plus, mon argent a grandi"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "altin",
+  "kavram": "L'or",
+  "baslik": "Pourquoi Torti est-il lent ?",
+  "metin_k": "L'or a de la valeur depuis des milliers d'années. Il ne bondit pas vite, mais il ne tombe pas facilement non plus.",
+  "metin_b": "Les gens se tournent vers l'or quand ils ont moins confiance dans l'argent. Il bouge peu à court terme et garde sa valeur à long terme. L'or pur s'appelle l'or 24 carats.",
+  "soru": "Comment est Torti ?",
+  "secenekler": [
+   "Il bondit vite",
+   "Lent mais régulier",
+   "Il ne change jamais"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "doviz",
+  "kavram": "Les devises",
+  "baslik": "Où saute Bondi ?",
+  "metin_k": "Le dollar est l'argent d'un autre pays. Certains jours il monte, d'autres jours il descend.",
+  "metin_b": "Le taux de change, c'est ce que vaut l'argent d'un pays dans l'argent d'un autre. Les nouvelles, les taux d'intérêt et la confiance le font bouger. Les sauts sont normaux ; c'est le long chemin qui compte.",
+  "soru": "Un jour, Bondi a baissé. Que fais-tu ?",
+  "secenekler": [
+   "J'abandonne tout de suite",
+   "J'attends patiemment",
+   "Je vends tout"
+  ],
+  "dogru": 1,
+  "karakter": "dolar"
+ },
+ {
+  "id": "cesitlendirme",
+  "kavram": "Diversifier",
+  "baslik": "Pourquoi quatre personnages ?",
+  "metin_k": "On ne met pas tous ses œufs dans le même panier. Quand l'un est triste, un autre sourit.",
+  "metin_b": "Les différents placements montent à des moments différents. Partager tes économies évite que la mauvaise journée d'un personnage touche tout le camp.",
+  "soru": "Donner tout ton argent à un seul personnage, c'est…",
+  "secenekler": [
+   "Le plus sûr",
+   "Risqué : s'il baisse, tout baisse",
+   "Ça ne change rien"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "fiyat",
+  "kavram": "Le prix",
+  "baslik": "Même argent, moins d'or",
+  "metin_k": "Le mois dernier, {p:250} achetaient plus d'or. L'or est devenu plus cher, donc le même argent en achète moins.",
+  "metin_b": "Quand le prix d'un placement monte, la même somme d'argent en achète moins, mais ce que tu as déjà vaut plus. Le prix et la quantité vont dans des sens opposés.",
+  "soru": "L'or est devenu plus cher. Tes 0,5 gramme…",
+  "secenekler": [
+   "Ont rétréci",
+   "Valent plus",
+   "Ont disparu"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "hedef",
+  "kavram": "Le but",
+  "baslik": "Combien de temps pour un vélo ?",
+  "metin_k": "Attendre est plus facile quand on a un but. Sache ce que tu veux et compte combien de repas il faut.",
+  "metin_b": "Un but donne du sens à l'épargne. Un but avec un montant et une date rend chaque repas mesurable : « J'en suis à 38 % de mon vélo ».",
+  "soru": "Pour un but de {p:3000}, si tu mets de côté {p:150} par semaine, combien de temps faut-il ?",
+  "secenekler": [
+   "10 semaines",
+   "20 semaines",
+   "30 semaines"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "ihtiyac",
+  "kavram": "Besoins et envies",
+  "baslik": "Besoin ou envie ?",
+  "metin_k": "L'eau est un besoin. Un troisième jouet est une envie. Les deux sont bien, mais l'un passe en premier.",
+  "metin_b": "Les besoins sont obligatoires, les envies sont un choix. Utiliser l'argent de poche d'abord pour les besoins, puis l'épargne, puis les envies, c'est un bon ordre.",
+  "soru": "Lequel est une envie ?",
+  "secenekler": [
+   "Un cahier pour l'école",
+   "Une nouvelle carte à collectionner",
+   "Le déjeuner"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "paylasim",
+  "kavram": "Partager",
+  "baslik": "Le troisième pot",
+  "metin_k": "Partager une partie de ton argent de poche, c'est aussi un choix. Même un petit partage peut rendre quelqu'un heureux.",
+  "metin_b": "Dépenser · Épargner · Partager. Trois pots apprennent que l'argent n'est pas seulement pour nous. La part partagée peut être petite, mais régulière.",
+  "soru": "Combien font 10 % de {p:300} d'argent de poche ?",
+  "secenekler": [
+   "{p:3}",
+   "{p:30}",
+   "{p:300}"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "sabir",
+  "kavram": "La patience",
+  "baslik": "Le temps est ton meilleur ami",
+  "metin_k": "Un feu de camp ne grandit pas en un jour. Chaque repas est une petite bûche. Regarde en arrière à la fin de l'année et vois comme il a grandi.",
+  "metin_b": "Le temps est la plus grande force de l'épargne. Un enfant qui commence tôt et donne un peu mais régulièrement peut dépasser celui qui commence tard et met beaucoup.",
+  "soru": "Qu'est-ce qui rapporte ?",
+  "secenekler": [
+   "Tout mettre en un seul jour",
+   "De petits repas réguliers",
+   "Ne jamais attendre"
+  ],
+  "dogru": 1,
+  "karakter": null
+ }
+]

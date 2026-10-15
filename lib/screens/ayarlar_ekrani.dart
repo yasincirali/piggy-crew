@@ -79,8 +79,14 @@ class AyarlarEkrani extends ConsumerWidget {
         const SizedBox(height: Bosluk.s),
         Wrap(spacing: Bosluk.s, children: [
           SecimCipi(metin: l.dilCihaz, secili: cocuk.dil == null, onTap: () => n.kaydet(_dilsiz(cocuk))),
-          SecimCipi(metin: 'Türkçe', secili: cocuk.dil == 'tr', onTap: () => n.guncelle((c) => c.copyWith(dil: 'tr'))),
-          SecimCipi(metin: 'English', secili: cocuk.dil == 'en', onTap: () => n.guncelle((c) => c.copyWith(dil: 'en'))),
+          // Liste desteklenen dillerden üretilir: yeni .arb eklenince seçenek
+          // kendiliğinden gelir.
+          for (final d in AppLocalizations.supportedLocales)
+            SecimCipi(
+              metin: dilAdlari[d.languageCode] ?? d.languageCode,
+              secili: cocuk.dil == d.languageCode,
+              onTap: () => n.guncelle((c) => c.copyWith(dil: d.languageCode)),
+            ),
         ]),
         const SizedBox(height: Bosluk.xl),
         BolumBasligi(l.ayarlarPara),

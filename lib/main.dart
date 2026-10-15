@@ -9,7 +9,9 @@ import 'providers/saglayicilar.dart';
 import 'screens/ana_iskelet.dart';
 import 'screens/karsilama_ekrani.dart';
 import 'services/depo.dart';
+import 'models/varlik.dart';
 import 'theme/dunya.dart';
+import 'widgets/karakter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,12 +40,18 @@ class HarcliklarimApp extends ConsumerWidget {
       theme: dunyaTemasi(cocuk?.dunya ?? Dunya.bahce),
       locale: cocuk?.dil == null ? null : Locale(cocuk!.dil!),
       supportedLocales: AppLocalizations.supportedLocales,
+      // Global: cihaz dili destekleniyorsa o, değilse İngilizce. Flutter'ın
+      // varsayılanı listenin ilkine (şablon Türkçe) düşerdi; Japonca telefonda
+      // Türkçe açılırdı.
+      localeResolutionCallback: (cihaz, destek) => dilCoz(cihaz, destek),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      // Sincap'ın parasında çocuğun para birimi görünür (global).
+      builder: (context, child) => ParaSembolu(sembol: (cocuk?.para ?? ParaBirimi.tryy).sembol, child: child!),
       home: cocuk == null ? const KarsilamaEkrani() : const AnaIskelet(),
     );
   }

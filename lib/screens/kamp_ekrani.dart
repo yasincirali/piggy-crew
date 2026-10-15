@@ -27,7 +27,32 @@ class KampEkrani extends ConsumerStatefulWidget {
 class _KampState extends ConsumerState<KampEkrani> {
   final _yeme = <VarlikTuru, int>{};
   final _tepki = <VarlikTuru, int>{};
+  final _sevinc = <VarlikTuru, int>{};
   bool _aciliyor = false;
+  bool _ruhBakiliyor = false;
+
+  /// Değeri artıya geçen karakter bir kez sevinir. Önceki hâl cihazda
+  /// saklanır; fiyat yüklenmeden önceki hâl sayılmaz (bkz. [bilinenRuhlar]).
+  void _artiyaGecisiDenetle(Map<VarlikTuru, KarakterDurumu> k) {
+    final simdi = bilinenRuhlar(k.values);
+    if (simdi.isEmpty || _ruhBakiliyor) return;
+    final depo = ref.read(depoProvider);
+    final onceki = depo.sonRuhOku();
+    final degisti = simdi.entries.any((e) => onceki[e.key] != e.value);
+    if (!degisti) return;
+    _ruhBakiliyor = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final gecen = artiyaGecenler(onceki, simdi);
+      await depo.sonRuhYaz({...onceki, ...simdi});
+      _ruhBakiliyor = false;
+      if (!mounted || gecen.isEmpty) return;
+      setState(() {
+        for (final t in gecen) {
+          _sevinc[t] = (_sevinc[t] ?? 0) + 1;
+        }
+      });
+    });
+  }
 
   Future<void> _besle(VarlikTuru t) async {
     final sonuc = await besleGoster(context, ref, t);
@@ -52,6 +77,7 @@ class _KampState extends ConsumerState<KampEkrani> {
     final k = ref.watch(karakterlerProvider);
     final toplam = ref.watch(toplamProvider);
     final fiyat = ref.watch(fiyatProvider);
+    _artiyaGecisiDenetle(k);
     final gorunur = k.keys.toList();
     final bos = toplam.maliyetTl <= 0;
 
@@ -88,6 +114,7 @@ class _KampState extends ConsumerState<KampEkrani> {
             gecikme: gecikme,
             yemeTetik: _yeme[t] ?? 0,
             tepkiTetik: _tepki[t] ?? 0,
+            sevincTetik: _sevinc[t] ?? 0,
             bosta: true,
             ses: ref.read(sesProvider).cal,
             pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
@@ -186,7 +213,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
                     child: Row(children: [
-                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh))),
+                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh, sembol: cocuk.para.sembol))),
                       const SizedBox(width: Bosluk.m),
                       Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

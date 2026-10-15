@@ -4,10 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/cocuk.dart';
+import '../utils/bicim.dart';
 import 'varlik.dart';
 
-/// Dersler `assets/dersler.json`'dan gelir — metin kodda değil, içerikte.
+/// Dersler `assets/dersler/<dil>.json`'dan gelir — metin kodda değil, içerikte.
 /// Her ders: kavram, iki yaş modu için ayrı metin, tek soru, üç seçenek.
+///
+/// Global uygulama: dil dosyası yoksa İngilizce. Tutarlar metne yazılmaz,
+/// `{p:50}` yer tutucusuyla gelir ve çocuğun para biriminde gösterilir
+/// ([paraYerlestir]); eskiden metin "50 ₺" sabitti, İngilizce çocuk da ₺ görüyordu.
 @immutable
 class Ders {
   const Ders({
@@ -29,6 +34,13 @@ class Ders {
 
   String metin(YasModu y) => y == YasModu.kucuk ? metinKucuk : metinBuyuk;
 
+  /// Desteklenen ders dilleri; her biri için `assets/dersler/<dil>.json` var.
+  static const diller = ['tr', 'en', 'de', 'es', 'fr', 'pt'];
+
+  /// `{p:50}` → çocuğun para biriminde "50 ₺" / "$50" / "50 €".
+  static String paraYerlestir(String s, ParaBirimi p) =>
+      s.replaceAllMapped(RegExp(r'\{p:(\d+)\}'), (m) => fmtPara(double.parse(m[1]!), p));
+
   static Ders fromJson(Map<String, dynamic> j) => Ders(
         id: j['id'] as String,
         kavram: j['kavram'] as String,
@@ -41,8 +53,9 @@ class Ders {
         karakter: j['karakter'] == null ? null : VarlikTuru.fromAnahtar(j['karakter'] as String),
       );
 
-  static Future<List<Ders>> yukle() async {
-    final s = await rootBundle.loadString('assets/dersler.json');
+  static Future<List<Ders>> yukle(String dil) async {
+    final d = diller.contains(dil) ? dil : 'en';
+    final s = await rootBundle.loadString('assets/dersler/$d.json');
     return (jsonDecode(s) as List).cast<Map<String, dynamic>>().map(Ders.fromJson).toList();
   }
 }
