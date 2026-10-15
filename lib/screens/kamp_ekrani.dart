@@ -115,9 +115,9 @@ class _KampState extends ConsumerState<KampEkrani> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _sigdir(ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
-                  _sigdir(KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140)),
-                  _sigdir(ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) : const SizedBox(width: 92)),
+                  _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
+                  _sigdir(140, KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140)),
+                  _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) : const SizedBox(width: 92)),
                 ],
               ),
               const SizedBox(height: Bosluk.s),
@@ -125,8 +125,10 @@ class _KampState extends ConsumerState<KampEkrani> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _sigdir(karakter(VarlikTuru.altin, boyut: 120)),
+                  _sigdir(120, karakter(VarlikTuru.altin, boyut: 120)),
+                  // Flex = kalan doğal genişlik (335 − 120 − 92); sahne öğeleriyle aynı ölçekte.
                   Expanded(
+                    flex: 123,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Bosluk.m),
                       child: Text(
@@ -136,7 +138,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                       ),
                     ),
                   ),
-                  _sigdir(alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) : const SizedBox(width: 92)),
+                  _sigdir(92, alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) : const SizedBox(width: 92)),
                 ],
               ),
             ]),
@@ -189,4 +191,6 @@ class _KampState extends ConsumerState<KampEkrani> {
 }
 
 /// Sahne öğesi dar ekranda sığmazsa orantılı küçülür, sığıyorsa boyutu aynen kalır.
-Widget _sigdir(Widget w) => Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: w));
+/// [en] öğenin doğal genişliği: satırdaki pay buna oranla dağılır, böylece
+/// normal ekranda hiçbir öğe küçülmez (eşit pay ateşi 140'tan küçültüyordu).
+Widget _sigdir(int en, Widget w) => Flexible(flex: en, child: FittedBox(fit: BoxFit.scaleDown, child: w));
