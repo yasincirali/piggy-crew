@@ -839,7 +839,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckAtes1000Aciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Kamp ateşin ilk kez 1.000\'i geçti.'**
+  /// **'Takımı dört ayrı haftada besledin.'**
   String get ckAtes1000Aciklama;
 
   /// No description provided for @ckAtes5000Ad.
@@ -851,7 +851,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckAtes5000Aciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Kamp ateşin ilk kez 5.000\'i geçti.'**
+  /// **'Takımı on iki ayrı haftada besledin.'**
   String get ckAtes5000Aciklama;
 
   /// No description provided for @ckDers5Ad.
@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @ckTortuparlakAciklama.
   ///
   /// In tr, this message translates to:
-  /// **'Tortu\'nun değeri 1.500\'ü geçti.'**
+  /// **'Tortu\'yu beş ayrı haftada besledin.'**
   String get ckTortuparlakAciklama;
 }
 
