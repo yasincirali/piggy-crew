@@ -149,3 +149,18 @@ class KarakterDurumu {
     return Ruh.duz;
   }
 }
+
+/// Bilinen hâl: fiyatı bilinen, boş olmayan, nakit olmayan karakterin ruhu.
+/// Fiyat yüklenmeden önceki "düz" hâl bilinmeyen sayılır ki uygulama her
+/// açılışta sevinç oynatmasın.
+Map<VarlikTuru, Ruh> bilinenRuhlar(Iterable<KarakterDurumu> k) => {
+      for (final d in k)
+        if (d.farkYuzde != null && !d.bos && !d.tur.nakitMi) d.tur: d.ruh,
+    };
+
+/// Değeri artıya geçenler: önceki BİLİNEN hâli mutlu değildi, şimdi mutlu.
+/// İlk kez görülen karakter (önceki yok) kutlanmaz; düşüşte hiçbir şey olmaz.
+Set<VarlikTuru> artiyaGecenler(Map<VarlikTuru, Ruh> onceki, Map<VarlikTuru, Ruh> simdi) => {
+      for (final e in simdi.entries)
+        if (e.value == Ruh.mutlu && onceki[e.key] != null && onceki[e.key] != Ruh.mutlu) e.key,
+    };

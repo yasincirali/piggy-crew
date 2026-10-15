@@ -27,10 +27,15 @@ class KarakterPainter extends CustomPainter {
     this.gozKapali = false,
     this.agizAcik = false,
     this.bakis = Offset.zero,
+    this.yuz,
   });
 
   final VarlikTuru tur;
   final Ruh ruh;
+
+  /// Sürekli yüz değerleri (canlı karakter). Null ise yüz [ruh], [gozKapali]
+  /// ve [agizAcik]'tan türetilir (durağan çizimler: liste, albüm).
+  final Yuz? yuz;
 
   /// Beslenirken çiğneme: ağız yuvarlak açılır (ruh hâlinden bağımsız).
   final bool agizAcik;
@@ -118,49 +123,98 @@ class KarakterPainter extends CustomPainter {
   }
 
   // ── Yüz parçaları ──────────────────────────────────────────────────────
-  void _goz(Canvas cv, double cx, double cy, double r, Color kapak, {Color iris = _murekkep, double irisR = 3.9}) {
-    cv.drawCircle(Offset(cx, cy), r, _dolgu(const Color(0xFFFFFAF0)));
-    cv.drawCircle(Offset(cx, cy), r, _cizgi(1.5));
-    if (gozKapali) {
-      // Kapak: yarım daire, tüm gözü örter.
-      final kapakYolu = Path()
-        ..addArc(Rect.fromCircle(center: Offset(cx, cy), radius: r + .3), math.pi, math.pi)
-        ..close();
-      cv.drawPath(kapakYolu, _dolgu(kapak));
-      cv.drawPath(kapakYolu, _cizgi(1.5));
-      cv.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), _cizgi(1.5));
-      return;
+  //
+  // Neden sürekli değerler: eskiden yüz birkaç sabit hâl arasında atlıyordu
+  // (açık göz ↔ kapalı kapak, düz ağız ↔ gülüş). Sevinç anında gözlerin
+  // uykulu kapağa dönmesi çocuğa "yoruldu" diye okunuyordu. Artık her parça
+  // 0–1 arası bir değerle biçim değiştirir ve sahneler bu değerleri yumuşak
+  // zarflarla sürer: aynı duygu her yerde aynı yüzle, atlamadan gelir.
+  Yuz get _y => yuz ?? Yuz.ruhtan(ruh, kapali: gozKapali, agizAcik: agizAcik);
+
+  void _goz(Canvas cv, double cx, double cy, double r, {Color iris = _murekkep, double irisR = 3.9}) {
+    final y = _y;
+    final s = y.sevinc.clamp(0.0, 1.0);
+    final k = y.kapak.clamp(0.0, 1.0);
+    // Göz dikeyde basılarak çizgiye dönüşür; çizgi sevinçte ^ (gülen göz),
+    // kırpma/esnemede ‿ (kapalı göz). İkisi de aynı basılmanın iki ucu.
+    final acik = (1 - s) * (1 - k);
+    // Kare: ara kareler kısa sürsün (yarı basık göz "şüpheli" okunuyor).
+    final boy = acik * acik;
+    if (boy > .03) {
+      cv.save();
+      cv.translate(cx, cy);
+      cv.scale(1, boy);
+      cv.translate(-cx, -cy);
+      cv.drawCircle(Offset(cx, cy), r, _dolgu(const Color(0xFFFFFAF0)));
+      cv.drawCircle(Offset(cx, cy), r, _cizgi(1.5));
+      // Bebek göz içinde kalır: kayma payı (r − irisR) ile sınırlı.
+      final pay = math.max(0.0, r - irisR - .8);
+      final b = Offset(cx + 1 + bakis.dx * pay, cy + 1 + bakis.dy * pay);
+      cv.drawCircle(b, irisR, _dolgu(iris));
+      if (iris != _murekkep) cv.drawCircle(b, irisR * .55, _dolgu(_murekkep));
+      cv.drawCircle(b + const Offset(2.5, -3.5), 1.8, _dolgu(Colors.white));
+      cv.restore();
     }
-    // Bebek göz içinde kalır: kayma payı (r − irisR) ile sınırlı.
-    final pay = math.max(0.0, r - irisR - .8);
-    final b = Offset(cx + 1 + bakis.dx * pay, cy + 1 + bakis.dy * pay);
-    cv.drawCircle(b, irisR, _dolgu(iris));
-    if (iris != _murekkep) cv.drawCircle(b, irisR * .55, _dolgu(_murekkep));
-    cv.drawCircle(b + const Offset(2.5, -3.5), 1.8, _dolgu(Colors.white));
+    final yay = 1 - acik;
+    if (yay <= .03) return;
+    // Yay, göz kapandıkça belirir; biçimi sevinç ile kapak oranına göre.
+    final sevincPayi = (s + k) == 0 ? 0.0 : s / (s + k);
+    final egim = r * (.85 * sevincPayi - .45 * (1 - sevincPayi));
+    final taban = cy + r * .25 * sevincPayi;
+    final yol = Path()
+      ..moveTo(cx - r * .8, taban)
+      ..quadraticBezierTo(cx, taban - 2 * egim, cx + r * .8, taban);
+    cv.drawPath(yol, _cizgi(2.4, _murekkep.withValues(alpha: (yay * 2.5).clamp(0.0, 1.0))));
   }
 
   void _yanak(Canvas cv, double cx, double cy) {
-    cv.drawOval(Rect.fromCenter(center: Offset(cx, cy), width: 12, height: 7),
-        _dolgu(const Color(0xBFF28C8C)));
+    final kz = _y.kizarma.clamp(0.0, 1.0);
+    cv.drawOval(Rect.fromCenter(center: Offset(cx, cy), width: 12 * (1 + .4 * kz), height: 7 * (1 + .4 * kz)),
+        _dolgu(const Color(0xFFF28C8C).withValues(alpha: .75 + .25 * kz)));
   }
 
-  /// Ağız: ruh hâline göre tek yol. Konum karaktere göre (x,y) kaydırılır.
+  /// Ağız tek biçimden türer: düz çizgi → gülümseme → açık "D" kahkaha;
+  /// çiğneme ve esneme ise yuvarlak "O". Konum karaktere göre (x,y) kaydırılır.
   void _agiz(Canvas cv, double dx, double dy) {
-    if (agizAcik) {
-      final o = Rect.fromCenter(center: Offset(55 + dx, 45 + dy), width: 13, height: 10);
-      cv.drawOval(o, _dolgu(_murekkep));
-      cv.drawOval(Rect.fromCenter(center: Offset(55 + dx, 48 + dy), width: 7, height: 3.5),
-          _dolgu(const Color(0xFFF28C8C)));
-      return;
-    }
-    final d = switch (ruh) {
-      Ruh.mutlu => 'M46 42q9 9 18 0',
-      // Bulutlu yüz sakin: düz ağız, ağlama/küskünlük yok.
-      Ruh.duz || Ruh.bulutlu => 'M48 45h14',
-    };
+    final y = _y;
+    final g = y.gulus.clamp(0.0, 1.0);
+    final s = y.kahkaha.clamp(0.0, 1.0);
+    final o = y.agizO.clamp(0.0, 1.0);
     cv.save();
     cv.translate(dx, dy);
-    cv.drawPath(_p(d), _cizgi(2.6));
+    if (o < .97) {
+      final x0 = 48 - 2 * g - 2 * s, x1 = 62 + 2 * g + 2 * s, y0 = 45 - 3 * g;
+      final alt = y0 + 9 * g + 13 * s, ust = y0 + 9 * g * (1 - s);
+      final katman = o > 0;
+      if (katman) cv.saveLayer(const Rect.fromLTWH(30, 25, 50, 40), Paint()..color = Color.fromRGBO(0, 0, 0, 1 - o));
+      if (s < .02) {
+        cv.drawPath(
+            Path()
+              ..moveTo(x0, y0)
+              ..quadraticBezierTo(55, alt, x1, y0),
+            _cizgi(2.6));
+      } else {
+        final d = Path()
+          ..moveTo(x0, y0)
+          ..quadraticBezierTo(55, alt, x1, y0)
+          ..quadraticBezierTo(55, ust, x0, y0)
+          ..close();
+        cv.drawPath(d, _dolgu(_murekkep));
+        cv.save();
+        cv.clipPath(d);
+        final dip = (y0 + alt) / 2;
+        cv.drawOval(Rect.fromCenter(center: Offset(55, dip - 1), width: 11, height: 7), _dolgu(const Color(0xFFF28C8C)));
+        cv.restore();
+        cv.drawPath(d, _cizgi(2.2));
+      }
+      if (katman) cv.restore();
+    }
+    if (o > .02) {
+      final r = Rect.fromCenter(center: const Offset(55, 45), width: 6 + 7 * o, height: 10 * o);
+      cv.drawOval(r, _dolgu(_murekkep));
+      cv.drawOval(Rect.fromCenter(center: Offset(55, 45 + 3 * o), width: 7 * o, height: 3.5 * o),
+          _dolgu(const Color(0xFFF28C8C)));
+    }
     cv.restore();
   }
 
@@ -217,8 +271,8 @@ class KarakterPainter extends CustomPainter {
     cv.drawCircle(const Offset(55, 34), 22, _dolgu(ten));
     cv.drawCircle(const Offset(55, 34), 22, _cizgi(2));
     cv.drawPath(_p('M44 16q11-8 22 0'), _cizgi(2));
-    _goz(cv, 47, 32, 7, ten);
-    _goz(cv, 63, 32, 7, ten);
+    _goz(cv, 47, 32, 7);
+    _goz(cv, 63, 32, 7);
     _yanak(cv, 40, 44);
     _yanak(cv, 70, 44);
     _agiz(cv, 0, 0);
@@ -237,8 +291,8 @@ class KarakterPainter extends CustomPainter {
     final karin = Rect.fromCenter(center: const Offset(55, 84), width: 32, height: 24);
     cv.drawOval(karin, _dolgu(const Color(0xFFEAFBEA)));
     cv.drawOval(karin, _cizgi(1.5));
-    _goz(cv, 44, 60, 8, yesil, irisR: 4.4);
-    _goz(cv, 66, 60, 8, yesil, irisR: 4.4);
+    _goz(cv, 44, 60, 8, irisR: 4.4);
+    _goz(cv, 66, 60, 8, irisR: 4.4);
     _yanak(cv, 37, 72);
     _yanak(cv, 73, 72);
     _sekil(cv, _p('M51 73l4 4 4-4z'), const Color(0xFFF28C8C), kontur: 1.2);
@@ -262,7 +316,7 @@ class KarakterPainter extends CustomPainter {
     // Nazar gözleri: açık mavi halka + beyaz + mavi iris + siyah göz bebeği.
     for (final cx in [42.0, 68.0]) {
       cv.drawCircle(Offset(cx, 56), 12, _dolgu(const Color(0xFF7FC8FF)));
-      _goz(cv, cx, 56, 10, lacivert, iris: const Color(0xFF2B6FD6), irisR: 6.2);
+      _goz(cv, cx, 56, 10, iris: const Color(0xFF2B6FD6), irisR: 6.2);
     }
     _yanak(cv, 35, 68);
     _yanak(cv, 75, 68);
@@ -283,8 +337,8 @@ class KarakterPainter extends CustomPainter {
     final karin = Rect.fromCenter(center: const Offset(46, 78), width: 32, height: 24);
     cv.drawOval(karin, _dolgu(const Color(0xFFFFE3C2)));
     cv.drawOval(karin, _cizgi(1.5));
-    _goz(cv, 36, 58, 7, turuncu);
-    _goz(cv, 56, 58, 7, turuncu);
+    _goz(cv, 36, 58, 7);
+    _goz(cv, 56, 58, 7);
     _yanak(cv, 29, 70);
     _yanak(cv, 63, 70);
     cv.drawPath(_p('M43 71l3 4 3-4z'), _dolgu(_murekkep));
@@ -303,8 +357,111 @@ class KarakterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(KarakterPainter o) =>
-      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis;
+      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz;
 }
+
+/// Yüzün sürekli değerleri (hepsi 0–1). Tek duygu sözlüğü:
+/// - [gulus]: ağız uçları; 0 düz, 1 gülümseme. Ruh hâlinden gelir.
+/// - [sevinc]: gözler ^ biçimine kapanır (gülen göz).
+/// - [kahkaha]: gülümseme açık "D" ağza açılır, dil görünür.
+/// - [kapak]: göz ‿ biçimine kapanır (kırpma, esneme). Uyku/yorgunluk dili;
+///   sevinçte KULLANILMAZ.
+/// - [agizO]: yuvarlak ağız (para yerken, esnerken).
+/// - [kizarma]: yanaklar büyür ve koyulaşır (sevinç, mahcup keyif).
+@immutable
+class Yuz {
+  const Yuz({this.gulus = 0, this.sevinc = 0, this.kahkaha = 0, this.kapak = 0, this.agizO = 0, this.kizarma = 0});
+
+  factory Yuz.ruhtan(Ruh r, {bool kapali = false, bool agizAcik = false}) =>
+      Yuz(gulus: ruhGulusu(r), kapak: kapali ? 1 : 0, agizO: agizAcik ? 1 : 0);
+
+  /// Ruh hâlinin ağız eğrisi. Düz hâl hafif gülümser: 7–10 yaş düz çizgiyi
+  /// "canı sıkkın" okur; nötr karakter de sıcak bakmalı. Bulutlu en sakin.
+  static double ruhGulusu(Ruh r) => switch (r) {
+        Ruh.mutlu => 1,
+        Ruh.duz => .4,
+        Ruh.bulutlu => .1,
+      };
+
+  final double gulus, sevinc, kahkaha, kapak, agizO, kizarma;
+
+  /// Sahne katmanlarını birleştirir: her değer en güçlü katmandan gelir.
+  Yuz ust(Yuz o) => Yuz(
+        gulus: math.max(gulus, o.gulus),
+        sevinc: math.max(sevinc, o.sevinc),
+        kahkaha: math.max(kahkaha, o.kahkaha),
+        kapak: math.max(kapak, o.kapak),
+        agizO: math.max(agizO, o.agizO),
+        kizarma: math.max(kizarma, o.kizarma),
+      );
+
+  List<double> get degerler => [gulus, sevinc, kahkaha, kapak, agizO, kizarma];
+
+  @override
+  bool operator ==(Object other) => other is Yuz && _esit(other);
+  bool _esit(Yuz o) {
+    final a = degerler, b = o.degerler;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll(degerler);
+}
+
+/// Yumuşak zarf: 0'dan girer, 1'de durur, 0'a iner. Uçlarda eğim sıfır
+/// (smoothstep) ki duygu "açılıp kapanırken" atlama olmasın.
+double zarf(double t, {double gir = .15, double cik = .2}) {
+  if (t <= 0 || t >= 1) return 0;
+  double ss(double x) {
+    final c = x.clamp(0.0, 1.0);
+    return c * c * (3 - 2 * c);
+  }
+
+  return math.min(ss(t / gir), ss((1 - t) / cik));
+}
+
+/// Sevinç yüzü (gücü e): ^ gözler, açık gülüş, kızaran yanak. Besleme sonu,
+/// değer artıya geçince ve dokunma kıkırdaması AYNI yüzü kullanır.
+Yuz sevincYuzu(double e, {double kahkaha = 1}) =>
+    Yuz(gulus: e, sevinc: e, kahkaha: e * kahkaha, kizarma: e);
+
+/// Besleme sahnesinin yüzü (t: 0–1, sahne zaman çizelgesi). Saf fonksiyon:
+/// sürekliliği test edilir (`karakter_duygu_test`).
+Yuz yemeYuzu(double t) {
+  // Para ağza yaklaşırken ağız açılır, vardıktan sonra çiğnenerek kapanır.
+  var o = 0.0;
+  for (final b in yemeParaBasla) {
+    final p = (t - b) / yemeDusus;
+    double ss(double x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+    final ac = ss((p - .35) / .25);
+    final kapan = ss((p - 1) / .2);
+    o = math.max(o, ac * (1 - kapan));
+  }
+  final u = ((t - yemeSevincAni) / (1 - yemeSevincAni)).clamp(0.0, 1.0);
+  return Yuz(agizO: o).ust(sevincYuzu(zarf(u, gir: .12, cik: .3)));
+}
+
+/// Besleme sırasında gözler: paralar düşerken yukarı bakar, her para ağza
+/// varınca kısa bir an aşağı (ağza) iner. Sürekli fonksiyon: para değişiminde
+/// bakış sıçramaz.
+double yemeBakisY(double t) {
+  double ss(double x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  var y = -ss(t / .06);
+  for (final b in yemeParaBasla) {
+    final x = (t - (b + yemeDusus)) / .06;
+    if (x > -1 && x < 1) y += 1.3 * (math.cos(x * math.pi) + 1) / 2;
+  }
+  return y * (1 - ss((t - .58) / .08));
+}
+
+/// Yeme zaman çizelgesi (0–1): paraların düşmeye başladığı anlar, düşüş
+/// süresi ve sevinç anı.
+const yemeParaBasla = [0.0, 0.16, 0.32];
+const yemeDusus = 0.24;
+const yemeSevincAni = 0.66;
 
 /// Ağız merkezi (110×110 alanında) — besleme paraları buraya düşer.
 Offset _agizMerkezi(VarlikTuru t) => switch (t) {
@@ -347,12 +504,18 @@ enum _Bosta { kipir, ziplama, gerinme, keyif, etrafaBak, dans }
 ///   kıpırdanma, minik zıplama, gerinip esneme, keyifle sallanma, etrafa
 ///   bakma ya da iki adımlık dans. Yalnız
 ///   kampta açık; sayfalarda ve listelerde kapalı ki ekran kalabalıklaşmasın.
-/// - Tepki (`tepkiTetik`): dokununca zıplar, kıpırdar, kendi sesini çıkarır.
+/// - Tepki (`tepkiTetik`): dokununca zıplar, kıkırdar, kendi sesini çıkarır.
 /// - Yeme (`yemeTetik`): besleme sonrası üç para yukarıdan ağzına düşer; her
 ///   birinde ağız açılır, çiğner, "tın" sesi ve hafif titreşim gelir. Sonunda
 ///   sevinç zıplaması ve kısa arpej. ~1,4 sn: her para tek tek sayılacak kadar
 ///   uzun (tatmin bu sayımdan gelir), tekrar beslemek isteyecek kadar kısa.
 ///   Konfeti yok (ürün kararı): ödül karakterin kendi sevinci.
+/// - Sevinç (`sevincTetik`): değeri artıya geçince bir kez, iki zıplama ve
+///   besleme sonundaki sevinç yüzünün aynısı.
+///
+/// Duygu sözlüğü tektir ([Yuz]): sevinç = ^ gözler + açık gülüş + kızaran
+/// yanak (besleme sonu, artıya geçiş, dokunma kıkırdaması, keyif); kapalı ‿
+/// göz yalnız kırpma ve esnemede. Ruh hâli değişince gülüş 600 ms'de kayar.
 class Karakter extends StatefulWidget {
   const Karakter({
     super.key,
@@ -364,6 +527,7 @@ class Karakter extends StatefulWidget {
     this.gecikme = Duration.zero,
     this.tepkiTetik = 0,
     this.yemeTetik = 0,
+    this.sevincTetik = 0,
     this.bosta = false,
     this.ses,
   });
@@ -380,6 +544,9 @@ class Karakter extends StatefulWidget {
 
   /// Her artışta besleme (yeme) sahnesi oynar.
   final int yemeTetik;
+
+  /// Her artışta "artıya geçti" sevinci oynar.
+  final int sevincTetik;
 
   /// Kendiliğinden ara sıra hareket etsin mi (kamp).
   final bool bosta;
@@ -400,16 +567,26 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
   late final AnimationController _bostaC =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
+  // Kırpma 180 ms: göz ‿'ya kapanıp açılır (eskiden 140 ms'lik anlık takas).
+  late final AnimationController _kirp =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 180));
   // Teselli: bulutluyken dokununca bulut çekilir, güneş açar, sonra bulut
   // yavaşça geri gelir (fiyat değişmedi; yalan söylemeyiz, ama karakter
   // çocuğun ilgisine sevinir).
   late final AnimationController _teselli =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
+  // Artıya geçiş sevinci: iki zıplama, ~1,5 sn. Nadir an, sevinç bütçesi burada.
+  late final AnimationController _sevincC =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+  // Ruh değişince gülüş eğrisi yumuşak kayar (ani yüz değişimi yok).
+  late final AnimationController _gulusC =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 600), value: 1);
+  late double _gulusBas = Yuz.ruhGulusu(widget.ruh);
+  late double _gulusHedef = _gulusBas;
   Timer? _gunesSabit;
   bool _gunesAcik = false;
   late final AnimationController _yeme =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..addListener(_yemeSesleri);
-  bool _kapali = false;
   _Bosta _bostaTur = _Bosta.kipir;
   final _rnd = math.Random();
   // Zamanlayıcılar alanda tutulur ve dispose'da iptal edilir; aksi hâlde
@@ -419,15 +596,10 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   Timer? _bostaZaman;
   Timer? _sessizSevinc;
 
-  // Yeme zaman çizelgesi (0–1): paraların düşmeye başladığı anlar, düşüş
-  // süresi, "yum" ve sevinç zıplamasının başı.
-  static const _paraBasla = [0.0, 0.16, 0.32];
-  static const _dusus = 0.24;
-  static const _yumAni = 0.6;
-  static const _sevincAni = 0.66;
   int _calinanPara = 0;
   bool _yumCalindi = false;
   bool _sevincCalindi = false;
+  static const _yumAni = 0.6;
 
   bool get _hareketsiz => MediaQuery.of(context).disableAnimations;
 
@@ -444,15 +616,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   void _kirpmaPlanla() {
     _kirpma = Timer(Duration(milliseconds: 2500 + _rnd.nextInt(3500)), () {
       if (!mounted) return;
-      if (!_hareketsiz) {
-        setState(() => _kapali = true);
-        _kirpma = Timer(const Duration(milliseconds: 140), () {
-          if (!mounted) return;
-          setState(() => _kapali = false);
-          _kirpmaPlanla();
-        });
-        return;
-      }
+      if (!_hareketsiz) _kirp.forward(from: 0);
       _kirpmaPlanla();
     });
   }
@@ -461,7 +625,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _bostaZaman?.cancel();
     _bostaZaman = Timer(Duration(milliseconds: 6000 + _rnd.nextInt(7000)), () {
       if (!mounted || !widget.bosta) return;
-      final mesgul = _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating;
+      final mesgul = _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating;
       if (!_hareketsiz && !mesgul) {
         _bostaTur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
         _bostaC.forward(from: 0);
@@ -472,7 +636,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
 
   void _yemeSesleri() {
     final t = _yeme.value;
-    while (_calinanPara < _paraBasla.length && t >= _paraBasla[_calinanPara] + _dusus) {
+    while (_calinanPara < yemeParaBasla.length && t >= yemeParaBasla[_calinanPara] + yemeDusus) {
       _calinanPara++;
       widget.ses?.call(Ses.para);
       HapticFeedback.lightImpact();
@@ -481,16 +645,23 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       _yumCalindi = true;
       widget.ses?.call(Ses.yum);
     }
-    if (!_sevincCalindi && t >= _sevincAni) {
+    if (!_sevincCalindi && t >= yemeSevincAni) {
       _sevincCalindi = true;
       widget.ses?.call(Ses.yasasin);
       HapticFeedback.mediumImpact();
     }
   }
 
+  double get _gulus => _gulusBas + (_gulusHedef - _gulusBas) * Curves.easeInOut.transform(_gulusC.value);
+
   @override
   void didUpdateWidget(Karakter o) {
     super.didUpdateWidget(o);
+    if (o.ruh != widget.ruh) {
+      _gulusBas = _gulus;
+      _gulusHedef = Yuz.ruhGulusu(widget.ruh);
+      _hareketsiz ? _gulusC.value = 1 : _gulusC.forward(from: 0);
+    }
     if (o.tepkiTetik != widget.tepkiTetik) {
       widget.ses?.call(widget.tur.ses);
       if (widget.ruh == Ruh.bulutlu) {
@@ -523,7 +694,16 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         _yumCalindi = false;
         _sevincCalindi = false;
         _bostaC.stop();
+        _sevincC.stop();
         _yeme.forward(from: 0);
+      }
+    }
+    if (o.sevincTetik != widget.sevincTetik) {
+      widget.ses?.call(Ses.yasasin);
+      if (!_hareketsiz && !_yeme.isAnimating) {
+        HapticFeedback.mediumImpact();
+        _bostaC.stop();
+        _sevincC.forward(from: 0);
       }
     }
     if (o.bosta != widget.bosta) {
@@ -543,6 +723,9 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _hop.dispose();
     _kipir.dispose();
     _bostaC.dispose();
+    _kirp.dispose();
+    _sevincC.dispose();
+    _gulusC.dispose();
     _yeme.dispose();
     super.dispose();
   }
@@ -550,7 +733,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   /// i. paranın düşüş ilerlemesi (0–1); düşmüyorsa null.
   double? _paraIlerleme(int i) {
     if (!_yeme.isAnimating) return null;
-    final p = (_yeme.value - _paraBasla[i]) / _dusus;
+    final p = (_yeme.value - yemeParaBasla[i]) / yemeDusus;
     return (p > 0 && p < 1) ? p : null;
   }
 
@@ -558,8 +741,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   double _cigneme() {
     if (!_yeme.isAnimating) return 0;
     var c = 0.0;
-    for (final b in _paraBasla) {
-      final x = (_yeme.value - (b + _dusus)) / 0.07;
+    for (final b in yemeParaBasla) {
+      final x = (_yeme.value - (b + yemeDusus)) / 0.07;
       if (x > 0 && x < 1) c = math.max(c, math.sin(x * math.pi));
     }
     return c;
@@ -568,14 +751,14 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli]),
+      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli, _kirp, _sevincC, _gulusC]),
       builder: (context, _) {
         // Salınım = nefes: hafif yükselme + göğüs şişmesi.
         final nefes = Curves.easeInOut.transform(_bob.value);
         var y = -4 * nefes;
         var sx = 1.0 - .012 * nefes, sy = 1.0 + .02 * nefes, aci = 0.0;
-        var gozKapali = _kapali;
         var bakis = Offset.zero;
+        var yuz = Yuz(kapak: _kirp.isAnimating ? math.sin(_kirp.value * math.pi) : 0);
 
         void zipla(double t, double yukseklik) {
           final z = ziplamaEgrisi(t, yukseklik);
@@ -584,11 +767,12 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
           sy *= z.sy;
         }
 
-        // Dokunma: çömel–zıpla–yaylan, üstüne sönen kıpırtı.
+        // Dokunma: çömel–zıpla–yaylan, üstüne sönen kıpırtı ve kıkırdama
+        // (gülen göz, yarı açık gülüş): "dokundun, hoşuma gitti".
         if (_hop.isAnimating) zipla(_hop.value, 16);
         final k = _kipir.value;
         aci += .09 * math.sin(k * math.pi * 4) * (1 - k);
-        if (_kipir.isAnimating && k > .1 && k < .7) gozKapali = true;
+        if (_kipir.isAnimating) yuz = yuz.ust(sevincYuzu(zarf(k, gir: .12, cik: .35), kahkaha: .7));
 
         // Boşta.
         if (_bostaC.isAnimating) {
@@ -599,14 +783,18 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
             case _Bosta.ziplama:
               zipla(b, 9);
             case _Bosta.gerinme:
-              // Yavaş uzan, tepede bir an dur, bırak (esneme gibi).
+              // Yavaş uzan, tepede esne (‿ göz + O ağız), bırak.
               final g = math.sin(math.pi * Curves.easeInOut.transform(b));
               sy += .09 * g;
               sx -= .05 * g;
-              if (b > .3 && b < .75) gozKapali = true;
+              final e = zarf(b, gir: .3, cik: .3);
+              yuz = yuz.ust(Yuz(kapak: e, agizO: e * .9));
             case _Bosta.keyif:
-              // Gözler kapalı, yana hafif yaslanıp mırlanır gibi sallanma.
-              if (b > .1 && b < .9) gozKapali = true;
+              // Keyif: gülen gözler, kapalı gülüş, hafif pembe yanak; yana
+              // yaslanıp mırlanır gibi sallanma. Uykulu göz değil (eski hâl
+              // "yoruldu" okunuyordu).
+              final e = zarf(b, gir: .2, cik: .25);
+              yuz = yuz.ust(Yuz(gulus: e, sevinc: e, kizarma: .5 * e));
               aci += .07 * math.sin(b * math.pi) * math.sin(b * math.pi * 3);
             case _Bosta.etrafaBak:
               // Önce sola, sonra sağa bakar; baş bakışla aynı yana eğilir.
@@ -614,30 +802,31 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
               bakis = Offset(d, -.2 * d.abs());
               aci += .05 * d;
             case _Bosta.dans:
-              // İki küçük sekme, her birinde başka yana eğilerek.
+              // İki küçük sekme, her birinde başka yana eğilerek; gülümser.
               final yarim = b < .5 ? b * 2 : (b - .5) * 2;
               zipla(yarim, 6);
               aci += (b < .5 ? -.08 : .08) * math.sin(yarim * math.pi);
+              yuz = yuz.ust(Yuz(gulus: zarf(b)));
           }
         }
 
-        // Yeme: çiğneme sıkışması, ağız; sonda sevinç zıplaması.
-        var agizAcik = false;
+        // Yeme: çiğneme sıkışması, ağız, bakış; sonda sevinç zıplaması.
         if (_yeme.isAnimating) {
+          final t = _yeme.value;
           final c = _cigneme();
           sx += .07 * c;
           sy -= .07 * c;
-          for (var i = 0; i < _paraBasla.length; i++) {
-            final p = _paraIlerleme(i);
-            if (p != null && p > .45) agizAcik = true;
-            // Gözler düşen paraya kilitlenir: önce yukarı, para indikçe aşağı.
-            if (p != null) bakis = Offset(0, -1 + 1.6 * p * p);
-          }
-          final u = ((_yeme.value - _sevincAni) / (1 - _sevincAni)).clamp(0.0, 1.0);
-          if (u > 0) {
-            zipla(u, 22);
-            if (u > .1 && u < .9) gozKapali = true;
-          }
+          bakis = Offset(0, yemeBakisY(t));
+          yuz = yuz.ust(yemeYuzu(t));
+          final u = ((t - yemeSevincAni) / (1 - yemeSevincAni)).clamp(0.0, 1.0);
+          if (u > 0) zipla(u, 22);
+        }
+
+        // Artıya geçiş: iki zıplama (büyük + küçük), aynı sevinç yüzü.
+        if (_sevincC.isAnimating) {
+          final v = _sevincC.value;
+          v < .55 ? zipla(v / .55, 20) : zipla((v - .55) / .45, 10);
+          yuz = yuz.ust(sevincYuzu(zarf(v, gir: .1, cik: .25)));
         }
 
         // Hava: bulutluyken başın üstünde süzülen bulut; teselli anında güneş.
@@ -651,6 +840,10 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                       (1 - Curves.easeIn.transform(((t - .75) / .25).clamp(0.0, 1.0)))
                   : 0;
         }
+        // Güneş açtıkça karakter de gülümser (teselliye karşılık), kayarak.
+        final taban = _gulus + (1 - _gulus) * (gunes ?? 0);
+        yuz = Yuz(gulus: taban).ust(yuz);
+
         final karakter = Transform.translate(
           offset: Offset(0, y),
           child: Transform.rotate(
@@ -664,13 +857,11 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                 size: Size.square(widget.boyut),
                 painter: KarakterPainter(
                   tur: widget.tur,
-                  // Güneş açınca karakter de gülümser (teselliye karşılık).
-                  ruh: (gunes ?? 0) > .5 ? Ruh.mutlu : widget.ruh,
+                  ruh: widget.ruh,
                   pulSayisi: widget.pulSayisi,
                   parlak: widget.parlak,
-                  gozKapali: gozKapali,
-                  agizAcik: agizAcik,
                   bakis: bakis,
+                  yuz: yuz,
                 ),
               ),
             ),
@@ -686,16 +877,16 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
               ),
             ),
           if (_yeme.isAnimating)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: CustomPaint(
-                painter: _ParaYagmuru(
-                  agiz: _agizMerkezi(widget.tur),
-                  ilerlemeler: [for (var i = 0; i < _paraBasla.length; i++) _paraIlerleme(i)],
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: _ParaYagmuru(
+                    agiz: _agizMerkezi(widget.tur),
+                    ilerlemeler: [for (var i = 0; i < yemeParaBasla.length; i++) _paraIlerleme(i)],
+                  ),
                 ),
               ),
             ),
-          ),
         ]);
       },
     );
