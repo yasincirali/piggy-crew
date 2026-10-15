@@ -173,14 +173,19 @@ extension DunyaContext on BuildContext {
   TextTheme get t => Theme.of(this).textTheme;
 }
 
-/// Dünyaya göre ThemeData. Tipografi sistem fontu (SF/Roboto) — çevrimdışı ve
-/// Dynamic Type dostu. Gösterim fontu (yuvarlak, çocuksu olmayan) 2. kapıda
-/// pakete gömülecek; google_fonts çalışma zamanında ağdan çeker, Kids
-/// kategorisinde istenmez.
+const baslikFontu = 'Baloo2';
+const govdeFontu = 'Nunito';
+
+/// Dünyaya göre ThemeData. Tipografi pakete gömülü iki aile: başlıklar Baloo 2
+/// (yuvarlak, kalın, logodaki tombul kavanozla aynı dil), gövde Nunito (yuvarlak
+/// uçlu, küçük boyutta okunaklı). google_fonts kullanılmaz: çalışma zamanında
+/// ağdan çeker, Kids kategorisinde istenmez. Boyutlar Material ölçeğinden gelir,
+/// Dynamic Type (textScaler) olduğu gibi uygulanır.
 ThemeData dunyaTemasi(Dunya d) {
   final r = DunyaRenkleri.of(d);
   final base = r.koyu ? ThemeData.dark(useMaterial3: true) : ThemeData.light(useMaterial3: true);
-  final tt = base.textTheme.apply(bodyColor: r.fg, displayColor: r.fg);
+  final tt = base.textTheme.apply(bodyColor: r.fg, displayColor: r.fg, fontFamily: govdeFontu);
+  TextStyle? baslik(TextStyle? s) => s?.copyWith(fontFamily: baslikFontu);
   return base.copyWith(
     scaffoldBackgroundColor: r.bg2,
     colorScheme: base.colorScheme.copyWith(
@@ -191,9 +196,13 @@ ThemeData dunyaTemasi(Dunya d) {
       error: r.loss,
     ),
     textTheme: tt.copyWith(
-      displayLarge: tt.displayLarge?.copyWith(fontWeight: FontWeight.w800, letterSpacing: -1.5),
-      headlineMedium: tt.headlineMedium?.copyWith(fontWeight: FontWeight.w700, letterSpacing: -.5),
-      titleLarge: tt.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+      displayLarge: baslik(tt.displayLarge)?.copyWith(fontWeight: FontWeight.w800, letterSpacing: -1),
+      displayMedium: baslik(tt.displayMedium)?.copyWith(fontWeight: FontWeight.w800),
+      displaySmall: baslik(tt.displaySmall)?.copyWith(fontWeight: FontWeight.w800),
+      headlineLarge: baslik(tt.headlineLarge)?.copyWith(fontWeight: FontWeight.w700),
+      headlineMedium: baslik(tt.headlineMedium)?.copyWith(fontWeight: FontWeight.w700, letterSpacing: -.25),
+      headlineSmall: baslik(tt.headlineSmall)?.copyWith(fontWeight: FontWeight.w700),
+      titleLarge: baslik(tt.titleLarge)?.copyWith(fontWeight: FontWeight.w700),
       titleMedium: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700),
       bodyLarge: tt.bodyLarge?.copyWith(height: 1.4),
       bodyMedium: tt.bodyMedium?.copyWith(height: 1.4, color: r.sub),

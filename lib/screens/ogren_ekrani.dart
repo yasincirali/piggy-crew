@@ -53,9 +53,9 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
       children: [
-        Row(children: [
+        // Wrap: büyük yazıda başlık ile sayaç yan yana sığmazsa alt alta iner.
+        Wrap(alignment: WrapAlignment.spaceBetween, spacing: Bosluk.s, runSpacing: Bosluk.xs, children: [
           BolumBasligi(l.ogrenBaslik),
-          const Spacer(),
           Text(l.ogrenSayac(ilerleme + 1, dersler.length), style: context.t.labelLarge?.copyWith(color: r.sub)),
         ]),
         const SizedBox(height: Bosluk.s),

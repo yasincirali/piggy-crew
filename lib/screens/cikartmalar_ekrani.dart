@@ -27,19 +27,34 @@ class CikartmalarEkrani extends ConsumerWidget {
         const SizedBox(height: Bosluk.s),
         Text(l.cikartmaSayac(acik.length, Cikartma.hepsi.length), style: context.t.labelLarge?.copyWith(color: r.sub)),
         const SizedBox(height: Bosluk.l),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: Bosluk.m,
-            crossAxisSpacing: Bosluk.m,
-            childAspectRatio: .92,
-          ),
-          itemCount: Cikartma.hepsi.length,
-          itemBuilder: (_, i) {
-            final c = Cikartma.hepsi[i];
-            final var_ = acik.contains(c.id);
+        // Sabit en-boy oranlı ızgara yerine satırlar: kart yüksekliği metne göre
+        // büyür, aynı satırdaki iki kart eşit boyda kalır (Dynamic Type 3×'te
+        // ızgara taşıyordu). Büyük yazıda tek sütun.
+        Builder(builder: (context) {
+          final sutun = MediaQuery.textScalerOf(context).scale(1) > 1.6 ? 1 : 2;
+          final hepsi = Cikartma.hepsi;
+          return Column(children: [
+            for (var i = 0; i < hepsi.length; i += sutun)
+              Padding(
+                padding: EdgeInsets.only(bottom: i + sutun < hepsi.length ? Bosluk.m : 0),
+                child: IntrinsicHeight(
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                    for (var j = i; j < i + sutun; j++) ...[
+                      if (j > i) const SizedBox(width: Bosluk.m),
+                      Expanded(
+                        child: j < hepsi.length ? _kart(context, l, r, hepsi[j], acik.contains(hepsi[j].id)) : const SizedBox(),
+                      ),
+                    ],
+                  ]),
+                ),
+              ),
+          ]);
+        }),
+      ],
+    );
+  }
+
+  Widget _kart(BuildContext context, AppLocalizations l, DunyaRenkleri r, Cikartma c, bool var_) {
             return Semantics(
               label: '${l.cikartmaAd(c)}${var_ ? '' : ', ${l.cikartmaKilitli}'}',
               child: Kart(
@@ -59,9 +74,5 @@ class CikartmalarEkrani extends ConsumerWidget {
                 ),
               ),
             );
-          },
-        ),
-      ],
-    );
   }
 }

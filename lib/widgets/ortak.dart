@@ -136,7 +136,8 @@ class SecimCipi extends StatelessWidget {
               if (onIkon != null) ...[onIkon!, const SizedBox(width: Bosluk.s)],
               if (secili) Icon(Icons.check_rounded, size: 18, color: r.accInk),
               if (secili) const SizedBox(width: Bosluk.xs),
-              Text(metin, style: context.t.labelLarge?.copyWith(color: secili ? r.accInk : r.fg)),
+              // Flexible: büyük yazıda çip satıra sığmazsa metin alt satıra iner.
+              Flexible(child: Text(metin, style: context.t.labelLarge?.copyWith(color: secili ? r.accInk : r.fg))),
             ],
           ),
         ),
