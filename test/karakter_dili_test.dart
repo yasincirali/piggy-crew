@@ -17,10 +17,31 @@ const _yasak = <String>[
   // EN
   'you made me sad', 'feed me', 'where were you', 'you forgot', "i'm hungry",
   'i am hungry', 'left me', 'last chance', 'hurry', "don't miss", 'angry with you',
+  // DE
+  'traurig gemacht', 'füttere mich', 'wo warst du', 'hast mich vergessen', 'du hast vergessen', 'ich habe hunger',
+  'allein gelassen', 'letzte chance', 'beeil dich', 'verpass nicht', 'böse auf dich',
+  // ES
+  'me pusiste triste', 'dame de comer', 'aliméntame', 'dónde estabas', 'te olvidaste',
+  'tengo hambre', 'me dejaste', 'última oportunidad', 'date prisa', 'no te lo pierdas',
+  // FR
+  "m'as rendu triste", 'nourris-moi', 'où étais-tu', 'tu as oublié', "j'ai faim",
+  'abandonné', 'dernière chance', 'dépêche-toi', 'ne rate pas', 'fâché contre toi',
+  // PT
+  'me deixou triste', 'me alimenta', 'onde você estava', 'você esqueceu', 'estou com fome',
+  'me abandonou', 'última chance', 'se apressa', 'anda logo', 'não perca', 'bravo com você',
 ];
 
+/// Tüm diller: yeni .arb eklenince test kendiliğinden kapsar.
+final _diller = Directory('lib/l10n')
+    .listSync()
+    .map((f) => RegExp(r'app_(\w+)\.arb$').firstMatch(f.path)?.group(1))
+    .whereType<String>()
+    .toList()
+  ..sort();
+
 void main() {
-  for (final dil in ['tr', 'en']) {
+  test('dil listesi boş değil', () => expect(_diller, containsAll(['tr', 'en'])));
+  for (final dil in _diller) {
     test('$dil: karakter metinlerinde suçlama/talep/baskı yok', () {
       final arb = jsonDecode(File('lib/l10n/app_$dil.arb').readAsStringSync()) as Map<String, dynamic>;
       final ihlal = <String>[];
@@ -36,7 +57,7 @@ void main() {
   }
 
   test('çıkartma açıklamaları tutar eşiği içermez (davranış ödüllenir)', () {
-    for (final dil in ['tr', 'en']) {
+    for (final dil in _diller) {
       final arb = jsonDecode(File('lib/l10n/app_$dil.arb').readAsStringSync()) as Map<String, dynamic>;
       arb.forEach((anahtar, deger) {
         if (!anahtar.startsWith('ck') || deger is! String) return;

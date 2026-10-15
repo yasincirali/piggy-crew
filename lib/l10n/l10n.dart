@@ -86,3 +86,25 @@ extension CikartmaAdlari on AppLocalizations {
         _ => '',
       };
 }
+
+/// Cihaz dilini desteklenen dile eşler: dil kodu tutuyorsa o, değilse
+/// İngilizce (global varsayılan). Bölge (pt_BR, es_MX) dil koduna iner.
+Locale dilCoz(Locale? cihaz, Iterable<Locale> destek) {
+  if (cihaz != null) {
+    for (final d in destek) {
+      if (d.languageCode == cihaz.languageCode) return d;
+    }
+  }
+  return const Locale('en');
+}
+
+/// Dil seçicide her dil kendi adıyla yazılır (endonym): çocuk kendi dilini
+/// tanısın, arayüz dili ne olursa olsun.
+const dilAdlari = <String, String>{
+  'tr': 'Türkçe',
+  'en': 'English',
+  'de': 'Deutsch',
+  'es': 'Español',
+  'fr': 'Français',
+  'pt': 'Português',
+};

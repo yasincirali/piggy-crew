@@ -28,10 +28,14 @@ class KarakterPainter extends CustomPainter {
     this.agizAcik = false,
     this.bakis = Offset.zero,
     this.yuz,
+    this.sembol = '₺',
   });
 
   final VarlikTuru tur;
   final Ruh ruh;
+
+  /// Sincap'ın madeni parasındaki simge: çocuğun ev para birimi (global).
+  final String sembol;
 
   /// Sürekli yüz değerleri (canlı karakter). Null ise yüz [ruh], [gozKapali]
   /// ve [agizAcik]'tan türetilir (durağan çizimler: liste, albüm).
@@ -346,9 +350,9 @@ class KarakterPainter extends CustomPainter {
     cv.drawCircle(const Offset(46, 98), 10, _dolgu(const Color(0xFFF7D774)));
     cv.drawCircle(const Offset(46, 98), 10, _cizgi(2));
     final tp = TextPainter(
-      text: const TextSpan(
-        text: '₺',
-        style: TextStyle(fontFamily: govdeFontu, fontSize: 12, fontWeight: FontWeight.w700, color: _murekkep),
+      text: TextSpan(
+        text: sembol,
+        style: const TextStyle(fontFamily: govdeFontu, fontSize: 12, fontWeight: FontWeight.w700, color: _murekkep),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
@@ -357,7 +361,7 @@ class KarakterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(KarakterPainter o) =>
-      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz;
+      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol;
 }
 
 /// Yüzün sürekli değerleri (hepsi 0–1). Tek duygu sözlüğü:
@@ -462,6 +466,18 @@ double yemeBakisY(double t) {
 const yemeParaBasla = [0.0, 0.16, 0.32];
 const yemeDusus = 0.24;
 const yemeSevincAni = 0.66;
+
+/// Ev para biriminin simgesi ağaçta bir kez verilir (main); her Karakter
+/// çağrısına parametre taşımamak için. Yoksa '₺' (testler, önizleme).
+class ParaSembolu extends InheritedWidget {
+  const ParaSembolu({super.key, required this.sembol, required super.child});
+  final String sembol;
+
+  static String of(BuildContext c) => c.dependOnInheritedWidgetOfExactType<ParaSembolu>()?.sembol ?? '₺';
+
+  @override
+  bool updateShouldNotify(ParaSembolu o) => o.sembol != sembol;
+}
 
 /// Ağız merkezi (110×110 alanında) — besleme paraları buraya düşer.
 Offset _agizMerkezi(VarlikTuru t) => switch (t) {
@@ -862,6 +878,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                   parlak: widget.parlak,
                   bakis: bakis,
                   yuz: yuz,
+                  sembol: ParaSembolu.of(context),
                 ),
               ),
             ),

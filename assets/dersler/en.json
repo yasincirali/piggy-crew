@@ -1,0 +1,152 @@
+[
+ {
+  "id": "birikim",
+  "kavram": "Saving",
+  "baslik": "Why does money wait?",
+  "metin_k": "Put in {p:10} every day and in a month you have {p:300}. Money that waits grows; money that is spent is gone.",
+  "metin_b": "Saving means holding today's wish for a bigger wish tomorrow. Small regular amounts add up more easily than one big amount.",
+  "soru": "If you save {p:50} every week, how much do you have after 10 weeks?",
+  "secenekler": [
+   "{p:50}",
+   "{p:500}",
+   "{p:5000}"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "enflasyon",
+  "kavram": "Inflation",
+  "baslik": "Can money shrink?",
+  "metin_k": "Last year a sandwich cost {p:10}, this year it costs {p:15}. Your money stayed the same, but it buys less.",
+  "metin_b": "When prices go up in general, the same money buys fewer things; this is called inflation. Assets like gold and foreign currency often rise along with it, so saving only cash is not enough.",
+  "soru": "You have {p:100} and prices went up by 50%. A year later, how many sandwiches can you buy?",
+  "secenekler": [
+   "The same",
+   "Fewer, sandwiches got pricier",
+   "More, my money grew"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "altin",
+  "kavram": "Gold",
+  "baslik": "Why is Tortu slow?",
+  "metin_k": "Gold has been valuable for thousands of years. It doesn't jump fast, but it doesn't fall easily either.",
+  "metin_b": "People turn to gold when they trust money less. It moves little in the short run and keeps its value over the long run. Pure gold is called 24 karat.",
+  "soru": "What is Tortu like?",
+  "secenekler": [
+   "Jumps fast",
+   "Slow but steady",
+   "Never changes"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "doviz",
+  "kavram": "Currency",
+  "baslik": "Where does Zippy jump?",
+  "metin_k": "The dollar is another country's money. Some days it goes up, some days it goes down.",
+  "metin_b": "An exchange rate is how much one country's money is worth in another's. News, interest rates and trust move it. Jumps are normal; the long road is what matters.",
+  "soru": "Zippy dropped one day. What do you do?",
+  "secenekler": [
+   "Give up right away",
+   "Wait patiently",
+   "Sell everything"
+  ],
+  "dogru": 1,
+  "karakter": "dolar"
+ },
+ {
+  "id": "cesitlendirme",
+  "kavram": "Diversifying",
+  "baslik": "Why four characters?",
+  "metin_k": "You don't put everything in one basket. While one is gloomy, another one smiles.",
+  "metin_b": "Different assets rise at different times. Splitting your savings keeps one character's bad day from affecting the whole camp.",
+  "soru": "Giving all your money to one character is…",
+  "secenekler": [
+   "The safest",
+   "Risky: if it falls, everything falls",
+   "Doesn't matter"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "fiyat",
+  "kavram": "Price",
+  "baslik": "Same money, less gold",
+  "metin_k": "Last month {p:250} bought more gold. Gold got pricier, so the same money buys less.",
+  "metin_b": "When an asset's price goes up, the same amount of money buys less of it, while what you already own becomes worth more. Price and quantity work in opposite directions.",
+  "soru": "Gold got pricier. Your 0.5 grams…",
+  "secenekler": [
+   "Shrank",
+   "Are worth more",
+   "Disappeared"
+  ],
+  "dogru": 1,
+  "karakter": "altin"
+ },
+ {
+  "id": "hedef",
+  "kavram": "Goal",
+  "baslik": "How long for a bike?",
+  "metin_k": "Waiting is easier when you have a goal. Know what you want and count how many feedings it takes.",
+  "metin_b": "A goal gives saving a meaning. A goal with an amount and a date makes every feeding measurable: 'I'm 38% of the way to my bike'.",
+  "soru": "For a {p:3000} goal, if you save {p:150} a week, how long will it take?",
+  "secenekler": [
+   "10 weeks",
+   "20 weeks",
+   "30 weeks"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "ihtiyac",
+  "kavram": "Needs and wants",
+  "baslik": "Need it or want it?",
+  "metin_k": "Water is a need. A third toy is a want. Both are fine, but one comes first.",
+  "metin_b": "Needs are a must, wants are a choice. Putting pocket money first toward needs, then savings, then wants is a healthy order.",
+  "soru": "Which one is a want?",
+  "secenekler": [
+   "A school notebook",
+   "A new trading card",
+   "Lunch"
+  ],
+  "dogru": 1,
+  "karakter": "tl"
+ },
+ {
+  "id": "paylasim",
+  "kavram": "Sharing",
+  "baslik": "The third jar",
+  "metin_k": "Sharing part of your pocket money is a choice too. Even a small share can make someone's day.",
+  "metin_b": "Spend · Save · Share. Three jars teach that money is not only for us. The shared part can be small but regular.",
+  "soru": "What is 10% of {p:300} pocket money?",
+  "secenekler": [
+   "{p:3}",
+   "{p:30}",
+   "{p:300}"
+  ],
+  "dogru": 1,
+  "karakter": null
+ },
+ {
+  "id": "sabir",
+  "kavram": "Patience",
+  "baslik": "Time is your best friend",
+  "metin_k": "A campfire doesn't grow in a day. Every feeding is a small log. Look back at the end of the year and see how big it got.",
+  "metin_b": "Time is the strongest force in saving. A child who starts early and feeds a little but regularly can get ahead of one who starts late and puts in a lot.",
+  "soru": "What pays off?",
+  "secenekler": [
+   "Putting in a lot one day",
+   "Small regular feedings",
+   "Never waiting"
+  ],
+  "dogru": 1,
+  "karakter": null
+ }
+]

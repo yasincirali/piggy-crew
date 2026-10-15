@@ -213,7 +213,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
                     child: Row(children: [
-                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh))),
+                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh, sembol: cocuk.para.sembol))),
                       const SizedBox(width: Bosluk.m),
                       Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
