@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ana ekran adı (yerel); iOS tr.lproj/InfoPlist.strings ile aynı. -->
+<resources>
+    <string name="app_name">Harçlıklarım</string>
+</resources>

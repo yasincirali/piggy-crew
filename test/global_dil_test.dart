@@ -26,6 +26,20 @@ void main() {
     }
   });
 
+  test('ana ekran adı her dilde iOS ve Android\'de aynı', () {
+    final pbx = File('ios/Runner.xcodeproj/project.pbxproj').readAsStringSync();
+    for (final d in diller) {
+      final ios = File('ios/Runner/$d.lproj/InfoPlist.strings').readAsStringSync();
+      final ad = RegExp(r'"CFBundleDisplayName" = "([^"]+)";').firstMatch(ios)?.group(1);
+      expect(ad, isNotNull, reason: d);
+      expect(pbx, contains('path = $d.lproj/InfoPlist.strings'), reason: '$d Xcode projesinde yok');
+      final klasor = d == 'en' ? 'values' : 'values-$d';
+      expect(File('android/app/src/main/res/$klasor/strings.xml').readAsStringSync(),
+          contains('<string name="app_name">$ad</string>'), reason: d);
+    }
+    expect(File('android/app/src/main/AndroidManifest.xml').readAsStringSync(), contains('@string/app_name'));
+  });
+
   test('dersler her dilde aynı yapıda, tutarlar yer tutucuyla', () {
     final en = ders('en');
     for (final d in diller) {
