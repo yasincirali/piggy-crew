@@ -107,7 +107,7 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
                             child: c,
                           ),
                         ),
-                        child: KeyedSubtree(key: ValueKey(_adim), child: _govde(l, r)),
+                        child: KeyedSubtree(key: ValueKey(_adim), child: _kaydirilabilir(_govde(l, r))),
                       ),
                     ),
                   ],
@@ -119,6 +119,18 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
       }),
     );
   }
+
+  /// Adımlar Spacer'la dikeyde dağılır; büyük yazıda (Dynamic Type) ya da
+  /// küçük ekranda sığmazsa kaydırılır. Sığdığında yerleşim birebir aynı kalır:
+  /// en az ekran yüksekliği + IntrinsicHeight, Spacer'ları korur.
+  Widget _kaydirilabilir(Widget govde) => LayoutBuilder(
+        builder: (context, k) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: k.maxHeight),
+            child: IntrinsicHeight(child: govde),
+          ),
+        ),
+      );
 
   Widget _govde(AppLocalizations l, DunyaRenkleri r) => switch (_adim) {
         0 => _adimGiris(l, r),
@@ -178,11 +190,10 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
           const SizedBox(height: Bosluk.xxl),
           Text(l.yasSoru, style: context.t.titleLarge),
           const SizedBox(height: Bosluk.m),
-          Row(children: [
-            for (final y in YasModu.values) ...[
+          // Wrap: büyük yazıda iki yaş çipi yan yana sığmazsa alt alta iner.
+          Wrap(spacing: Bosluk.s, runSpacing: Bosluk.s, children: [
+            for (final y in YasModu.values)
               SecimCipi(metin: y == YasModu.kucuk ? l.yasKucuk : l.yasBuyuk, secili: _yas == y, onTap: () => setState(() => _yas = y)),
-              const SizedBox(width: Bosluk.s),
-            ],
           ]),
           const Spacer(),
           AnaDugme(metin: l.devam, onTap: _ad.text.trim().isEmpty ? null : _ileri),

@@ -273,7 +273,7 @@ class KarakterPainter extends CustomPainter {
     final tp = TextPainter(
       text: const TextSpan(
         text: '₺',
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _murekkep),
+        style: TextStyle(fontFamily: govdeFontu, fontSize: 12, fontWeight: FontWeight.w700, color: _murekkep),
       ),
       textDirection: TextDirection.ltr,
     )..layout();

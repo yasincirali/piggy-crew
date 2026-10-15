@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +13,12 @@ import 'theme/dunya.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Gömülü fontların OFL metni lisans sayfasında görünsün (OFL koşulu).
+  LicenseRegistry.addLicense(() async* {
+    for (final (ad, dosya) in [('Baloo 2', 'OFL-Baloo2.txt'), ('Nunito', 'OFL-Nunito.txt')]) {
+      yield LicenseEntryWithLineBreaks([ad], await rootBundle.loadString('assets/fonts/$dosya'));
+    }
+  });
   final depo = await Depo.ac();
   runApp(ProviderScope(
     overrides: [depoProvider.overrideWithValue(depo)],

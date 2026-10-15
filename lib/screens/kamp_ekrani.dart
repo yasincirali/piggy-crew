@@ -105,34 +105,43 @@ class _KampState extends ConsumerState<KampEkrani> {
               ),
             ),
           const SizedBox(height: Bosluk.l),
-          // Kamp sahnesi.
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (ust.isNotEmpty) karakter(ust[0], gecikme: const Duration(milliseconds: 700)) else const SizedBox(width: 92),
-              KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140),
-              if (ust.length > 1) karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) else const SizedBox(width: 92),
-            ],
-          ),
-          const SizedBox(height: Bosluk.s),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              karakter(VarlikTuru.altin, boyut: 120),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Bosluk.m),
-                  child: Text(
-                    bos ? l.kampBos : _fiyatNotu(l, fiyat.valueOrNull?.zaman),
-                    textAlign: TextAlign.center,
-                    style: context.t.bodySmall?.copyWith(color: r.sub),
-                  ),
-                ),
+          // Kamp sahnesi. Karakterler ve ateş sabit boyutlu bir sahne; altındaki
+          // ad/fark etiketleri en fazla 1,5× büyür ki sahne dar ekranda taşmasın.
+          // Aynı bilgi aşağıdaki besleme listesinde tam Dynamic Type ile var.
+          MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.5,
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
+                  _sigdir(140, KampAtesi(toplamTl: toplam.degerTl ?? toplam.maliyetTl, boyut: 140)),
+                  _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) : const SizedBox(width: 92)),
+                ],
               ),
-              if (alt.isNotEmpty) karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) else const SizedBox(width: 92),
-            ],
+              const SizedBox(height: Bosluk.s),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _sigdir(120, karakter(VarlikTuru.altin, boyut: 120)),
+                  // Flex = kalan doğal genişlik (335 − 120 − 92); sahne öğeleriyle aynı ölçekte.
+                  Expanded(
+                    flex: 123,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: Bosluk.m),
+                      child: Text(
+                        bos ? l.kampBos : _fiyatNotu(l, fiyat.valueOrNull?.zaman),
+                        textAlign: TextAlign.center,
+                        style: context.t.bodySmall?.copyWith(color: r.sub),
+                      ),
+                    ),
+                  ),
+                  _sigdir(92, alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) : const SizedBox(width: 92)),
+                ],
+              ),
+            ]),
           ),
           const SizedBox(height: Bosluk.xl),
           // Besle düğmeleri: her karakter için bir satır (44 pt+).
@@ -180,3 +189,8 @@ class _KampState extends ConsumerState<KampEkrani> {
     return l.kampFiyatEski(bugun ? f.format(z) : DateFormat.MMMd(Localizations.localeOf(context).toString()).format(z));
   }
 }
+
+/// Sahne öğesi dar ekranda sığmazsa orantılı küçülür, sığıyorsa boyutu aynen kalır.
+/// [en] öğenin doğal genişliği: satırdaki pay buna oranla dağılır, böylece
+/// normal ekranda hiçbir öğe küçülmez (eşit pay ateşi 140'tan küçültüyordu).
+Widget _sigdir(int en, Widget w) => Flexible(flex: en, child: FittedBox(fit: BoxFit.scaleDown, child: w));

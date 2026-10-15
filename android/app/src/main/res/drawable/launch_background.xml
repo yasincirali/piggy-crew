@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
+<!-- Açılış ekranı: logo zemini + ortada kavanoz işareti. Koyu modda da aynı
+     (marka rengi); Flutter ilk kareyi çizince kalkar. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
-
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+    <item android:drawable="@color/logo_zemin" />
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/launch_image" />
+    </item>
 </layer-list>
