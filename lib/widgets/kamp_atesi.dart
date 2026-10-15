@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
@@ -151,8 +152,20 @@ class _AtesPainter extends CustomPainter {
     // Parlama: alev bir an %18 kabarır, parıltı güçlenir (yumuşak çan eğrisi).
     final kabarma = parlama > 0 ? math.sin(parlama * math.pi) : 0.0;
     final nefes = t == null ? 0.0 : .04 * math.sin(t * 2.2);
-    cv.drawCircle(Offset(60, 78), 52 * (1 + nefes + .12 * kabarma),
-        Paint()..color = r.warm.withValues(alpha: (parilti * (1 + 2 * nefes) + .2 * kabarma).clamp(0, .7)));
+    // Parıltı yumuşak kenarlı (radyal gradyan): sert disk "sticker" gibi
+    // duruyordu, ışık gibi değil.
+    final yaricap = 58 * (1 + nefes + .12 * kabarma);
+    final alfa = (parilti * (1 + 2 * nefes) + .2 * kabarma).clamp(0.0, .7) * 1.6;
+    cv.drawCircle(
+      const Offset(60, 80),
+      yaricap,
+      Paint()
+        ..shader = ui.Gradient.radial(const Offset(60, 80), yaricap, [
+          r.warm.withValues(alpha: alfa.clamp(0.0, 1.0)),
+          r.warm.withValues(alpha: (alfa * .45).clamp(0.0, 1.0)),
+          r.warm.withValues(alpha: 0),
+        ], const [0, .55, 1]),
+    );
     // Alev: taban (60,108) sabit kalır, yukarı büyür.
     cv.save();
     cv.translate(60, 108);
