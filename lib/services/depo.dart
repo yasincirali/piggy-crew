@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocuk.dart';
+import '../models/evre.dart';
 import '../models/varlik.dart';
 
 /// Yerel kalıcılık — tek dosya, tek sürüm anahtarı.
@@ -24,6 +25,7 @@ class Depo {
   static const _dersIlerleme = 'ders_ilerleme_v1';
   static const _sesAcik = 'ses_acik_v1';
   static const _sonRuh = 'son_ruh_v1';
+  static const _evre = 'evre_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -80,6 +82,25 @@ class Depo {
   Future<void> sonRuhYaz(Map<VarlikTuru, Ruh> m) =>
       _sp.setString(_sonRuh, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
 
+  /// Ulaşılan en yüksek büyüme evreleri (evre geri gitmez; bkz. [Evre]).
+  Map<VarlikTuru, Evre> evreOku() {
+    final s = _sp.getString(_evre);
+    if (s == null) return const {};
+    try {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return {
+        for (final e in m.entries)
+          if (VarlikTuru.values.any((t) => t.name == e.key) && Evre.values.any((v) => v.name == e.value))
+            VarlikTuru.values.byName(e.key): Evre.values.byName(e.value as String),
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<void> evreYaz(Map<VarlikTuru, Evre> m) =>
+      _sp.setString(_evre, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
+
   /// Tüm veriyi sil (veli köşesi). Fiyat önbelleği kalır, kişisel değil.
   Future<void> hepsiniSil() async {
     await _sp.remove(_cocuk);
@@ -87,6 +108,7 @@ class Depo {
     await _sp.remove(_cikartmalar);
     await _sp.remove(_dersIlerleme);
     await _sp.remove(_sonRuh);
+    await _sp.remove(_evre);
   }
 
   /// PIN düz metin saklanmaz; tuzlu SHA-256 özeti saklanır. Tuz sabit ve
