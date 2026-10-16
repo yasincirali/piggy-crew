@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cocuk.dart';
+import '../models/evre.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
 import '../services/fiyat_servisi.dart';
@@ -110,6 +111,21 @@ final karakterlerProvider = Provider<Map<VarlikTuru, KarakterDurumu>>((ref) {
         );
       }(),
   };
+});
+
+/// Görünen büyüme evreleri: hesaplanan ile saklanan en yüksek evrenin büyüğü.
+/// Evre geri gitmez (besleme silinse de); ulaşılan evre burada saklanır ki
+/// hesap düşse de görünen düşmesin.
+final evrelerProvider = Provider<Map<VarlikTuru, Evre>>((ref) {
+  final depo = ref.read(depoProvider);
+  final hesap = evreler(ref.watch(hareketlerProvider));
+  final kayitli = depo.evreOku();
+  final kayit = {
+    for (final t in VarlikTuru.values)
+      if (hesap[t] != null || kayitli[t] != null) t: gosterilenEvre(hesap[t], kayitli[t]),
+  };
+  if (!mapEquals(kayit, kayitli)) depo.evreYaz(kayit);
+  return {for (final t in VarlikTuru.values) t: kayit[t] ?? Evre.minik};
 });
 
 /// Toplam değer; bir karakterin fiyatı bilinmiyorsa o karakter toplamdan

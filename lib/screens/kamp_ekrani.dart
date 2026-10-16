@@ -119,6 +119,8 @@ class _KampState extends ConsumerState<KampEkrani> {
             ses: ref.read(sesProvider).cal,
             pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
+            evre: ref.watch(evrelerProvider)[t],
+            evreKutla: true,
           ),
           Text(l.karakter(t), style: context.t.labelLarge),
           if (!d.bos && d.farkTl != null)

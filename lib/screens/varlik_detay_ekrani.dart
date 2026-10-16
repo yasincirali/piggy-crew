@@ -80,6 +80,10 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       boyut: 170,
                       pulSayisi: tur == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
                       parlak: tur == VarlikTuru.altin && ref.watch(cikartmalarProvider).contains('tortu_parlak'),
+                      // Buradan beslenip evre atlarsa büyüme sahnesi burada oynar.
+                      evre: ref.watch(evrelerProvider)[tur],
+                      evreKutla: true,
+                      ses: ref.read(sesProvider).cal,
                     ),
                   ),
                   const SizedBox(height: Bosluk.s),

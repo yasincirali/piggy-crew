@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../models/evre.dart';
 import '../models/varlik.dart';
 import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
@@ -29,7 +30,30 @@ class KarakterPainter extends CustomPainter {
     this.bakis = Offset.zero,
     this.yuz,
     this.sembol = '₺',
+    this.evre,
+    this.evreOnceki,
+    this.evreGecis = 1,
+    this.derinlik = true,
+    this.golgeCiz = true,
   });
+
+  /// Büyüme evresi: gövde ölçeği ve baştaki bitki. Null → evresiz çizim
+  /// (karşılama, dersler: evre kavramı yok, ölçek 1).
+  final Evre? evre;
+
+  /// Atlama sahnesinde önceki evre; [evreGecis] 0'da onun, 1'de [evre]'nin
+  /// görünümü. Yeni gelen parça (filiz, çiçek, yıldız) büyüyerek çıkar.
+  final Evre? evreOnceki;
+  final double evreGecis;
+
+  /// 2,5D görünüm: yumuşak ışık–gölge, parıltı, bulanık zemin gölgesi ve
+  /// bakışla kayan yüz (baş çevirme). Çizgi film dili korunur; mürekkep
+  /// kontur ve desenler aynı, yalnız hacim eklenir.
+  final bool derinlik;
+
+  /// Zemin gölgesini painter mı çizsin. Canlı karakter 2,5D'de gölgeyi
+  /// kendisi yerde sabit çizer (zıplayınca gölge küçülür), burada çizilmez.
+  final bool golgeCiz;
 
   final VarlikTuru tur;
   final Ruh ruh;
@@ -70,12 +94,68 @@ class KarakterPainter extends CustomPainter {
 
   void _sekil(Canvas cv, Path p, Color dolgu, {double kontur = 2}) {
     cv.drawPath(p, _dolgu(dolgu));
+    _isik(cv, p);
     if (kontur > 0) cv.drawPath(p, _cizgi(kontur));
   }
 
-  void _golge(Canvas cv, double cx, double cy, double rx) {
-    cv.drawOval(Rect.fromCenter(center: Offset(cx, cy), width: rx * 2, height: 12),
-        _dolgu(const Color(0x47000000)));
+  /// Hacim: biçimin içine sol üstten ışık, sağ alta yumuşak gölge. Mürekkep
+  /// kontur ÜSTTE kalır ki çizgi film netliği bozulmasın. Küçük parçalara
+  /// (burun, ağız) uygulanmaz: kalabalık ve "kirli" görünür.
+  void _isik(Canvas cv, Path p) {
+    if (!derinlik) return;
+    final b = p.getBounds();
+    if (b.shortestSide < 12) return;
+    cv.save();
+    cv.clipPath(p);
+    cv.drawRect(
+        b,
+        Paint()
+          ..shader = const RadialGradient(
+            center: Alignment(-.45, -.6),
+            radius: 1.05,
+            colors: [Color(0x59FFFFFF), Color(0x00FFFFFF), Color(0x00000000), Color(0x38000000)],
+            stops: [0, .4, .62, 1],
+          ).createShader(b));
+    cv.restore();
+  }
+
+  /// Parıltı: ışığın yüzeyde bıraktığı küçük yumuşak beyaz leke (hacim hissi).
+  void _parilti(Canvas cv, Offset c, double w, double h) {
+    if (!derinlik) return;
+    cv.drawOval(
+        Rect.fromCenter(center: c, width: w, height: h),
+        Paint()
+          ..color = const Color(0x8CFFFFFF)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.6));
+  }
+
+  /// Baş çevirme: yüz bakış yönüne birkaç birim kayar, gövde yerinde kalır
+  /// (paralaks). Gözbebeklerinin kayması bunun üstüne biner.
+  double get _yuzKayma => derinlik ? bakis.dx * 2.6 : 0;
+
+  void _yuzBasla(Canvas cv) {
+    cv.save();
+    cv.translate(_yuzKayma, 0);
+  }
+
+  void _yuzBitir(Canvas cv) => cv.restore();
+
+  static const _golgeOlcu = {
+    VarlikTuru.altin: (55.0, 40.0),
+    VarlikTuru.dolar: (55.0, 34.0),
+    VarlikTuru.euro: (55.0, 34.0),
+    VarlikTuru.nakit: (52.0, 34.0),
+  };
+
+  void _golge(Canvas cv, double olcek) {
+    final (cx, rx) = _golgeOlcu[tur]!;
+    cv.drawOval(
+        Rect.fromCenter(center: Offset(cx, 101), width: rx * 2 * olcek, height: 12 * olcek),
+        derinlik
+            ? (Paint()
+              ..color = const Color(0x4D000000)
+              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3))
+            : _dolgu(const Color(0x47000000)));
   }
 
   // ── Desenler: biçime clip'lenir, döşenir ───────────────────────────────
@@ -94,6 +174,7 @@ class KarakterPainter extends CustomPainter {
       }
     }
     cv.restore();
+    _isik(cv, sekil);
   }
 
   void _kilim(Canvas cv, Path sekil) {
@@ -112,6 +193,7 @@ class KarakterPainter extends CustomPainter {
       }
     }
     cv.restore();
+    _isik(cv, sekil);
   }
 
   void _hasir(Canvas cv, Path sekil) {
@@ -124,6 +206,7 @@ class KarakterPainter extends CustomPainter {
       cv.drawLine(Offset(i, 0), Offset(i, 110), cz);
     }
     cv.restore();
+    _isik(cv, sekil);
   }
 
   // ── Yüz parçaları ──────────────────────────────────────────────────────
@@ -228,6 +311,15 @@ class KarakterPainter extends CustomPainter {
     canvas.save();
     canvas.translate((size.width - 110 * s) / 2, (size.height - 110 * s) / 2);
     canvas.scale(s);
+    final ev = evre;
+    final hedef = ev?.olcek ?? 1.0;
+    final g = Curves.easeInOut.transform(evreGecis.clamp(0.0, 1.0));
+    final olcek = evreOnceki == null ? hedef : evreOnceki!.olcek + (hedef - evreOnceki!.olcek) * g;
+    if (golgeCiz) _golge(canvas, olcek);
+    // Evre ölçeği ayak tabanından: karakter yerinde büyür, havaya kalkmaz.
+    canvas.translate(55, 100);
+    canvas.scale(olcek);
+    canvas.translate(-55, -100);
     switch (tur) {
       case VarlikTuru.altin:
         _tortu(canvas);
@@ -238,11 +330,115 @@ class KarakterPainter extends CustomPainter {
       case VarlikTuru.nakit:
         _sincap(canvas);
     }
+    if (ev != null) _bitki(canvas, ev);
     canvas.restore();
   }
 
+  // ── Büyüme: baştaki bitki ─────────────────────────────────────────────
+  //
+  // Neden bitki: büyümenin kendisini anlatır (filiz → çiçek → yıldız), kostüm
+  // değildir (çıkartmalar kostüm) ve dört karakterde aynı dil. Tortu'da
+  // kabuğun arkasında biter (kaplumbağanın sırtındaki küçük bahçe).
+  static const _bitkiYeri = {
+    VarlikTuru.altin: (Offset(85, 55), .75),
+    VarlikTuru.dolar: (Offset(55, 37), 0.0),
+    VarlikTuru.euro: (Offset(55, 25), 0.0),
+    VarlikTuru.nakit: (Offset(46, 33), -.1),
+  };
+
+  static const _yaprak = Color(0xFF6CC56B);
+  static const _tacYaprak = {
+    VarlikTuru.altin: Color(0xFFF28C8C),
+    VarlikTuru.dolar: Color(0xFFFFB3C7),
+    VarlikTuru.euro: Color(0xFFFFFAF0),
+    VarlikTuru.nakit: Color(0xFFB9A7FF),
+  };
+  static const _altinTac = Color(0xFFF7C948);
+
+  /// Yeni gelen parçanın büyüme payı (0–1): önceki evrede yoksa [evreGecis]
+  /// ile büyür, zaten varsa tam.
+  double _yeni(Evre parca) {
+    final o = evreOnceki;
+    if (o != null && o.index < parca.index) {
+      // Hafif aşma ile çıkar (çizgi film "pıt"): 0 → 1,15 → 1.
+      final t = evreGecis.clamp(0.0, 1.0);
+      return t < .7 ? Curves.easeOut.transform(t / .7) * 1.15 : 1.15 - .15 * Curves.easeInOut.transform(((t - .7) / .3).clamp(0.0, 1.0));
+    }
+    return 1;
+  }
+
+  void _bitki(Canvas cv, Evre e) {
+    if (e.index < Evre.filiz.index) return;
+    final (yer, aci) = _bitkiYeri[tur]!;
+    cv.save();
+    cv.translate(yer.dx, yer.dy);
+    cv.rotate(aci);
+    final f = _yeni(Evre.filiz);
+    if (f <= 0) {
+      cv.restore();
+      return;
+    }
+    cv.scale(f);
+    final cicek = e.index >= Evre.cicek.index ? _yeni(Evre.cicek) : 0.0;
+    // Sap: çiçekte uzar.
+    final boy = 8 + 4 * cicek.clamp(0.0, 1.0);
+    cv.drawPath(
+        Path()
+          ..moveTo(0, 0)
+          ..quadraticBezierTo(-1.5, -boy * .5, 0, -boy),
+        _cizgi(1.8, const Color(0xFF3E8E4A)));
+    // İki yaprak.
+    for (final (x, y, r) in [(-4.2, -5.5, -.6), (4.2, -7.5, .6)]) {
+      cv.save();
+      cv.translate(x, y);
+      cv.rotate(r);
+      final yp = Path()..addOval(Rect.fromCenter(center: Offset.zero, width: 8, height: 4.6));
+      cv.drawPath(yp, _dolgu(_yaprak));
+      _isik(cv, yp);
+      cv.drawPath(yp, _cizgi(1.3));
+      cv.restore();
+    }
+    if (cicek > 0) {
+      cv.save();
+      cv.translate(0, -boy - 3);
+      cv.scale(cicek);
+      final yil = e == Evre.yildiz ? _yeni(Evre.yildiz).clamp(0.0, 1.0) : 0.0;
+      final tac = Color.lerp(_tacYaprak[tur]!, _altinTac, yil)!;
+      for (var i = 0; i < 5; i++) {
+        final a = -math.pi / 2 + i * 2 * math.pi / 5;
+        final c = Offset(math.cos(a) * 3.6, math.sin(a) * 3.6);
+        cv.drawCircle(c, 3, _dolgu(tac));
+        cv.drawCircle(c, 3, _cizgi(1.2));
+      }
+      if (yil > 0) {
+        // Yıldız evresi: göbek yıldız olur, iki minik pırıltı.
+        cv.drawPath(_yildizYolu(3.6 * (.6 + .4 * yil)), _dolgu(const Color(0xFFFFF3B0)));
+        cv.drawPath(_yildizYolu(3.6 * (.6 + .4 * yil)), _cizgi(1.1));
+        for (final (px, py, pr) in [(-9.0, -4.0, 1.9), (8.5, -7.0, 1.5)]) {
+          cv.drawPath(_yildizYolu(pr * 1.6 * yil).shift(Offset(px, py)), _dolgu(const Color(0xFFFFF3B0)));
+          cv.drawPath(_yildizYolu(pr * 1.6 * yil).shift(Offset(px, py)), _cizgi(.9));
+        }
+      } else {
+        cv.drawCircle(Offset.zero, 2.4, _dolgu(const Color(0xFFF7D774)));
+        cv.drawCircle(Offset.zero, 2.4, _cizgi(1.1));
+      }
+      cv.restore();
+    }
+    cv.restore();
+  }
+
+  static Path _yildizYolu(double r) {
+    final p = Path();
+    for (var i = 0; i < 8; i++) {
+      final a = -math.pi / 2 + i * math.pi / 4;
+      final rr = i.isEven ? r : r * .42;
+      final o = Offset(math.cos(a) * rr, math.sin(a) * rr);
+      i == 0 ? p.moveTo(o.dx, o.dy) : p.lineTo(o.dx, o.dy);
+    }
+    return p..close();
+  }
+
   void _tortu(Canvas cv) {
-    _golge(cv, 55, 101, 40);
     _sekil(cv, _p('M14 86c0-30 18-50 41-50s41 20 41 50z'), const Color(0xFFE0A800));
     final kabuk = _p('M22 86c0-24 14-40 33-40s33 16 33 40z');
     _cini(cv, kabuk);
@@ -268,22 +464,30 @@ class KarakterPainter extends CustomPainter {
     for (final x in [20.0, 74.0]) {
       final r = RRect.fromRectAndRadius(Rect.fromLTWH(x, 84, 16, 13), const Radius.circular(6.5));
       cv.drawRRect(r, _dolgu(const Color(0xFFC98A00)));
+      _isik(cv, Path()..addRRect(r));
       cv.drawRRect(r, _cizgi(2));
     }
-    // Baş.
+    // Baş: baş çevirmede baş da yüzün yarısı kadar kayar (boyun döner).
+    cv.save();
+    cv.translate(_yuzKayma * .5, 0);
     const ten = Color(0xFFF5C76A);
-    cv.drawCircle(const Offset(55, 34), 22, _dolgu(ten));
-    cv.drawCircle(const Offset(55, 34), 22, _cizgi(2));
+    final bas = Path()..addOval(Rect.fromCircle(center: const Offset(55, 34), radius: 22));
+    cv.drawPath(bas, _dolgu(ten));
+    _isik(cv, bas);
+    cv.drawPath(bas, _cizgi(2));
     cv.drawPath(_p('M44 16q11-8 22 0'), _cizgi(2));
+    _parilti(cv, const Offset(45, 21), 9, 5);
+    cv.restore();
+    _yuzBasla(cv);
     _goz(cv, 47, 32, 7);
     _goz(cv, 63, 32, 7);
     _yanak(cv, 40, 44);
     _yanak(cv, 70, 44);
     _agiz(cv, 0, 0);
+    _yuzBitir(cv);
   }
 
   void _zipzip(Canvas cv) {
-    _golge(cv, 55, 101, 34);
     const yesil = Color(0xFF4FCF80);
     _sekil(cv, _p('M34 46c-6-24 0-44 7-44s13 20 7 44z'), yesil);
     _sekil(cv, _p('M62 46c-6-24 0-44 7-44s13 20 7 44z'), yesil);
@@ -294,18 +498,21 @@ class KarakterPainter extends CustomPainter {
     cv.drawPath(govde, _cizgi(2));
     final karin = Rect.fromCenter(center: const Offset(55, 84), width: 32, height: 24);
     cv.drawOval(karin, _dolgu(const Color(0xFFEAFBEA)));
+    _isik(cv, Path()..addOval(karin));
     cv.drawOval(karin, _cizgi(1.5));
+    _parilti(cv, const Offset(38, 46), 10, 5.5);
+    _yuzBasla(cv);
     _goz(cv, 44, 60, 8, irisR: 4.4);
     _goz(cv, 66, 60, 8, irisR: 4.4);
     _yanak(cv, 37, 72);
     _yanak(cv, 73, 72);
     _sekil(cv, _p('M51 73l4 4 4-4z'), const Color(0xFFF28C8C), kontur: 1.2);
     _agiz(cv, 0, 36);
+    _yuzBitir(cv);
     cv.drawPath(_p('M40 86l-4 8M70 86l4 8'), _cizgi(2));
   }
 
   void _baykus(Canvas cv) {
-    _golge(cv, 55, 101, 34);
     const lacivert = Color(0xFF1F3B73);
     cv.drawPath(_p('M22 32l16 12M88 32l-16 12'), _cizgi(11));
     cv.drawPath(_p('M22 32l16 12M88 32l-16 12'), _cizgi(8, lacivert));
@@ -314,8 +521,11 @@ class KarakterPainter extends CustomPainter {
     final kusak = _p('M30 70q25-16 50 0v10q-25 16-50 0z');
     _kilim(cv, kusak);
     cv.drawPath(kusak, _cizgi(1.5));
+    _parilti(cv, const Offset(36, 36), 10, 6);
+    _yuzBasla(cv);
     final yuz = Rect.fromCenter(center: const Offset(55, 60), width: 48, height: 36);
     cv.drawOval(yuz, _dolgu(const Color(0xFFDBE7FF)));
+    _isik(cv, Path()..addOval(yuz));
     cv.drawOval(yuz, _cizgi(1.5));
     // Nazar gözleri: açık mavi halka + beyaz + mavi iris + siyah göz bebeği.
     for (final cx in [42.0, 68.0]) {
@@ -326,11 +536,11 @@ class KarakterPainter extends CustomPainter {
     _yanak(cv, 75, 68);
     _sekil(cv, _p('M50 67l5 8 5-8z'), const Color(0xFFF5B82E));
     _agiz(cv, 0, 38);
+    _yuzBitir(cv);
     cv.drawPath(_p('M44 99l-3 6M66 99l3 6M55 99v6'), _cizgi(3, const Color(0xFFF5B82E)));
   }
 
   void _sincap(Canvas cv) {
-    _golge(cv, 52, 101, 34);
     const turuncu = Color(0xFFE8540E);
     final kuyruk = _p('M70 50c30-30 46-10 42 20-3 22-24 36-38 26z');
     _kilim(cv, kuyruk);
@@ -340,15 +550,21 @@ class KarakterPainter extends CustomPainter {
     _sekil(cv, _p('M22 42l5-18 11 12M70 42l-5-18-11 12'), turuncu);
     final karin = Rect.fromCenter(center: const Offset(46, 78), width: 32, height: 24);
     cv.drawOval(karin, _dolgu(const Color(0xFFFFE3C2)));
+    _isik(cv, Path()..addOval(karin));
     cv.drawOval(karin, _cizgi(1.5));
+    _parilti(cv, const Offset(30, 44), 9, 5);
+    _yuzBasla(cv);
     _goz(cv, 36, 58, 7);
     _goz(cv, 56, 58, 7);
     _yanak(cv, 29, 70);
     _yanak(cv, 63, 70);
     cv.drawPath(_p('M43 71l3 4 3-4z'), _dolgu(_murekkep));
     _agiz(cv, -9, 34);
-    cv.drawCircle(const Offset(46, 98), 10, _dolgu(const Color(0xFFF7D774)));
-    cv.drawCircle(const Offset(46, 98), 10, _cizgi(2));
+    _yuzBitir(cv);
+    final para = Path()..addOval(Rect.fromCircle(center: const Offset(46, 98), radius: 10));
+    cv.drawPath(para, _dolgu(const Color(0xFFF7D774)));
+    _isik(cv, para);
+    cv.drawPath(para, _cizgi(2));
     final tp = TextPainter(
       text: TextSpan(
         text: sembol,
@@ -361,7 +577,8 @@ class KarakterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(KarakterPainter o) =>
-      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol;
+      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol ||
+      o.evre != evre || o.evreOnceki != evreOnceki || o.evreGecis != evreGecis || o.derinlik != derinlik || o.golgeCiz != golgeCiz;
 }
 
 /// Yüzün sürekli değerleri (hepsi 0–1). Tek duygu sözlüğü:
@@ -467,6 +684,133 @@ const yemeParaBasla = [0.0, 0.16, 0.32];
 const yemeDusus = 0.24;
 const yemeSevincAni = 0.66;
 
+/// Büyüme sahnesi zaman çizelgesi (0–1, 2,4 sn): hazırlık, büyüme, sevinç.
+const evreBuyumeBasla = 0.22;
+const evreBuyumeBitis = 0.5;
+const evreSevincAni = 0.52;
+
+/// Büyüme sahnesinin bir anı (saf fonksiyon, `karakter_buyume_test`).
+/// [gecis]: eski evreden yeniye (0–1); [sx]/[sy]: çömelme ve aşmalı büyüme.
+({double gecis, double sx, double sy, double bakisY, Yuz yuz}) evreSahnesi(double t) {
+  double ss(double x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  // Hazırlık: çömelir (basılır, genişler), merakla yukarı bakar.
+  final comel = t < .28 ? math.sin(math.pi * t / .28) : 0.0;
+  // Büyüme: geçiş ilerler, üstüne sönen aşma ("pıt" diye oturma).
+  final u = ((t - evreBuyumeBasla) / (evreBuyumeBitis - evreBuyumeBasla)).clamp(0.0, 1.0);
+  final asma = (t > evreBuyumeBasla && t < .78) ? .07 * math.sin(math.pi * ((t - evreBuyumeBasla) / (.78 - evreBuyumeBasla))) * (1 - u * .5) : 0.0;
+  final sx = 1 + .08 * comel + asma * .8;
+  final sy = 1 - .1 * comel + asma;
+  // Merak yüzü (hazırlıkta): yuvarlak "o" ağız; sevinç anında aynı sevinç yüzü.
+  final merak = zarf(t / .32, gir: .3, cik: .3);
+  final sevinc = zarf((t - .3) / .7, gir: .15, cik: .25);
+  final bakisY = -ss(t / .12) * (1 - ss((t - .55) / .1));
+  return (
+    gecis: ss(u),
+    sx: sx,
+    sy: sy,
+    bakisY: bakisY,
+    yuz: Yuz(agizO: merak * .6).ust(sevincYuzu(sevinc, kahkaha: .9)),
+  );
+}
+
+/// Gövdenin ortası (110×110): büyüme ışığının merkezi.
+Offset _govdeMerkezi(VarlikTuru t) => switch (t) {
+      VarlikTuru.altin => const Offset(55, 62),
+      VarlikTuru.dolar => const Offset(55, 64),
+      VarlikTuru.euro => const Offset(55, 60),
+      VarlikTuru.nakit => const Offset(48, 64),
+    };
+
+/// Yerde sabit, yumuşak zemin gölgesi (2,5D). [yukseklik] 0 = yerde,
+/// 1 = en yüksekte (gölge küçülür, solar).
+class ZeminGolgesi extends CustomPainter {
+  ZeminGolgesi({required this.tur, required this.yukseklik, this.olcek = 1});
+  final VarlikTuru tur;
+  final double yukseklik;
+  final double olcek;
+
+  @override
+  void paint(Canvas cv, Size size) {
+    final s = size.shortestSide / 110;
+    cv.save();
+    cv.translate((size.width - 110 * s) / 2, (size.height - 110 * s) / 2);
+    cv.scale(s);
+    final (cx, rx) = KarakterPainter._golgeOlcu[tur]!;
+    final k = olcek * (1 - .35 * yukseklik);
+    cv.drawOval(
+        Rect.fromCenter(center: Offset(cx, 101), width: rx * 2 * k, height: 12 * k),
+        Paint()
+          ..color = Color.fromRGBO(0, 0, 0, .3 * (1 - .5 * yukseklik))
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+    cv.restore();
+  }
+
+  @override
+  bool shouldRepaint(ZeminGolgesi o) => o.yukseklik != yukseklik || o.olcek != olcek || o.tur != tur;
+}
+
+/// Büyüme ışığı: arkada sıcak hâle (büyüme anında doruk), önde dışa saçılan
+/// sekiz pırıltı. Konfeti değil: az, yumuşak, karakterin kendi ışığı.
+class EvreIsigi extends CustomPainter {
+  EvreIsigi({required this.t, required this.arka, required this.merkez});
+  final double t;
+  final bool arka;
+  final Offset merkez;
+
+  @override
+  void paint(Canvas cv, Size size) {
+    final s = size.shortestSide / 110;
+    cv.save();
+    cv.translate((size.width - 110 * s) / 2, (size.height - 110 * s) / 2);
+    cv.scale(s);
+    if (arka) {
+      final h = zarf(t / .85, gir: .3, cik: .5);
+      if (h > 0) {
+        final r = 34 + 22 * h;
+        cv.drawCircle(
+            merkez,
+            r,
+            Paint()
+              ..shader = RadialGradient(colors: [
+                Color.fromRGBO(255, 236, 160, .75 * h),
+                Color.fromRGBO(255, 214, 102, .35 * h),
+                const Color(0x00FFD666),
+              ], stops: const [0, .55, 1])
+                  .createShader(Rect.fromCircle(center: merkez, radius: r)));
+      }
+    } else {
+      final p = ((t - evreBuyumeBasla) / .55).clamp(0.0, 1.0);
+      if (p > 0 && p < 1) {
+        final e = Curves.easeOut.transform(p);
+        final gorunur = 1 - Curves.easeIn.transform(p);
+        for (var i = 0; i < 8; i++) {
+          final a = i * math.pi / 4 + .35;
+          final d = 22 + 34 * e + (i.isEven ? 4 : 0);
+          final c = merkez + Offset(math.cos(a) * d, math.sin(a) * d * .85);
+          final r = (i.isEven ? 4.2 : 3.0) * (.4 + .6 * math.sin(math.pi * math.min(1, p * 1.4)));
+          cv.save();
+          cv.translate(c.dx, c.dy);
+          cv.rotate(p * 1.5);
+          final yol = KarakterPainter._yildizYolu(r);
+          cv.drawPath(yol, Paint()..color = Color.fromRGBO(255, 243, 176, gorunur));
+          cv.drawPath(
+              yol,
+              Paint()
+                ..color = DunyaRenkleri.murekkep.withValues(alpha: gorunur * .8)
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = .9
+                ..strokeJoin = StrokeJoin.round);
+          cv.restore();
+        }
+      }
+    }
+    cv.restore();
+  }
+
+  @override
+  bool shouldRepaint(EvreIsigi o) => o.t != t || o.arka != arka;
+}
+
 /// Ev para biriminin simgesi ağaçta bir kez verilir (main); her Karakter
 /// çağrısına parametre taşımamak için. Yoksa '₺' (testler, önizleme).
 class ParaSembolu extends InheritedWidget {
@@ -529,6 +873,13 @@ enum _Bosta { kipir, ziplama, gerinme, keyif, etrafaBak, dans }
 /// - Sevinç (`sevincTetik`): değeri artıya geçince bir kez, iki zıplama ve
 ///   besleme sonundaki sevinç yüzünün aynısı.
 ///
+/// - Büyüme (`evre` artınca, `evreKutla` açıksa): bir kez ~2,4 sn'lik sahne.
+///   Hazırlık (çömelir, merakla yukarı bakar, "o" ağız), büyüme (arkada sıcak
+///   ışık, gövde yeni ölçeğe aşmayla oturur, yeni bitki parçası "pıt" diye
+///   çıkar, pırıltılar dışa saçılır), sevinç (aynı sevinç yüzü + zıplama).
+///   Beslemeyle aynı anda gelirse yeme sahnesi bitince başlar. Uygulama
+///   açılışında oynamaz (yalnız ekrandayken artış).
+///
 /// Duygu sözlüğü tektir ([Yuz]): sevinç = ^ gözler + açık gülüş + kızaran
 /// yanak (besleme sonu, artıya geçiş, dokunma kıkırdaması, keyif); kapalı ‿
 /// göz yalnız kırpma ve esnemede. Ruh hâli değişince gülüş 600 ms'de kayar.
@@ -546,7 +897,20 @@ class Karakter extends StatefulWidget {
     this.sevincTetik = 0,
     this.bosta = false,
     this.ses,
+    this.evre,
+    this.evreKutla = false,
+    this.derinlik = true,
   });
+
+  /// Büyüme evresi (null → evresiz çizim). Bkz. [Evre].
+  final Evre? evre;
+
+  /// Evre artınca büyüme sahnesi oynasın mı (kamp, detay). Kapalıysa yeni
+  /// evre doğrudan görünür.
+  final bool evreKutla;
+
+  /// 2,5D görünüm (bkz. [KarakterPainter.derinlik]).
+  final bool derinlik;
 
   final VarlikTuru tur;
   final Ruh ruh;
@@ -602,7 +966,17 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   Timer? _gunesSabit;
   bool _gunesAcik = false;
   late final AnimationController _yeme =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..addListener(_yemeSesleri);
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))
+        ..addListener(_yemeSesleri)
+        ..addStatusListener(_yemeBitti);
+  // Büyüme sahnesi: nadir ve ilk kez olan an; sevinç bütçesinin en büyüğü.
+  late final AnimationController _evreC =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2400))..addListener(_evreSesleri);
+  late Evre? _evreGorunen = widget.evre;
+  Evre? _evreOnceki;
+  bool _evreBekliyor = false;
+  bool _evreIsikCalindi = false;
+  bool _evreSevincCalindi = false;
   _Bosta _bostaTur = _Bosta.kipir;
   final _rnd = math.Random();
   // Zamanlayıcılar alanda tutulur ve dispose'da iptal edilir; aksi hâlde
@@ -641,7 +1015,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _bostaZaman?.cancel();
     _bostaZaman = Timer(Duration(milliseconds: 6000 + _rnd.nextInt(7000)), () {
       if (!mounted || !widget.bosta) return;
-      final mesgul = _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating;
+      final mesgul =
+          _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating || _evreC.isAnimating;
       if (!_hareketsiz && !mesgul) {
         _bostaTur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
         _bostaC.forward(from: 0);
@@ -668,11 +1043,59 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     }
   }
 
+  void _evreSesleri() {
+    final t = _evreC.value;
+    if (!_evreIsikCalindi && t >= evreBuyumeBasla) {
+      _evreIsikCalindi = true;
+      widget.ses?.call(Ses.cikartma);
+      HapticFeedback.lightImpact();
+    }
+    if (!_evreSevincCalindi && t >= evreSevincAni) {
+      _evreSevincCalindi = true;
+      widget.ses?.call(Ses.yasasin);
+      HapticFeedback.mediumImpact();
+    }
+  }
+
+  void _evreBaslat() {
+    _evreBekliyor = false;
+    _evreIsikCalindi = false;
+    _evreSevincCalindi = false;
+    _bostaC.stop();
+    _sevincC.stop();
+    _evreC.forward(from: 0);
+  }
+
+  void _yemeBitti(AnimationStatus d) {
+    if (d == AnimationStatus.completed && _evreBekliyor && mounted) _evreBaslat();
+  }
+
   double get _gulus => _gulusBas + (_gulusHedef - _gulusBas) * Curves.easeInOut.transform(_gulusC.value);
 
   @override
   void didUpdateWidget(Karakter o) {
     super.didUpdateWidget(o);
+    final yeniEvre = widget.evre;
+    if (yeniEvre != _evreGorunen) {
+      final artti = yeniEvre != null && _evreGorunen != null && yeniEvre.index > _evreGorunen!.index;
+      if (artti && widget.evreKutla) {
+        _evreOnceki = _evreGorunen;
+        _evreGorunen = yeniEvre;
+        if (_hareketsiz) {
+          // Hareket yok: yeni evre hemen görünür, sevinç sesle gelir.
+          _evreOnceki = null;
+          widget.ses?.call(Ses.cikartma);
+        } else if (_yeme.isAnimating || o.yemeTetik != widget.yemeTetik) {
+          // Yeme bu karede başlıyor ya da sürüyor: sahne onun ardından.
+          _evreBekliyor = true;
+        } else {
+          _evreBaslat();
+        }
+      } else {
+        _evreGorunen = yeniEvre;
+        _evreOnceki = null;
+      }
+    }
     if (o.ruh != widget.ruh) {
       _gulusBas = _gulus;
       _gulusHedef = Yuz.ruhGulusu(widget.ruh);
@@ -743,7 +1166,19 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _sevincC.dispose();
     _gulusC.dispose();
     _yeme.dispose();
+    _evreC.dispose();
     super.dispose();
+  }
+
+  /// Sahne beklerken (yeme sürüyor) eski evre çizilir: büyüme sahnesiz görünmesin.
+  Evre? get _evreCizilen => _evreBekliyor ? _evreOnceki : _evreGorunen;
+
+  double _evreOlcegi(double gecis) {
+    final e = _evreCizilen;
+    if (e == null) return 1;
+    final o = _evreOnceki;
+    if (o == null || gecis >= 1 || _evreBekliyor) return e.olcek;
+    return o.olcek + (e.olcek - o.olcek) * Curves.easeInOut.transform(gecis);
   }
 
   /// i. paranın düşüş ilerlemesi (0–1); düşmüyorsa null.
@@ -767,7 +1202,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli, _kirp, _sevincC, _gulusC]),
+      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli, _kirp, _sevincC, _gulusC, _evreC]),
       builder: (context, _) {
         // Salınım = nefes: hafif yükselme + göğüs şişmesi.
         final nefes = Curves.easeInOut.transform(_bob.value);
@@ -845,6 +1280,22 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
           yuz = yuz.ust(sevincYuzu(zarf(v, gir: .1, cik: .25)));
         }
 
+        // Büyüme: hazırlık (çömel, yukarı bak, "o"), büyüme (aşmalı ölçek),
+        // sevinç (aynı yüz + zıplama). Bkz. [evreSahnesi].
+        var evreGecis = 1.0;
+        double? evreT;
+        if (_evreC.isAnimating && _evreOnceki != null) {
+          final t = evreT = _evreC.value;
+          final e = evreSahnesi(t);
+          evreGecis = e.gecis;
+          sx *= e.sx;
+          sy *= e.sy;
+          bakis = Offset(bakis.dx, math.min(bakis.dy, e.bakisY));
+          yuz = yuz.ust(e.yuz);
+          final u = (t - evreSevincAni) / (.92 - evreSevincAni);
+          if (u > 0 && u < 1) zipla(u, 14);
+        }
+
         // Hava: bulutluyken başın üstünde süzülen bulut; teselli anında güneş.
         double? gunes;
         if (widget.ruh == Ruh.bulutlu) {
@@ -879,14 +1330,43 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                   bakis: bakis,
                   yuz: yuz,
                   sembol: ParaSembolu.of(context),
+                  evre: _evreCizilen,
+                  evreOnceki: evreT == null ? null : _evreOnceki,
+                  evreGecis: evreGecis,
+                  derinlik: widget.derinlik,
+                  golgeCiz: !widget.derinlik,
                 ),
               ),
             ),
           ),
         );
-        if (!_yeme.isAnimating && gunes == null) return karakter;
+        // 2,5D: gölge yerde sabit kalır; karakter yükseldikçe küçülür ve
+        // solar (havada olduğu okunur). Eskiden gölge karakterle zıplıyordu.
+        final zemin = widget.derinlik
+            ? Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: ZeminGolgesi(
+                      tur: widget.tur,
+                      yukseklik: (-y / 24).clamp(0.0, 1.0),
+                      olcek: _evreOlcegi(evreGecis),
+                    ),
+                  ),
+                ),
+              )
+            : null;
+        if (!_yeme.isAnimating && gunes == null && evreT == null && zemin == null) return karakter;
         return Stack(clipBehavior: Clip.none, children: [
+          ?zemin,
+          if (evreT != null)
+            Positioned.fill(
+              child: IgnorePointer(child: CustomPaint(painter: EvreIsigi(t: evreT, arka: true, merkez: _govdeMerkezi(widget.tur)))),
+            ),
           karakter,
+          if (evreT != null)
+            Positioned.fill(
+              child: IgnorePointer(child: CustomPaint(painter: EvreIsigi(t: evreT, arka: false, merkez: _govdeMerkezi(widget.tur)))),
+            ),
           if (gunes != null)
             Positioned.fill(
               child: IgnorePointer(
