@@ -4,8 +4,8 @@ import 'package:harcliklarim/models/varlik.dart';
 import 'package:harcliklarim/services/ses_servisi.dart';
 import 'package:harcliklarim/widgets/karakter.dart';
 
-/// Canlı karakter sözleşmesi: besleme sahnesi sesleri doğru sırada çalar
-/// (üç para → yum → yaşasın), dokunma karakterin kendi sesini çalar,
+/// Canlı karakter sözleşmesi: besleme ritüelinin sesleri doğru sırada çalar
+/// (yiyecek ulaşınca tık → yum → yaşasın), dokunma karakterin kendi sesini çalar,
 /// hareketi azalt açıkken hareket olmadan yalnız ses gelir ve boşta
 /// zamanlayıcıları sayfa kapanınca sarkmaz.
 Widget _sahne({
@@ -33,24 +33,26 @@ Widget _sahne({
     );
 
 void main() {
-  testWidgets('besleme: üç para, yum, yaşasın sırasıyla', (t) async {
-    final calinan = <Ses>[];
-    await t.pumpWidget(_sahne(calinan: calinan));
-    await t.pumpWidget(_sahne(calinan: calinan, yeme: 1));
-    for (var i = 0; i < 30; i++) {
-      await t.pump(const Duration(milliseconds: 50));
-    }
-    expect(calinan, [Ses.para, Ses.para, Ses.para, Ses.yum, Ses.yasasin]);
-    expect(t.takeException(), isNull);
-  });
+  for (final tur in VarlikTuru.values) {
+    testWidgets('besleme ritüeli (${tur.name}): tık, yum, yaşasın sırasıyla', (t) async {
+      final calinan = <Ses>[];
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur));
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, yeme: 1));
+      for (var i = 0; i < 40; i++) {
+        await t.pump(const Duration(milliseconds: 50));
+      }
+      expect(calinan, [Ses.para, Ses.yum, Ses.yasasin]);
+      expect(t.takeException(), isNull);
+    });
+  }
 
   testWidgets('besleme ikinci kez de tam çalar', (t) async {
     final calinan = <Ses>[];
     await t.pumpWidget(_sahne(calinan: calinan));
     await t.pumpWidget(_sahne(calinan: calinan, yeme: 1));
-    await t.pump(const Duration(milliseconds: 1500));
+    await t.pump(const Duration(milliseconds: 1900));
     await t.pumpWidget(_sahne(calinan: calinan, yeme: 2));
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 40; i++) {
       await t.pump(const Duration(milliseconds: 50));
     }
     expect(calinan.where((s) => s == Ses.yasasin).length, 2);

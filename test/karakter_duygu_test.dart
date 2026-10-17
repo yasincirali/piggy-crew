@@ -21,27 +21,51 @@ void main() {
     }
   }
 
-  test('besleme yüzü her değerde sürekli, başta ve sonda nötr', () {
-    for (var i = 0; i < 6; i++) {
-      surekli('yuz[$i]', (t) => yemeYuzu(t).degerler[i]);
-      expect(yemeYuzu(0).degerler[i], 0);
-      expect(yemeYuzu(1).degerler[i], 0);
-    }
-    surekli('bakış', yemeBakisY);
-    expect(yemeBakisY(0), 0);
-    expect(yemeBakisY(1), 0);
-  });
+  for (final tur in VarlikTuru.values) {
+    test('besleme ritüeli (${tur.name}) sürekli, sonda nötr', () {
+      final son = yemeSahnesi(tur, 1);
+      for (var i = 0; i < son.degerler.length; i++) {
+        // y çizim biriminde (110'luk alan): zıplamada hızlı ama sürekli.
+        surekli('degerler[$i]', (t) => yemeSahnesi(tur, t).degerler[i], esik: i == 0 ? .6 : .08);
+      }
+      expect(son.y, closeTo(0, 1e-6));
+      expect(son.sx, closeTo(1, 1e-6));
+      expect(son.sy, closeTo(1, 1e-6));
+      expect(son.aci, closeTo(0, 1e-6));
+      expect(son.donus, closeTo(1, 1e-6));
+      expect(son.bakis.distance, closeTo(0, 1e-6));
+      for (final v in son.yuz.degerler) {
+        expect(v, closeTo(0, 1e-6));
+      }
+      expect(son.yemek, isNull, reason: 'yiyecek sahne bitmeden kaybolur (yendi)');
+    });
 
-  test('besleme sevinci gülen göz ve açık gülüşle gelir, uykulu kapakla değil', () {
-    var enSevinc = 0.0, enKahkaha = 0.0;
-    for (var t = 0.0; t <= 1; t += adim) {
-      final y = yemeYuzu(t);
-      expect(y.kapak, 0, reason: 'sevinçte göz kapağı kapanmaz');
-      enSevinc = y.sevinc > enSevinc ? y.sevinc : enSevinc;
-      enKahkaha = y.kahkaha > enKahkaha ? y.kahkaha : enKahkaha;
+    test('besleme ritüeli (${tur.name}): yiyecek girişten başlar, sevinç gülen gözle gelir', () {
+      expect(yemeSahnesi(tur, 0).yemek, yemekGirisNoktasi[tur]);
+      var enSevinc = 0.0, enKahkaha = 0.0;
+      for (var t = 0.0; t <= 1; t += adim) {
+        final y = yemeSahnesi(tur, t).yuz;
+        expect(y.kapak, 0, reason: 'sevinçte göz kapağı kapanmaz');
+        enSevinc = y.sevinc > enSevinc ? y.sevinc : enSevinc;
+        enKahkaha = y.kahkaha > enKahkaha ? y.kahkaha : enKahkaha;
+      }
+      expect(enSevinc, greaterThan(.95));
+      expect(enKahkaha, greaterThan(.95));
+    });
+  }
+
+  test('her karakter kendi yolunda yer (imza parçası yalnız onda)', () {
+    double enCok(VarlikTuru tur, double Function(YemeAni) f) =>
+        [for (var t = 0.0; t <= 1; t += adim) f(yemeSahnesi(tur, t)).abs()].reduce((a, b) => a > b ? a : b);
+    expect(enCok(VarlikTuru.altin, (a) => a.kabukIsilti), greaterThan(.9));
+    expect(enCok(VarlikTuru.dolar, (a) => a.kulakSark), greaterThan(.2));
+    expect(enCok(VarlikTuru.euro, (a) => a.kanat), greaterThan(.8));
+    expect(enCok(VarlikTuru.euro, (a) => a.gozYildiz), greaterThan(.9));
+    expect(enCok(VarlikTuru.nakit, (a) => a.yanakSis), greaterThan(.9));
+    expect(enCok(VarlikTuru.nakit, (a) => 1 - a.donus), greaterThan(1.9), reason: 'Sincap bir tur döner');
+    for (final tur in VarlikTuru.values.where((t) => t != VarlikTuru.nakit)) {
+      expect(enCok(tur, (a) => a.yanakSis), 0);
     }
-    expect(enSevinc, greaterThan(.95));
-    expect(enKahkaha, greaterThan(.95));
   });
 
   test('zarf uçlarda sıfır, içeride sürekli', () {

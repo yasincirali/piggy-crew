@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import '../providers/saglayicilar.dart';
 import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
+import '../widgets/avuc_parasi.dart';
 import '../widgets/kamp_atesi.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
@@ -39,6 +41,15 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
   /// görünmüyor (başka sekme ya da üstte sayfa), görününce oynar.
   int _donus = 0;
   bool _donusSirada = false;
+
+  /// Besleme ritüeli: yiyecek avuçta bekler (bkz. [AvucParasi]). Kayıt
+  /// "Ver"de yapılmıştır; avuç yalnız sahneyi başlatır.
+  final _anahtar = {for (final t in VarlikTuru.values) t: GlobalKey()};
+  final _avuc = ValueNotifier<Offset?>(null);
+  final _avucAnahtar = GlobalKey<AvucParasiState>();
+  final _kaydirma = ScrollController();
+  OverlayEntry? _avucGiris;
+  VarlikTuru? _avucTur;
   Timer? _donusSesi;
   Timer? _donusSifirla;
 
@@ -54,6 +65,9 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _donusSesi?.cancel();
     _donusSifirla?.cancel();
+    _avucGiris?.remove();
+    _avuc.dispose();
+    _kaydirma.dispose();
     super.dispose();
   }
 
@@ -62,9 +76,18 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
     super.didChangeDependencies();
     // Sekme ya da üstteki sayfa değişince de buraya gelinir (TickerMode ve
     // ModalRoute bağımlılığı): sıradaki karşılama kamp görününce oynar.
+    // Görünürlük her seferinde okunur ki sekme/ModalRoute bağımlılığı
+    // kaydolsun (okunmazsa sekme değişince buraya hiç gelinmez).
+    final gorunur = _gorunur;
     // Soğuk açılışta ilk kareden önce çalışır: karakterler kenarda başlar.
     _donusOynat();
+    // Avuçta yiyecek varken kamp gizlendiyse (sekme, üstte sayfa) bekletme: ver.
+    if (_avucGiris != null && !gorunur) _avucAnahtar.currentState?.hemenVer();
   }
+
+  // Sekme gizliliği Visibility.of'tan gelir (IndexedStack TickerMode'u kapatmaz).
+  bool get _gorunur =>
+      TickerMode.valuesOf(context).enabled && Visibility.of(context) && (ModalRoute.of(context)?.isCurrent ?? true);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState s) {
@@ -89,8 +112,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
 
   void _donusOynat() {
     if (!_donusSirada || !mounted) return;
-    final gorunur = TickerMode.valuesOf(context).enabled && (ModalRoute.of(context)?.isCurrent ?? true);
-    if (!gorunur) return;
+    if (!_gorunur) return;
     _donusSirada = false;
     // "Haftada bir" sayacı karşılama gerçekten görününce işler.
     ref.read(depoProvider).sonDonusYaz(DateTime.now());
@@ -137,12 +159,86 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
   }
 
   Future<void> _besle(VarlikTuru t) async {
+    _avucAnahtar.currentState?.hemenVer();
     final sonuc = await besleGoster(context, ref, t);
     if (sonuc == null || !mounted) return;
+    // Hareketi azalt: avuç yok, sahne sesle gelir (bkz. Karakter).
+    if (MediaQuery.of(context).disableAnimations) return _beslendi(t, sonuc);
+    await _avucaKoy(t, sonuc);
+  }
+
+  /// Yiyeceği avuca koyar: alt kenardan yükselir, karakterin yanında bekler.
+  Future<void> _avucaKoy(VarlikTuru t, BeslemeSonucu sonuc) async {
+    // Sahne görünsün: liste aşağı kaymışsa başa döner.
+    if (_kaydirma.hasClients && _kaydirma.offset > 0) {
+      await _kaydirma.animateTo(0, duration: Devinim.normal, curve: Devinim.cikis);
+    }
+    if (!mounted) return;
+    final kutu = _anahtar[t]!.currentContext?.findRenderObject();
+    if (kutu is! RenderBox || !kutu.hasSize || !_gorunur) return _beslendi(t, sonuc);
+    final ekran = MediaQuery.sizeOf(context);
+    final olcek = ref.read(evrelerProvider)[t]?.olcek ?? 1;
+
+    // Karakterin çizim alanındaki bir noktanın global yeri (sahne ölçeği ve
+    // evre büyüklüğü dahil, ayak tabanından ölçeklenir).
+    Rect alan() => Rect.fromPoints(kutu.localToGlobal(Offset.zero), kutu.localToGlobal(kutu.size.bottomRight(Offset.zero)));
+    Offset hedef() {
+      final a = alan();
+      final g = yemekGirisNoktasi[t]!;
+      final q = Offset(55 + (g.dx - 55) * olcek, 100 + (g.dy - 100) * olcek);
+      return a.topLeft + q * (a.width / 110);
+    }
+
+    final a = alan();
+    // Avuç karakterin ekran ortasına bakan yanında, kenara taşmadan.
+    final yon = ekran.width / 2 >= a.center.dx ? 1.0 : -1.0;
+    final bekleme = Offset(
+      (a.center.dx + yon * a.width * .95).clamp(AvucParasi.dokunma, ekran.width - AvucParasi.dokunma),
+      a.center.dy - a.height * .05,
+    );
+    final hedefOlcek = yemekYaricap * (a.width / 110) * olcek / (AvucParasi.boyut / 2 * .8);
+    final l = context.l10n;
+    late final OverlayEntry giris;
+    giris = OverlayEntry(
+      builder: (_) => AvucParasi(
+        key: _avucAnahtar,
+        tur: t,
+        sembol: ref.read(cocukProvider)!.para.sembol,
+        baslangic: Offset(ekran.width / 2, ekran.height + 30),
+        bekleme: bekleme,
+        hedef: hedef,
+        hedefOlcek: hedefOlcek,
+        konum: _avuc,
+        etiket: l.besleVer(l.karakter(t)),
+        onVerildi: () => _sonra(() {
+          giris.remove();
+          if (_avucGiris == giris) _avucGiris = null;
+          if (!mounted) return;
+          setState(() => _avucTur = null);
+          _beslendi(t, sonuc);
+        }),
+      ),
+    );
+    _avucGiris = giris;
+    setState(() => _avucTur = t);
+    Overlay.of(context, rootOverlay: true).insert(giris);
+  }
+
+  /// Kare çizilirken ağaç değiştirilmez: o anda gelen çağrı kare sonuna kalır.
+  void _sonra(VoidCallback f) {
+    final faz = SchedulerBinding.instance.schedulerPhase;
+    if (faz == SchedulerPhase.idle || faz == SchedulerPhase.postFrameCallbacks) {
+      f();
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((_) => f());
+    }
+  }
+
+  void _beslendi(VarlikTuru t, BeslemeSonucu sonuc) {
     setState(() => _yeme[t] = (_yeme[t] ?? 0) + 1);
     if (sonuc.yeniCikartma != null) {
       // Çıkartma sesi yeme sahnesinin arpejinden sonra gelsin, üst üste binmesin.
-      Future.delayed(const Duration(milliseconds: 1500), () => ref.read(sesProvider).cal(Ses.cikartma));
+      Future.delayed(yemeSuresi + const Duration(milliseconds: 100), () => ref.read(sesProvider).cal(Ses.cikartma));
     }
     final l = context.l10n;
     final mesaj = sonuc.yeniCikartma == null
@@ -185,6 +281,8 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
         // açılır: tepki görünsün diye kısa bekleme. Çift dokunma iki sayfa
         // açmasın diye bekleme sırasında yeni dokunma yalnız tepki verir.
         onTap: () {
+          // Avuçta bu karakterin yiyeceği varken karaktere dokunmak = ver.
+          if (_avucTur == t) return _avucAnahtar.currentState?.ver();
           setState(() => _tepki[t] = (_tepki[t] ?? 0) + 1);
           if (_aciliyor) return;
           _aciliyor = true;
@@ -197,6 +295,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
         },
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Karakter(
+            key: _anahtar[t],
             tur: t,
             ruh: d.ruh,
             boyut: boyut,
@@ -213,6 +312,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
             donusTetik: _donus,
             donusYon: donusYon,
             donusGecikme: donusGecikme,
+            avuc: _avucTur == t ? _avuc : null,
           ),
           Text(l.karakter(t), style: context.t.labelLarge),
           if (!d.bos && d.farkTl != null)
@@ -231,6 +331,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
       onRefresh: () => ref.read(fiyatProvider.notifier).yenile(),
       color: r.acc,
       child: ListView(
+        controller: _kaydirma,
         padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
         children: [
           Text(l.kampSelam(cocuk.ad), style: context.t.titleMedium?.copyWith(color: r.sub)),

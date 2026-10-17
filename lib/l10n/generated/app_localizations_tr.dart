@@ -188,7 +188,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String besleVer(String karakter) {
-    return '$karakter\'ya ver';
+    String _temp0 = intl.Intl.selectLogic(karakter, {
+      'Tortu': 'Tortu\'ya ver',
+      'other': '$karakter\'a ver',
+    });
+    return '$_temp0';
   }
 
   @override

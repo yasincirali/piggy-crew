@@ -193,5 +193,18 @@ void main() {
     await uzaklasipDon(const Duration(days: 4));
     expect(find.text(mesaj), findsNothing, reason: 'haftada en çok bir kez');
     await t.pump(const Duration(seconds: 3));
+
+    // Başka sekmedeyken dönerse karşılama bekler, kampa geçince oynar.
+    await sp.remove('son_donus_v1');
+    await t.tap(find.byIcon(Icons.menu_book_outlined));
+    await bekle(t);
+    await uzaklasipDon(const Duration(days: 6));
+    expect(find.text(mesaj), findsNothing, reason: 'kamp görünmüyor');
+    expect(depo.sonDonusOku(), isNull);
+    await t.tap(find.byIcon(Icons.local_fire_department_outlined));
+    await bekle(t);
+    await t.pump(const Duration(milliseconds: 500));
+    expect(find.text(mesaj), findsOneWidget);
+    await t.pump(const Duration(seconds: 3));
   });
 }
