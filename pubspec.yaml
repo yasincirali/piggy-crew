@@ -36,6 +36,12 @@ flutter:
     - assets/dersler/
     # Ses efektleri: CC0 kayıtlar, kaynaklar assets/sesler/LISANS.md.
     - assets/sesler/
+    # 3D karakterler (deneme): Blender'da önceden render, animasyonlu WebP.
+    # Üretim tool/karakter3d/ (README). Veli köşesinden açılır.
+    - assets/karakter3d/altin/
+    - assets/karakter3d/dolar/
+    - assets/karakter3d/euro/
+    - assets/karakter3d/nakit/
     - assets/fonts/OFL-Baloo2.txt
     - assets/fonts/OFL-Nunito.txt
   # Yazı tipleri pakete gömülü (Kids kategorisi: çalışma zamanında ağdan font

@@ -331,6 +331,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ayarlarTitresim => 'Vibração';
 
   @override
+  String get ayarlarGorunum => 'Aparência dos personagens';
+
+  @override
+  String get gorunumKlasik => 'Clássico';
+
+  @override
+  String get gorunum3d => '3D (teste)';
+
+  @override
   String get ayarlarDil => 'Idioma';
 
   @override

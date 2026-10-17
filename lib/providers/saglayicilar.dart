@@ -43,6 +43,19 @@ class TitresimAcikNotifier extends Notifier<bool> {
 }
 
 final titresimAcikProvider = NotifierProvider<TitresimAcikNotifier, bool>(TitresimAcikNotifier.new);
+
+/// Karakter görünümü: 3D (deneme) açık mı (veli köşesi).
+class Karakter3dNotifier extends Notifier<bool> {
+  @override
+  bool build() => ref.read(depoProvider).karakter3dOku();
+
+  Future<void> ayarla(bool v) async {
+    state = v;
+    await ref.read(depoProvider).karakter3dYaz(v);
+  }
+}
+
+final karakter3dProvider = NotifierProvider<Karakter3dNotifier, bool>(Karakter3dNotifier.new);
 final dokunsalProvider = Provider<DokunsalServisi>((ref) => DokunsalServisi(acik: ref.read(depoProvider).titresimAcikOku()));
 
 /// Ortak bileşenler (ref'siz) için: ağaçtaki servisle çalar; ProviderScope

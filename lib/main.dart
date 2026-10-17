@@ -51,7 +51,11 @@ class HarcliklarimApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       // Sincap'ın parasında çocuğun para birimi görünür (global).
-      builder: (context, child) => ParaSembolu(sembol: (cocuk?.para ?? ParaBirimi.tryy).sembol, child: child!),
+      // 3D karakterler (deneme): veli köşesindeki seçim, kapalıyken 2D.
+      builder: (context, child) => UcBoyut(
+        acik: ref.watch(karakter3dProvider),
+        child: ParaSembolu(sembol: (cocuk?.para ?? ParaBirimi.tryy).sembol, child: child!),
+      ),
       home: cocuk == null ? const KarsilamaEkrani() : const AnaIskelet(),
     );
   }
