@@ -120,7 +120,7 @@
       }
     }
   },
-  "besleVer": "{karakter}'ya ver",
+  "besleVer": "{karakter, select, Tortu{Tortu'ya ver} other{{karakter}'a ver}}",
   "@besleVer": {
     "placeholders": {
       "karakter": {

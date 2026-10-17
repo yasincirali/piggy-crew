@@ -5,6 +5,7 @@ import 'package:harcliklarim/main.dart';
 import 'package:harcliklarim/providers/saglayicilar.dart';
 import 'package:harcliklarim/services/depo.dart';
 import 'package:harcliklarim/services/fiyat_servisi.dart';
+import 'package:harcliklarim/widgets/avuc_parasi.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,6 +65,11 @@ void main() {
     expect(find.textContaining('alırsın'), findsOneWidget);
     await t.tap(find.text("Tortu'ya ver"));
     await bekle(t);
+    // Yiyecek avuçta bekler; çocuk uzatır (burada dokunur).
+    expect(find.byType(AvucParasi), findsOneWidget);
+    await t.tap(find.bySemanticsLabel("Tortu'ya ver"));
+    await bekle(t);
+    expect(find.byType(AvucParasi), findsNothing);
 
     expect(find.text('Tortu doydu!'), findsNothing); // ilk besleme çıkartma açar
     expect(find.textContaining('Yeni çıkartma'), findsOneWidget);

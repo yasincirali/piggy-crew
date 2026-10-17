@@ -421,7 +421,7 @@ abstract class AppLocalizations {
   /// No description provided for @besleVer.
   ///
   /// In tr, this message translates to:
-  /// **'{karakter}\'ya ver'**
+  /// **'{karakter, select, Tortu{Tortu\'ya ver} other{{karakter}\'a ver}}'**
   String besleVer(String karakter);
 
   /// No description provided for @besleFiyatYok.
