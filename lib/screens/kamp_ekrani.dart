@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/donus.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/ses_servisi.dart';
@@ -24,12 +27,91 @@ class KampEkrani extends ConsumerStatefulWidget {
   ConsumerState<KampEkrani> createState() => _KampState();
 }
 
-class _KampState extends ConsumerState<KampEkrani> {
+class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
   final _yeme = <VarlikTuru, int>{};
   final _tepki = <VarlikTuru, int>{};
   final _sevinc = <VarlikTuru, int>{};
   bool _aciliyor = false;
   bool _ruhBakiliyor = false;
+
+  /// Geri dönüş karşılaması (karar [donusKarsilamasiGerekli]). [_donus] dört
+  /// karakterin ortak tetiği; [_donusSirada]: karar verildi ama kamp o an
+  /// görünmüyor (başka sekme ya da üstte sayfa), görününce oynar.
+  int _donus = 0;
+  bool _donusSirada = false;
+  Timer? _donusSesi;
+  Timer? _donusSifirla;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _donusDenetle();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _donusSesi?.cancel();
+    _donusSifirla?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Sekme ya da üstteki sayfa değişince de buraya gelinir (TickerMode ve
+    // ModalRoute bağımlılığı): sıradaki karşılama kamp görününce oynar.
+    // Soğuk açılışta ilk kareden önce çalışır: karakterler kenarda başlar.
+    _donusOynat();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState s) {
+    if (s == AppLifecycleState.resumed) {
+      _donusDenetle();
+      setState(_donusOynat);
+    } else if (s == AppLifecycleState.paused) {
+      // Yokluk, son ön planda olunan andan ölçülür (açılış anından değil).
+      // Yalnız paused: dönüşte de hidden'dan geçilir, orada yazmak yokluğu silerdi.
+      ref.read(depoProvider).sonGorulmeYaz(DateTime.now());
+    }
+  }
+
+  void _donusDenetle() {
+    final depo = ref.read(depoProvider);
+    final simdi = DateTime.now();
+    if (donusKarsilamasiGerekli(sonGorulme: depo.sonGorulmeOku(), sonDonus: depo.sonDonusOku(), simdi: simdi)) {
+      _donusSirada = true;
+    }
+    depo.sonGorulmeYaz(simdi);
+  }
+
+  void _donusOynat() {
+    if (!_donusSirada || !mounted) return;
+    final gorunur = TickerMode.valuesOf(context).enabled && (ModalRoute.of(context)?.isCurrent ?? true);
+    if (!gorunur) return;
+    _donusSirada = false;
+    // "Haftada bir" sayacı karşılama gerçekten görününce işler.
+    ref.read(depoProvider).sonDonusYaz(DateTime.now());
+    _donus++;
+    final hareketsiz = MediaQuery.of(context).disableAnimations;
+    // Tek ses ve tek mesaj, takımın varış anında (karakter başına değil).
+    // Mesaj yokluğu anmaz: yalnız "seni görmek güzel" (karakter dili tüzüğü).
+    _donusSesi?.cancel();
+    _donusSesi = Timer(hareketsiz ? Duration.zero : const Duration(milliseconds: 1000), () {
+      if (!mounted) return;
+      ref.read(sesProvider).cal(Ses.yasasin);
+      HapticFeedback.mediumImpact();
+      bildir(context, context.l10n.donusKarsilama);
+    });
+    // Sahne bitince tetik sıfırlanır: yerleşim değişip bir karakter yeniden
+    // kurulursa karşılamayı tekrar oynamasın (azalış oynatmaz).
+    _donusSifirla?.cancel();
+    _donusSifirla = Timer(const Duration(milliseconds: 2500), () {
+      if (mounted) setState(() => _donus = 0);
+    });
+  }
 
   /// Değeri artıya geçen karakter bir kez sevinir. Önceki hâl cihazda
   /// saklanır; fiyat yüklenmeden önceki hâl sayılmaz (bkz. [bilinenRuhlar]).
@@ -84,10 +166,17 @@ class _KampState extends ConsumerState<KampEkrani> {
     final sol = gorunur.where((t) => t != VarlikTuru.altin).toList();
     // Yerleşim: üst satır (Baykuş · ateş · Zıpzıp), alt satır (Tortu büyük · Sincap).
     // Ev birimi dolar/euro ise bir karakter eksik; kalanlar sırayla doldurur.
+    // Geri dönüşte her karakter kendi yakın kenarından, sırayla (60 ms ara) gelir.
     final ust = sol.take(2).toList();
     final alt = sol.skip(2).toList();
 
-    Widget karakter(VarlikTuru t, {double boyut = 92, Duration gecikme = Duration.zero}) {
+    Widget karakter(
+      VarlikTuru t, {
+      double boyut = 92,
+      Duration gecikme = Duration.zero,
+      double donusYon = -1,
+      Duration donusGecikme = Duration.zero,
+    }) {
       final d = k[t]!;
       final cik = ref.watch(cikartmalarProvider);
       return Basilabilir(
@@ -121,6 +210,9 @@ class _KampState extends ConsumerState<KampEkrani> {
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
             evre: ref.watch(evrelerProvider)[t],
             evreKutla: true,
+            donusTetik: _donus,
+            donusYon: donusYon,
+            donusGecikme: donusGecikme,
           ),
           Text(l.karakter(t), style: context.t.labelLarge),
           if (!d.bos && d.farkTl != null)
@@ -177,7 +269,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                         boyut: 140,
                         parlamaTetik: _yeme.values.fold(0, (a, b) => a + b),
                       )),
-                  _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400)) : const SizedBox(width: 92)),
+                  _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400), donusYon: 1, donusGecikme: const Duration(milliseconds: 60)) : const SizedBox(width: 92)),
                 ],
               ),
               const SizedBox(height: Bosluk.s),
@@ -185,7 +277,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _sigdir(120, karakter(VarlikTuru.altin, boyut: 120)),
+                  _sigdir(120, karakter(VarlikTuru.altin, boyut: 120, donusGecikme: const Duration(milliseconds: 120))),
                   // Flex = kalan doğal genişlik (335 − 120 − 92); sahne öğeleriyle aynı ölçekte.
                   Expanded(
                     flex: 123,
@@ -198,7 +290,7 @@ class _KampState extends ConsumerState<KampEkrani> {
                       ),
                     ),
                   ),
-                  _sigdir(92, alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100)) : const SizedBox(width: 92)),
+                  _sigdir(92, alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100), donusYon: 1, donusGecikme: const Duration(milliseconds: 180)) : const SizedBox(width: 92)),
                 ],
               ),
             ]),

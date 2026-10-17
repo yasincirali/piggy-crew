@@ -464,4 +464,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ckTortuparlakAciklama => 'You fed Tortu in five different weeks.';
+
+  @override
+  String get donusKarsilama => 'The team came running to see you!';
 }

@@ -713,6 +713,48 @@ const evreSevincAni = 0.52;
   );
 }
 
+/// Geri dönüş karşılaması zaman çizelgesi (0–1, 1,5 sn): koşu, varış, sevinç.
+const donusVarisAni = 0.6;
+
+/// Karşılamanın bir anı (saf fonksiyon, `donus_karsilamasi_test`).
+/// [uzaklik]: yerine kalan yol (1 = kenarda, 0 = yerinde; widget yönle ve
+/// boyutla çarpar); [opaklik]: kenarda belirerek girer, ekranda "ışınlanma"
+/// olmasın; [egim]: koşu yönüne öne eğilme (yön işaretsiz, widget çarpar).
+/// Koşu dört küçük sekmeyle, varınca bir sevinç zıplaması; yüz baştan sona
+/// gülümser, varışta aynı sevinç yüzüne açılır (duygu sözlüğü tek).
+({double uzaklik, double opaklik, double y, double sx, double sy, double egim, Yuz yuz}) donusSahnesi(double t) {
+  double ss(double x) => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  final p = (t / donusVarisAni).clamp(0.0, 1.0);
+  // Güçlü yavaşlayan giriş (Devinim.cikis eğrisi): hızla gelir, yerinde yumuşak durur.
+  final uzaklik = 1 - Devinim.cikis.transform(p);
+  final opaklik = ss(t / .14);
+  var y = 0.0, sx = 1.0, sy = 1.0;
+  if (t < donusVarisAni) {
+    // Koşu sekmeleri: yaklaştıkça alçalır.
+    final z = ziplamaEgrisi((p * 4) % 1, 7 * (1 - .5 * p));
+    y = z.y;
+    sx = z.sx;
+    sy = z.sy;
+  } else {
+    final z = ziplamaEgrisi((t - donusVarisAni) / (1 - donusVarisAni), 18);
+    y = z.y;
+    sx = z.sx;
+    sy = z.sy;
+  }
+  final egim = .1 * zarf(p, gir: .1, cik: .45);
+  final sevinc = zarf((t - donusVarisAni + .04) / (1 - donusVarisAni + .04), gir: .15, cik: .3);
+  final gulus = zarf(t, gir: .08, cik: .12);
+  return (
+    uzaklik: uzaklik,
+    opaklik: opaklik,
+    y: y,
+    sx: sx,
+    sy: sy,
+    egim: egim,
+    yuz: Yuz(gulus: gulus, kizarma: .4 * gulus).ust(sevincYuzu(sevinc)),
+  );
+}
+
 /// Gövdenin ortası (110×110): büyüme ışığının merkezi.
 Offset _govdeMerkezi(VarlikTuru t) => switch (t) {
       VarlikTuru.altin => const Offset(55, 62),
@@ -879,6 +921,11 @@ enum _Bosta { kipir, ziplama, gerinme, keyif, etrafaBak, dans }
 ///   çıkar, pırıltılar dışa saçılır), sevinç (aynı sevinç yüzü + zıplama).
 ///   Beslemeyle aynı anda gelirse yeme sahnesi bitince başlar. Uygulama
 ///   açılışında oynamaz (yalnız ekrandayken artış).
+/// - Geri dönüş (`donusTetik`): birkaç gün sonra açılışta, haftada en çok bir
+///   kez (karar `models/donus.dart`'ta). [donusYon] tarafındaki kenardan
+///   belirerek koşar, yerine varınca sevinçle zıplar; ~1,5 sn. İlk karede
+///   tetik zaten artmışsa (soğuk açılış) sahne ilk kareden başlar ki
+///   karakter önce yerinde görünüp sonra kenara "ışınlanmasın".
 ///
 /// Duygu sözlüğü tektir ([Yuz]): sevinç = ^ gözler + açık gülüş + kızaran
 /// yanak (besleme sonu, artıya geçiş, dokunma kıkırdaması, keyif); kapalı ‿
@@ -900,7 +947,21 @@ class Karakter extends StatefulWidget {
     this.evre,
     this.evreKutla = false,
     this.derinlik = true,
+    this.donusTetik = 0,
+    this.donusYon = -1,
+    this.donusGecikme = Duration.zero,
   });
+
+  /// Her artışta geri dönüş karşılaması oynar (azalış oynatmaz: üst widget
+  /// sahneden sonra sayacı sıfırlayabilir).
+  final int donusTetik;
+
+  /// Koşarak geldiği kenar: −1 soldan, +1 sağdan.
+  final double donusYon;
+
+  /// Takım sırayla gelsin diye karaktere özgü kısa bekleme; bu sürede
+  /// karakter görünmez (kenarda bekliyor).
+  final Duration donusGecikme;
 
   /// Büyüme evresi (null → evresiz çizim). Bkz. [Evre].
   final Evre? evre;
@@ -970,6 +1031,13 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         ..addListener(_yemeSesleri)
         ..addStatusListener(_yemeBitti);
   // Büyüme sahnesi: nadir ve ilk kez olan an; sevinç bütçesinin en büyüğü.
+  // Geri dönüş karşılaması: koşu + varış sevinci, ~1,5 sn. Nadir (haftada en
+  // çok bir) an; sevinç bütçesi burada harcanabilir.
+  late final AnimationController _donusC =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+  Timer? _donusZaman;
+  bool _donusBekliyor = false;
+  bool _ilkBagimlilik = true;
   late final AnimationController _evreC =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 2400))..addListener(_evreSesleri);
   late Evre? _evreGorunen = widget.evre;
@@ -1001,6 +1069,34 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     });
     _kirpmaPlanla();
     if (widget.bosta) _bostaPlanla();
+    // Soğuk açılış: tetik ilk karede gelmişse karakter kenarda (görünmez)
+    // başlar; hareketi azalt bilgisi ancak didChangeDependencies'te okunur.
+    _donusBekliyor = widget.donusTetik > 0;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_ilkBagimlilik) {
+      _ilkBagimlilik = false;
+      if (_donusBekliyor) _donusBaslat();
+    }
+  }
+
+  void _donusBaslat() {
+    _donusZaman?.cancel();
+    if (_hareketsiz) {
+      // Hareket yok: karakter yerinde kalır; ses ve mesajı kamp verir.
+      _donusBekliyor = false;
+      return;
+    }
+    _donusBekliyor = true;
+    _donusZaman = Timer(widget.donusGecikme, () {
+      if (!mounted) return;
+      _donusBekliyor = false;
+      _bostaC.stop();
+      _donusC.forward(from: 0);
+    });
   }
 
   void _kirpmaPlanla() {
@@ -1016,7 +1112,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _bostaZaman = Timer(Duration(milliseconds: 6000 + _rnd.nextInt(7000)), () {
       if (!mounted || !widget.bosta) return;
       final mesgul =
-          _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating || _evreC.isAnimating;
+          _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating || _evreC.isAnimating || _donusC.isAnimating;
       if (!_hareketsiz && !mesgul) {
         _bostaTur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
         _bostaC.forward(from: 0);
@@ -1139,7 +1235,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     }
     if (o.sevincTetik != widget.sevincTetik) {
       widget.ses?.call(Ses.yasasin);
-      if (!_hareketsiz && !_yeme.isAnimating) {
+      if (!_hareketsiz && !_yeme.isAnimating && !_donusC.isAnimating) {
         HapticFeedback.mediumImpact();
         _bostaC.stop();
         _sevincC.forward(from: 0);
@@ -1147,6 +1243,9 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     }
     if (o.bosta != widget.bosta) {
       widget.bosta ? _bostaPlanla() : _bostaZaman?.cancel();
+    }
+    if (widget.donusTetik > o.donusTetik) {
+      _donusBaslat();
     }
   }
 
@@ -1157,6 +1256,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _bostaZaman?.cancel();
     _sessizSevinc?.cancel();
     _gunesSabit?.cancel();
+    _donusZaman?.cancel();
+    _donusC.dispose();
     _teselli.dispose();
     _bob.dispose();
     _hop.dispose();
@@ -1202,7 +1303,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli, _kirp, _sevincC, _gulusC, _evreC]),
+      animation: Listenable.merge([_bob, _hop, _kipir, _bostaC, _yeme, _teselli, _kirp, _sevincC, _gulusC, _evreC, _donusC]),
       builder: (context, _) {
         // Salınım = nefes: hafif yükselme + göğüs şişmesi.
         final nefes = Curves.easeInOut.transform(_bob.value);
@@ -1296,6 +1397,24 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
           if (u > 0 && u < 1) zipla(u, 14);
         }
 
+        // Geri dönüş: kenardan koşarak gelir, varınca sevinçle zıplar.
+        var dx = 0.0, opaklik = 1.0;
+        if (_donusBekliyor) {
+          opaklik = 0;
+        } else if (_donusC.isAnimating) {
+          final d = donusSahnesi(_donusC.value);
+          dx = widget.donusYon * widget.boyut * 1.3 * d.uzaklik;
+          opaklik = d.opaklik;
+          y += d.y;
+          sx *= d.sx;
+          sy *= d.sy;
+          // Koşu yönü −yön: soldan gelen sağa koşar, sağa eğilir; gözler de
+          // gittiği yere (takımın ortasına) bakar.
+          aci -= widget.donusYon * d.egim;
+          bakis = Offset(-widget.donusYon * .6 * d.uzaklik, bakis.dy);
+          yuz = yuz.ust(d.yuz);
+        }
+
         // Hava: bulutluyken başın üstünde süzülen bulut; teselli anında güneş.
         double? gunes;
         if (widget.ruh == Ruh.bulutlu) {
@@ -1312,7 +1431,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         yuz = Yuz(gulus: taban).ust(yuz);
 
         final karakter = Transform.translate(
-          offset: Offset(0, y),
+          offset: Offset(dx, y),
           child: Transform.rotate(
             angle: aci,
             alignment: Alignment.bottomCenter,
@@ -1345,18 +1464,21 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         final zemin = widget.derinlik
             ? Positioned.fill(
                 child: IgnorePointer(
-                  child: CustomPaint(
-                    painter: ZeminGolgesi(
-                      tur: widget.tur,
-                      yukseklik: (-y / 24).clamp(0.0, 1.0),
-                      olcek: _evreOlcegi(evreGecis),
+                  child: Transform.translate(
+                    offset: Offset(dx, 0),
+                    child: CustomPaint(
+                      painter: ZeminGolgesi(
+                        tur: widget.tur,
+                        yukseklik: (-y / 24).clamp(0.0, 1.0),
+                        olcek: _evreOlcegi(evreGecis),
+                      ),
                     ),
                   ),
                 ),
               )
             : null;
-        if (!_yeme.isAnimating && gunes == null && evreT == null && zemin == null) return karakter;
-        return Stack(clipBehavior: Clip.none, children: [
+        if (!_yeme.isAnimating && gunes == null && evreT == null && zemin == null && opaklik == 1) return karakter;
+        final yigin = Stack(clipBehavior: Clip.none, children: [
           ?zemin,
           if (evreT != null)
             Positioned.fill(
@@ -1385,6 +1507,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
               ),
             ),
         ]);
+        // Kenarda beklerken ve belirirken saydam; gölge de karakterle gelir.
+        return opaklik >= 1 ? yigin : Opacity(opacity: opaklik, child: yigin);
       },
     );
   }

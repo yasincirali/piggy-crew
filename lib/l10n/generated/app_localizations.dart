@@ -909,6 +909,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Tortu\'yu beş ayrı haftada besledin.'**
   String get ckTortuparlakAciklama;
+
+  /// Birkaç gün sonra açılışta takım koşarak gelince görünen kısa mesaj. Yokluk süresini anmaz, bir şey istemez.
+  ///
+  /// In tr, this message translates to:
+  /// **'Takım seni görünce koşa koşa geldi!'**
+  String get donusKarsilama;
 }
 
 class _AppLocalizationsDelegate

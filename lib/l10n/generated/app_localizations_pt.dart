@@ -470,4 +470,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get ckTortuparlakAciklama =>
       'Você alimentou o Jabu em cinco semanas diferentes.';
+
+  @override
+  String get donusKarsilama => 'A equipe veio correndo te ver!';
 }

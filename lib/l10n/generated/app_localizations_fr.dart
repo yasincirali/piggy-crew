@@ -471,4 +471,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ckTortuparlakAciklama =>
       'Tu as nourri Torti pendant cinq semaines différentes.';
+
+  @override
+  String get donusKarsilama => 'L\'équipe accourt pour te voir !';
 }

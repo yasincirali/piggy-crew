@@ -26,6 +26,8 @@ class Depo {
   static const _sesAcik = 'ses_acik_v1';
   static const _sonRuh = 'son_ruh_v1';
   static const _evre = 'evre_v1';
+  static const _sonGorulme = 'son_gorulme_v1';
+  static const _sonDonus = 'son_donus_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -101,6 +103,19 @@ class Depo {
   Future<void> evreYaz(Map<VarlikTuru, Evre> m) =>
       _sp.setString(_evre, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
 
+  /// Geri dönüş karşılaması için iki an (bkz. `donusKarsilamasiGerekli`):
+  /// uygulamanın en son ön planda olduğu ve karşılamanın en son oynadığı an.
+  /// Milisaniye olarak; bozuk değer "hiç" sayılır (karşılama oynamaz, zarar yok).
+  DateTime? sonGorulmeOku() => _anOku(_sonGorulme);
+  Future<void> sonGorulmeYaz(DateTime t) => _sp.setInt(_sonGorulme, t.millisecondsSinceEpoch);
+  DateTime? sonDonusOku() => _anOku(_sonDonus);
+  Future<void> sonDonusYaz(DateTime t) => _sp.setInt(_sonDonus, t.millisecondsSinceEpoch);
+
+  DateTime? _anOku(String anahtar) {
+    final v = _sp.get(anahtar);
+    return v is int ? DateTime.fromMillisecondsSinceEpoch(v) : null;
+  }
+
   /// Tüm veriyi sil (veli köşesi). Fiyat önbelleği kalır, kişisel değil.
   Future<void> hepsiniSil() async {
     await _sp.remove(_cocuk);
@@ -109,6 +124,9 @@ class Depo {
     await _sp.remove(_dersIlerleme);
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
+    // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
+    await _sp.remove(_sonGorulme);
+    await _sp.remove(_sonDonus);
   }
 
   /// PIN düz metin saklanmaz; tuzlu SHA-256 özeti saklanır. Tuz sabit ve
