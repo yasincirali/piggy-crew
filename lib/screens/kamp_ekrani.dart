@@ -3,7 +3,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -11,6 +10,7 @@ import '../l10n/l10n.dart';
 import '../models/donus.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
+import '../services/dokunsal.dart';
 import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
@@ -124,7 +124,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
     _donusSesi = Timer(hareketsiz ? Duration.zero : const Duration(milliseconds: 1000), () {
       if (!mounted) return;
       ref.read(sesProvider).cal(Ses.yasasin);
-      HapticFeedback.mediumImpact();
+      ref.read(dokunsalProvider).cal(Dokunus.sevinc);
       bildir(context, context.l10n.donusKarsilama);
     });
     // Sahne bitince tetik sıfırlanır: yerleşim değişip bir karakter yeniden
@@ -209,6 +209,13 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
         hedef: hedef,
         hedefOlcek: hedefOlcek,
         konum: _avuc,
+        ses: ref.read(sesProvider).cal,
+        dokunsal: ref.read(dokunsalProvider),
+        halka: () {
+          final g = alan();
+          // Gövdenin ortası (ayaklar altta, baş üstte): çizim alanının biraz altı.
+          return (g.center + Offset(0, g.height * .06), g.width * .5 * olcek);
+        },
         etiket: l.besleVer(l.karakter(t)),
         onVerildi: () => _sonra(() {
           giris.remove();
@@ -238,7 +245,10 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
     setState(() => _yeme[t] = (_yeme[t] ?? 0) + 1);
     if (sonuc.yeniCikartma != null) {
       // Çıkartma sesi yeme sahnesinin arpejinden sonra gelsin, üst üste binmesin.
-      Future.delayed(yemeSuresi + const Duration(milliseconds: 100), () => ref.read(sesProvider).cal(Ses.cikartma));
+      Future.delayed(yemeSuresi + const Duration(milliseconds: 100), () {
+        ref.read(sesProvider).cal(Ses.cikartma);
+        ref.read(dokunsalProvider).cal(Dokunus.cikartma);
+      });
     }
     final l = context.l10n;
     final mesaj = sonuc.yeniCikartma == null
@@ -305,6 +315,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
             sevincTetik: _sevinc[t] ?? 0,
             bosta: true,
             ses: ref.read(sesProvider).cal,
+            dokun: ref.read(dokunsalProvider).cal,
             pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
             evre: ref.watch(evrelerProvider)[t],
@@ -404,7 +415,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
               for (final t in gorunur)
                 Basilabilir(
                   onTap: () => _besle(t),
-                  semantik: l.besleBaslik(l.karakter(t)),
+                  semantik: l.besleBaslik(l.karakter(t), t.name),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
                     child: Row(children: [

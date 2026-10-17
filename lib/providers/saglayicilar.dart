@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cocuk.dart';
 import '../models/evre.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
+import '../services/dokunsal.dart';
 import '../services/fiyat_servisi.dart';
 import '../services/ses_servisi.dart';
 
@@ -26,6 +29,31 @@ class SesAcikNotifier extends Notifier<bool> {
 
 final sesAcikProvider = NotifierProvider<SesAcikNotifier, bool>(SesAcikNotifier.new);
 final sesProvider = Provider<SesServisi>((ref) => SesServisi(acik: ref.read(depoProvider).sesAcikOku()));
+
+/// Titreşim açık mı (Ayarlar). Değişince servis de güncellenir.
+class TitresimAcikNotifier extends Notifier<bool> {
+  @override
+  bool build() => ref.read(depoProvider).titresimAcikOku();
+
+  Future<void> ayarla(bool v) async {
+    state = v;
+    ref.read(dokunsalProvider).acik = v;
+    await ref.read(depoProvider).titresimAcikYaz(v);
+  }
+}
+
+final titresimAcikProvider = NotifierProvider<TitresimAcikNotifier, bool>(TitresimAcikNotifier.new);
+final dokunsalProvider = Provider<DokunsalServisi>((ref) => DokunsalServisi(acik: ref.read(depoProvider).titresimAcikOku()));
+
+/// Ortak bileşenler (ref'siz) için: ağaçtaki servisle çalar; ProviderScope
+/// yoksa (tek bileşen testi) sistemin hafif darbesine düşer.
+void dokunsalCal(BuildContext context, Dokunus d) {
+  try {
+    ProviderScope.containerOf(context, listen: false).read(dokunsalProvider).cal(d);
+  } catch (_) {
+    HapticFeedback.lightImpact();
+  }
+}
 
 /// Çocuk profili; null → karşılama akışı.
 class CocukNotifier extends Notifier<Cocuk?> {

@@ -89,10 +89,14 @@
     }
   },
   "besle": "Besle",
-  "besleBaslik": "{karakter}'yu besle",
+  "besleBaslik": "{tur, select, altin{{karakter}'yu besle} euro{{karakter}'u besle} other{{karakter}'ı besle}}",
   "@besleBaslik": {
+    "description": "Besle sayfası başlığı. tur: altin/dolar/euro/nakit (Türkçe belirtme hâli eki karaktere göre: Tortu'yu, Zıpzıp'ı, Baykuş'u, Sincap'ı).",
     "placeholders": {
       "karakter": {
+        "type": "String"
+      },
+      "tur": {
         "type": "String"
       }
     }
@@ -247,6 +251,8 @@
   "ayarlarSes": "Sesler",
   "sesAcik": "Açık",
   "sesKapali": "Kapalı",
+  "ayarlarTitresim": "Titreşim",
+  "@ayarlarTitresim": {"description": "Ayarlar: titreşim (dokunsal geri bildirim) bölüm başlığı; seçenekler sesAcik/sesKapali"},
   "ayarlarDil": "Dil",
   "ayarlarVeli": "Anne baba köşesi",
   "ayarlarSurum": "Sürüm {s}",

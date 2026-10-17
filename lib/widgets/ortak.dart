@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../theme/dunya.dart';
+import '../providers/saglayicilar.dart';
+import '../services/dokunsal.dart';
 
 /// Ortak bileşenler — "bir iş = bir bileşen" (sandık tasarım dili).
 /// Dokunma alanı ≥ 44 pt her yerde; basışta .97 ölçek, 120 ms.
@@ -55,7 +56,7 @@ class _BasilabilirState extends State<Basilabilir> {
         onTapCancel: () => setState(() => _basili = false),
         onTapUp: (_) => setState(() => _basili = false),
         onTap: () {
-          HapticFeedback.lightImpact();
+          dokunsalCal(context, Dokunus.dokunma);
           widget.onTap();
         },
         child: AnimatedScale(

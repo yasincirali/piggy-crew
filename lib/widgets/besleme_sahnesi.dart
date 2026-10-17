@@ -36,6 +36,70 @@ YemeZamani yemeZamani(VarlikTuru t) => switch (t) {
       VarlikTuru.nakit => (tutma: .2, yum: .6, sevinc: .7),
     };
 
+/// Sahnenin ses ve titreşim anı: [t] (0–1) geçilince [ses] ve [dokunus]
+/// birlikte çalar.
+typedef YemeIpucu = ({double t, Ses? ses, Dokunus? dokunus});
+
+/// Besleme sahnesinin ses + titreşim zaman çizelgesi (sıralı).
+///
+/// Neden tek çizelge (2026-10-17, "titreşim ve efektleri profesyonel"):
+/// ses, titreşim ve görüntü aynı kareye denk gelmezse el "bir şey kaçtı"
+/// diye hisseder. Anlar sahne eğrilerinden hesaplandı: Zıpzıp'ın beş ısırığı
+/// `|sin(5πu)|` tepeleri, Baykuş'un iki kanat çırpışı `|sin(2πu)|` tepeleri,
+/// Sincap'ın sekmesi paranın yere değdiği an, ortak sevincin inişi
+/// `ziplamaEgrisi`nin iniş anı. Sahne eğrisi değişirse burası da değişir;
+/// `besleme_efekt_test` ısırık ve kanat anlarını eğrilerle karşılaştırır.
+List<YemeIpucu> yemeIpuclari(VarlikTuru tur) {
+  final z = yemeZamani(tur);
+  // Ortak sevinç zıplamasının yere indiği an (ziplamaEgrisi iniş .74).
+  final inis = z.sevinc + .74 * (1 - z.sevinc);
+  final List<YemeIpucu> ozel = switch (tur) {
+    VarlikTuru.altin => [
+        (t: z.tutma, ses: Ses.karo, dokunus: Dokunus.karo),
+        (t: .27, ses: Ses.parilti, dokunus: Dokunus.isilti),
+        (t: z.yum, ses: Ses.tortu, dokunus: Dokunus.konma),
+      ],
+    VarlikTuru.dolar => [
+        // Kalkış (zıplamanın hazırlığı biter: .18 × .42).
+        (t: .076, ses: Ses.zipzip, dokunus: Dokunus.sekme),
+        (t: z.tutma, ses: Ses.kapma, dokunus: Dokunus.yakalama),
+        // İniş (.74 × .42).
+        (t: .31, ses: null, dokunus: Dokunus.konma),
+        for (final u in zipzipIsirikAnlari) (t: .3 + .32 * u, ses: Ses.isirik, dokunus: Dokunus.isirik),
+      ],
+    VarlikTuru.euro => [
+        (t: z.tutma, ses: Ses.yildiz, dokunus: Dokunus.pirilti),
+        for (final u in baykusKanatAnlari) (t: z.tutma + .02 + .26 * u, ses: Ses.kanat, dokunus: Dokunus.kanat),
+      ],
+    VarlikTuru.nakit => [
+        (t: .1, ses: Ses.sek, dokunus: Dokunus.sekme),
+        (t: z.tutma, ses: Ses.plop, dokunus: Dokunus.yakalama),
+        (t: .23, ses: null, dokunus: Dokunus.sisme),
+        (t: .34, ses: Ses.vin, dokunus: Dokunus.donme),
+        (t: z.yum, ses: Ses.yum, dokunus: Dokunus.konma),
+      ],
+  };
+  return [
+    ...ozel,
+    (t: z.sevinc, ses: Ses.yasasin, dokunus: Dokunus.sevinc),
+    (t: inis, ses: null, dokunus: Dokunus.konma),
+  ];
+}
+
+/// Zıpzıp'ın ısırık tepeleri (kemirme evresinin 0–1'inde, `|sin(5πu)|`).
+const zipzipIsirikAnlari = [.1, .3, .5, .7, .9];
+
+/// Baykuş'un kanat çırpışı tepeleri (çırpma evresinin 0–1'inde, `|sin(2πu)|`).
+const baykusKanatAnlari = [.25, .75];
+
+/// Yiyeceğin karaktere ulaştığı anın sesi (hareketi azalt açıkken tek başına çalar).
+Ses yakalamaSesi(VarlikTuru t) => switch (t) {
+      VarlikTuru.altin => Ses.karo,
+      VarlikTuru.dolar => Ses.kapma,
+      VarlikTuru.euro => Ses.yildiz,
+      VarlikTuru.nakit => Ses.plop,
+    };
+
 /// Yiyeceğin sahneye girdiği nokta (110×110 çizim alanında). Kamp'taki avuç
 /// parası buraya uçar; sahne yiyeceği tam buradan devralır, ekranda atlama
 /// olmaz. Tortu'da kabuğun üstü, Zıpzıp ve Baykuş'ta başın üstü (düşer,

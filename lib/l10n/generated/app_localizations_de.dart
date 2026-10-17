@@ -170,7 +170,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get besle => 'Füttern';
 
   @override
-  String besleBaslik(String karakter) {
+  String besleBaslik(String karakter, String tur) {
     return '$karakter füttern';
   }
 
@@ -326,6 +326,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get sesKapali => 'Aus';
+
+  @override
+  String get ayarlarTitresim => 'Vibration';
 
   @override
   String get ayarlarDil => 'Sprache';

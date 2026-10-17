@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/l10n.dart';
@@ -9,6 +8,7 @@ import '../providers/saglayicilar.dart';
 import '../theme/dunya.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
+import '../services/dokunsal.dart';
 
 final _derslerProvider = FutureProvider.family<List<Ders>, String>((_, dil) => Ders.yukle(dil));
 
@@ -100,7 +100,7 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
                   ? null
                   : () {
                       final dogru = i == ders.dogru;
-                      HapticFeedback.lightImpact();
+                      ref.read(dokunsalProvider).cal(Dokunus.secim);
                       setState(() {
                         _secim = i;
                         _dogru = dogru;

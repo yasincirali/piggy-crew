@@ -171,7 +171,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get besle => 'Alimentar';
 
   @override
-  String besleBaslik(String karakter) {
+  String besleBaslik(String karakter, String tur) {
     return 'Alimentar $karakter';
   }
 
@@ -326,6 +326,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sesKapali => 'Desligado';
+
+  @override
+  String get ayarlarTitresim => 'Vibração';
 
   @override
   String get ayarlarDil => 'Idioma';

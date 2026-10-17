@@ -394,11 +394,11 @@ abstract class AppLocalizations {
   /// **'Besle'**
   String get besle;
 
-  /// No description provided for @besleBaslik.
+  /// Besle sayfası başlığı. tur: altin/dolar/euro/nakit (Türkçe belirtme hâli eki karaktere göre: Tortu'yu, Zıpzıp'ı, Baykuş'u, Sincap'ı).
   ///
   /// In tr, this message translates to:
-  /// **'{karakter}\'yu besle'**
-  String besleBaslik(String karakter);
+  /// **'{tur, select, altin{{karakter}\'yu besle} euro{{karakter}\'u besle} other{{karakter}\'ı besle}}'**
+  String besleBaslik(String karakter, String tur);
 
   /// No description provided for @besleTutar.
   ///
@@ -645,6 +645,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Kapalı'**
   String get sesKapali;
+
+  /// Ayarlar: titreşim (dokunsal geri bildirim) bölüm başlığı; seçenekler sesAcik/sesKapali
+  ///
+  /// In tr, this message translates to:
+  /// **'Titreşim'**
+  String get ayarlarTitresim;
 
   /// No description provided for @ayarlarDil.
   ///

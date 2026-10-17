@@ -3,14 +3,15 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 import '../models/evre.dart';
 import '../models/varlik.dart';
+import '../services/dokunsal.dart';
 import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 
+part 'besleme_efektleri.dart';
 part 'besleme_sahnesi.dart';
 
 /// Kumbara Takımı çizimleri — prototipteki SVG'lerin birebir Dart karşılığı.
@@ -983,6 +984,7 @@ class Karakter extends StatefulWidget {
     this.sevincTetik = 0,
     this.bosta = false,
     this.ses,
+    this.dokun,
     this.evre,
     this.evreKutla = false,
     this.derinlik = true,
@@ -1037,6 +1039,10 @@ class Karakter extends StatefulWidget {
 
   /// Ses çalıcı; null ise sessiz (sayfalar, testler).
   final void Function(Ses)? ses;
+
+  /// Titreşim: sahne anları sesle aynı zaman çizelgesinden çalar
+  /// (bkz. [yemeIpuclari]). Null → titreşim yok.
+  final void Function(Dokunus)? dokun;
 
   @override
   State<Karakter> createState() => _KarakterState();
@@ -1100,9 +1106,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   Timer? _bostaZaman;
   Timer? _sessizSevinc;
 
-  bool _tutmaCalindi = false;
-  bool _yumCalindi = false;
-  bool _sevincCalindi = false;
+  // Besleme ipuçlarından kaçıncısına gelindi (ses + titreşim).
+  int _ipucuSira = 0;
 
   bool get _hareketsiz => MediaQuery.of(context).disableAnimations;
 
@@ -1184,20 +1189,11 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
 
   void _yemeSesleri() {
     final t = _yeme.value;
-    final z = yemeZamani(widget.tur);
-    if (!_tutmaCalindi && t >= z.tutma) {
-      _tutmaCalindi = true;
-      widget.ses?.call(Ses.para);
-      HapticFeedback.lightImpact();
-    }
-    if (!_yumCalindi && t >= z.yum) {
-      _yumCalindi = true;
-      widget.ses?.call(Ses.yum);
-    }
-    if (!_sevincCalindi && t >= z.sevinc) {
-      _sevincCalindi = true;
-      widget.ses?.call(Ses.yasasin);
-      HapticFeedback.mediumImpact();
+    final liste = yemeIpuclari(widget.tur);
+    while (_ipucuSira < liste.length && t >= liste[_ipucuSira].t) {
+      final ip = liste[_ipucuSira++];
+      if (ip.ses != null) widget.ses?.call(ip.ses!);
+      if (ip.dokunus != null) widget.dokun?.call(ip.dokunus!);
     }
   }
 
@@ -1206,12 +1202,12 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     if (!_evreIsikCalindi && t >= evreBuyumeBasla) {
       _evreIsikCalindi = true;
       widget.ses?.call(Ses.cikartma);
-      HapticFeedback.lightImpact();
+      widget.dokun?.call(Dokunus.buyume);
     }
     if (!_evreSevincCalindi && t >= evreSevincAni) {
       _evreSevincCalindi = true;
       widget.ses?.call(Ses.yasasin);
-      HapticFeedback.mediumImpact();
+      widget.dokun?.call(Dokunus.sevinc);
     }
   }
 
@@ -1261,6 +1257,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     }
     if (o.tepkiTetik != widget.tepkiTetik) {
       widget.ses?.call(widget.tur.ses);
+      widget.dokun?.call(widget.tur.sesDokunusu);
       if (widget.ruh == Ruh.bulutlu) {
         if (_hareketsiz) {
           setState(() => _gunesAcik = true);
@@ -1280,16 +1277,17 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     }
     if (o.yemeTetik != widget.yemeTetik) {
       if (_hareketsiz) {
-        // Hareket yok, sevinç sesle gelir.
-        widget.ses?.call(Ses.para);
+        // Hareket yok, sevinç sesle (ve titreşimle) gelir: yakalama, sonra yaşasın.
+        widget.ses?.call(yakalamaSesi(widget.tur));
+        widget.dokun?.call(Dokunus.yakalama);
         _sessizSevinc?.cancel();
         _sessizSevinc = Timer(const Duration(milliseconds: 280), () {
-          if (mounted) widget.ses?.call(Ses.yasasin);
+          if (!mounted) return;
+          widget.ses?.call(Ses.yasasin);
+          widget.dokun?.call(Dokunus.sevinc);
         });
       } else {
-        _tutmaCalindi = false;
-        _yumCalindi = false;
-        _sevincCalindi = false;
+        _ipucuSira = 0;
         _bostaC.stop();
         _sevincC.stop();
         _yeme.forward(from: 0);
@@ -1298,7 +1296,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     if (o.sevincTetik != widget.sevincTetik) {
       widget.ses?.call(Ses.yasasin);
       if (!_hareketsiz && !_yeme.isAnimating && !_donusC.isAnimating) {
-        HapticFeedback.mediumImpact();
+        widget.dokun?.call(Dokunus.sevinc);
         _bostaC.stop();
         _sevincC.forward(from: 0);
       }
@@ -1538,7 +1536,18 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                 ),
               )
             : null;
-        if (gunes == null && evreT == null && zemin == null && opaklik == 1) return karakter;
+        final efektler = _yeme.isAnimating ? yemeEfektleri(widget.tur, _yeme.value) : const <Parcacik>[];
+        final efekt = efektler.isEmpty
+            ? null
+            : Positioned.fill(
+                child: IgnorePointer(
+                  child: Transform.translate(
+                    offset: Offset(dx, 0),
+                    child: CustomPaint(painter: EfektPainter(parcaciklar: efektler, olcek: _evreOlcegi(evreGecis))),
+                  ),
+                ),
+              );
+        if (gunes == null && evreT == null && zemin == null && efekt == null && opaklik == 1) return karakter;
         final yigin = Stack(clipBehavior: Clip.none, children: [
           ?zemin,
           if (evreT != null)
@@ -1546,6 +1555,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
               child: IgnorePointer(child: CustomPaint(painter: EvreIsigi(t: evreT, arka: true, merkez: _govdeMerkezi(widget.tur)))),
             ),
           karakter,
+          ?efekt,
           if (evreT != null)
             Positioned.fill(
               child: IgnorePointer(child: CustomPaint(painter: EvreIsigi(t: evreT, arka: false, merkez: _govdeMerkezi(widget.tur)))),

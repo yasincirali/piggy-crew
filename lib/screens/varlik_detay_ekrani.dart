@@ -84,6 +84,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       evre: ref.watch(evrelerProvider)[tur],
                       evreKutla: true,
                       ses: ref.read(sesProvider).cal,
+                      dokun: ref.read(dokunsalProvider).cal,
                     ),
                   ),
                   const SizedBox(height: Bosluk.s),

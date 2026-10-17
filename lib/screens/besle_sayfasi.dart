@@ -10,6 +10,7 @@ import '../theme/dunya.dart';
 import '../utils/bicim.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
+import '../services/dokunsal.dart';
 
 /// Besleme sonucu: hareket eklendi; varsa yeni açılan çıkartmanın adı.
 class BeslemeSonucu {
@@ -52,7 +53,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     );
     await ref.read(hareketlerProvider.notifier).ekle(h);
     final yeni = await _cikartmalariKontrolEt();
-    HapticFeedback.mediumImpact();
+    ref.read(dokunsalProvider).cal(Dokunus.onay);
     if (mounted) Navigator.of(context).pop(BeslemeSonucu(yeni));
   }
 
@@ -122,7 +123,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
             const SizedBox(width: Bosluk.m),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(l.besleBaslik(ad), style: context.t.titleLarge),
+                Text(l.besleBaslik(ad, widget.tur.name), style: context.t.titleLarge),
                 if (fiyat != null && !widget.tur.nakitMi)
                   Text(l.besleBugunFiyat(birim, fmtPara(fiyat, cocuk.para)), style: context.t.bodyMedium),
                 if (fiyat == null) Text(l.besleFiyatYok, style: context.t.bodyMedium?.copyWith(color: r.loss)),
