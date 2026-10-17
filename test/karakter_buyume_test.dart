@@ -105,7 +105,11 @@ void main() {
     for (var i = 0; i < 90; i++) {
       await t.pump(const Duration(milliseconds: 50));
     }
-    expect(calinan, [Ses.para, Ses.yum, Ses.yasasin, Ses.cikartma, Ses.yasasin]);
+    expect(calinan, [
+      for (final i in yemeIpuclari(VarlikTuru.dolar)) ?i.ses,
+      Ses.cikartma,
+      Ses.yasasin,
+    ]);
   });
 
   testWidgets('hareketi azalt: yeni evre hemen, yalnız ses', (t) async {

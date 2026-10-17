@@ -24,6 +24,7 @@ class Depo {
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
   static const _sesAcik = 'ses_acik_v1';
+  static const _titresimAcik = 'titresim_acik_v1';
   static const _sonRuh = 'son_ruh_v1';
   static const _evre = 'evre_v1';
   static const _sonGorulme = 'son_gorulme_v1';
@@ -64,6 +65,10 @@ class Depo {
   /// sil" dokunmaz.
   bool sesAcikOku() => _sp.getBool(_sesAcik) ?? true;
   Future<void> sesAcikYaz(bool v) => _sp.setBool(_sesAcik, v);
+
+  /// Titreşim varsayılan açık; sesle aynı türden cihaz tercihi.
+  bool titresimAcikOku() => _sp.getBool(_titresimAcik) ?? true;
+  Future<void> titresimAcikYaz(bool v) => _sp.setBool(_titresimAcik, v);
 
   /// Son bilinen ruh hâlleri ("artıya geçti" sevinci bir kez oynasın diye).
   Map<VarlikTuru, Ruh> sonRuhOku() {

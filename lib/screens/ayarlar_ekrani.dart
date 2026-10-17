@@ -8,6 +8,7 @@ import '../models/cocuk.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/depo.dart';
+import '../services/dokunsal.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
 import '../widgets/ortak.dart';
@@ -29,6 +30,7 @@ class AyarlarEkrani extends ConsumerWidget {
     final n = ref.read(cocukProvider.notifier);
     final surum = ref.watch(_surumProvider).valueOrNull;
     final sesAcik = ref.watch(sesAcikProvider);
+    final titresimAcik = ref.watch(titresimAcikProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
@@ -43,7 +45,7 @@ class AyarlarEkrani extends ConsumerWidget {
               metin: l.dunya(d),
               secili: cocuk.dunya == d,
               onTap: () {
-                HapticFeedback.selectionClick();
+                ref.read(dokunsalProvider).cal(Dokunus.secim);
                 n.guncelle((c) => c.copyWith(dunya: d));
               },
             ),
@@ -72,6 +74,24 @@ class AyarlarEkrani extends ConsumerWidget {
               onIkon: Icon(v ? Icons.volume_up_rounded : Icons.volume_off_rounded,
                   size: 18, color: sesAcik == v ? r.accInk : r.fg),
               onTap: () => ref.read(sesAcikProvider.notifier).ayarla(v),
+            ),
+        ]),
+        const SizedBox(height: Bosluk.xl),
+        // Titreşim ayrı seçim: sesi açık tutup titreşimi kapatmak isteyen
+        // (ya da tersi) için. Açılınca bir kez tıklar ki farkı hissedilsin.
+        BolumBasligi(l.ayarlarTitresim),
+        const SizedBox(height: Bosluk.s),
+        Wrap(spacing: Bosluk.s, children: [
+          for (final v in const [true, false])
+            SecimCipi(
+              metin: v ? l.sesAcik : l.sesKapali,
+              secili: titresimAcik == v,
+              onIkon: Icon(v ? Icons.vibration_rounded : Icons.mobile_off_rounded,
+                  size: 18, color: titresimAcik == v ? r.accInk : r.fg),
+              onTap: () async {
+                await ref.read(titresimAcikProvider.notifier).ayarla(v);
+                if (v) ref.read(dokunsalProvider).cal(Dokunus.secim);
+              },
             ),
         ]),
         const SizedBox(height: Bosluk.xl),
@@ -173,7 +193,7 @@ class _PinSayfasiState extends State<_PinSayfasi> {
               if (Depo.pinOzeti(v) == widget.ozet) {
                 Navigator.of(context).pop(true);
               } else {
-                HapticFeedback.heavyImpact();
+                dokunsalCal(context, Dokunus.hata);
                 setState(() {
                   _hata = true;
                   _c.clear();

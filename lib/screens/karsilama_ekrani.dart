@@ -10,6 +10,7 @@ import '../services/depo.dart';
 import '../theme/dunya.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
+import '../services/dokunsal.dart';
 
 /// Karşılama: 5 adım, e-posta yok, şifre yok. Ad → yaş → para → kamp yeri →
 /// veli PIN (atlanabilir). Tema seçimi anında arka planı değiştirir ki çocuk
@@ -237,7 +238,7 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
                   secili: _dunya == d,
                   onIkon: _DunyaNoktasi(d),
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    ref.read(dokunsalProvider).cal(Dokunus.secim);
                     setState(() => _dunya = d);
                   },
                 ),

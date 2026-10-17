@@ -169,8 +169,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get besle => 'Besle';
 
   @override
-  String besleBaslik(String karakter) {
-    return '$karakter\'yu besle';
+  String besleBaslik(String karakter, String tur) {
+    String _temp0 = intl.Intl.selectLogic(tur, {
+      'altin': '$karakter\'yu besle',
+      'euro': '$karakter\'u besle',
+      'other': '$karakter\'ı besle',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -327,6 +332,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sesKapali => 'Kapalı';
+
+  @override
+  String get ayarlarTitresim => 'Titreşim';
 
   @override
   String get ayarlarDil => 'Dil';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:harcliklarim/models/varlik.dart';
+import 'package:harcliklarim/services/dokunsal.dart';
 import 'package:harcliklarim/services/ses_servisi.dart';
 import 'package:harcliklarim/widgets/karakter.dart';
 
@@ -15,6 +16,7 @@ Widget _sahne({
   int tepki = 0,
   bool bosta = false,
   bool hareketsiz = false,
+  List<Dokunus>? titresen,
 }) =>
     MaterialApp(
       home: MediaQuery(
@@ -27,6 +29,7 @@ Widget _sahne({
             tepkiTetik: tepki,
             bosta: bosta,
             ses: calinan.add,
+            dokun: titresen?.add,
           ),
         ),
       ),
@@ -34,14 +37,19 @@ Widget _sahne({
 
 void main() {
   for (final tur in VarlikTuru.values) {
-    testWidgets('besleme ritüeli (${tur.name}): tık, yum, yaşasın sırasıyla', (t) async {
+    testWidgets('besleme ritüeli (${tur.name}): sesler ve titreşimler çizelge sırasıyla, sonda yaşasın', (t) async {
       final calinan = <Ses>[];
-      await t.pumpWidget(_sahne(calinan: calinan, tur: tur));
-      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, yeme: 1));
+      final titresen = <Dokunus>[];
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, titresen: titresen));
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, yeme: 1, titresen: titresen));
       for (var i = 0; i < 40; i++) {
         await t.pump(const Duration(milliseconds: 50));
       }
-      expect(calinan, [Ses.para, Ses.yum, Ses.yasasin]);
+      final cizelge = yemeIpuclari(tur);
+      expect(calinan, [for (final i in cizelge) ?i.ses]);
+      expect(titresen, [for (final i in cizelge) ?i.dokunus]);
+      expect(calinan.first, isNot(Ses.yasasin));
+      expect(calinan.last, Ses.yasasin);
       expect(t.takeException(), isNull);
     });
   }
@@ -59,12 +67,14 @@ void main() {
   });
 
   for (final tur in VarlikTuru.values) {
-    testWidgets('dokununca ${tur.name} kendi sesini çalar', (t) async {
+    testWidgets('dokununca ${tur.name} kendi sesini ve titreşimini çalar', (t) async {
       final calinan = <Ses>[];
-      await t.pumpWidget(_sahne(calinan: calinan, tur: tur));
-      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, tepki: 1));
+      final titresen = <Dokunus>[];
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, titresen: titresen));
+      await t.pumpWidget(_sahne(calinan: calinan, tur: tur, tepki: 1, titresen: titresen));
       await t.pump(const Duration(milliseconds: 800));
       expect(calinan, [tur.ses]);
+      expect(titresen, [tur.sesDokunusu]);
     });
   }
 
@@ -74,7 +84,7 @@ void main() {
     await t.pumpWidget(_sahne(calinan: calinan, yeme: 1, hareketsiz: true));
     expect(t.hasRunningAnimations, isFalse);
     await t.pump(const Duration(milliseconds: 400));
-    expect(calinan, [Ses.para, Ses.yasasin]);
+    expect(calinan, [yakalamaSesi(VarlikTuru.altin), Ses.yasasin]);
   });
 
   testWidgets('boşta hareket çalışır, kapanınca zamanlayıcı kalmaz', (t) async {

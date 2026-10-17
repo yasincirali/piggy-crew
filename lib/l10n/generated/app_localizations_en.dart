@@ -169,7 +169,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get besle => 'Feed';
 
   @override
-  String besleBaslik(String karakter) {
+  String besleBaslik(String karakter, String tur) {
     return 'Feed $karakter';
   }
 
@@ -323,6 +323,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sesKapali => 'Off';
+
+  @override
+  String get ayarlarTitresim => 'Vibration';
 
   @override
   String get ayarlarDil => 'Language';

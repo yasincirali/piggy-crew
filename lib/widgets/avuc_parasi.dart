@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../models/varlik.dart';
+import '../services/dokunsal.dart';
+import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 import 'karakter.dart';
 
@@ -20,6 +21,14 @@ import 'karakter.dart';
 /// ekran okuyucuda tek düğme). Çocuk uzatmadan ayrılırsa (sekme, sayfa)
 /// yiyecek kendiliğinden verilir: kayıt zaten yapılmıştır, sahne kaybolmaz.
 ///
+/// Dokunuş dili (2026-10-17, "titreşim ve efektler profesyonel"): avuçta
+/// belirince hafif bir damla sesi; tutunca "pıt" ve tık; sürüklerken
+/// karaktere yaklaştıkça artan, çok hafif bir titreşim dokusu (iPhone) ve
+/// karakterin etrafında bir halka; yakalama alanına girince tek bir "çentik"
+/// (bırakabilirsin); atınca yumuşak "vuş"; uzakta bırakınca avuca
+/// "damla" ile döner. Yiyeceğin arkasında kısa bir iz kalır (hız okunur).
+/// Hiçbiri metin değil, hiçbiri süre ya da baskı kurmaz.
+///
 /// Konumlar global (kök Overlay ekranın tamamını kaplar).
 class AvucParasi extends StatefulWidget {
   const AvucParasi({
@@ -33,6 +42,9 @@ class AvucParasi extends StatefulWidget {
     required this.konum,
     required this.etiket,
     required this.onVerildi,
+    this.ses,
+    this.dokunsal,
+    this.halka,
   });
 
   final VarlikTuru tur;
@@ -53,6 +65,15 @@ class AvucParasi extends StatefulWidget {
   /// Ekran okuyucu etiketi ("Tortu'ya ver").
   final String etiket;
   final VoidCallback onVerildi;
+  final void Function(Ses)? ses;
+  final DokunsalServisi? dokunsal;
+
+  /// Yakalama halkası: karakterin gövdesi (merkez + yarıçap, global).
+  /// Null → halka çizilmez.
+  final (Offset, double) Function()? halka;
+
+  /// Bırakınca verildiği yarıçap (karakterin yiyecek noktasına uzaklık).
+  static const yakalamaYaricapi = 90.0;
 
   /// Avuçtaki çizim çapı; dokunma alanı 56 (≥44 pt).
   static const boyut = 40.0;
@@ -75,8 +96,20 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
     ..addStatusListener((s) {
       if (s == AnimationStatus.completed) _bitir();
     });
-  late final AnimationController _geri =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 260));
+  late final AnimationController _geri = AnimationController(vsync: this, duration: const Duration(milliseconds: 260))
+    ..addStatusListener((s) {
+      if (s == AnimationStatus.completed && !verildi) {
+        widget.ses?.call(Ses.don);
+        widget.dokunsal?.cal(Dokunus.avucaDonus);
+      }
+    });
+  // Yakalama alanına girince karakterin etrafında bir kez açılan halka.
+  late final AnimationController _halka =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+  // Sürükleme ve uçuşta yiyeceğin arkasındaki kısa iz (son konumlar).
+  final _iz = <Offset>[];
+  bool _icerde = false;
+  double _yakinlik = 0, _gonderilen = -1;
   Timer? _ipucuZaman;
 
   Offset? _surukle;
@@ -96,6 +129,10 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
     for (final c in [_giris, _salinim, _ucus, _geri]) {
       c.addListener(_yayinla);
     }
+    _giris.addStatusListener((s) {
+      if (s == AnimationStatus.completed && !verildi) widget.ses?.call(Ses.belir);
+    });
+    _ucus.addListener(_izEkle);
   }
 
   void _yayinla() {
@@ -105,7 +142,8 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
   @override
   void dispose() {
     _ipucuZaman?.cancel();
-    for (final c in [_giris, _salinim, _ipucu, _ucus, _geri]) {
+    widget.dokunsal?.surekliDur();
+    for (final c in [_giris, _salinim, _ipucu, _ucus, _geri, _halka]) {
       c.dispose();
     }
     super.dispose();
@@ -131,7 +169,7 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
   }
 
   double get _olcek {
-    if (!_ucuyor) return _surukle != null ? 1.08 : 1;
+    if (!_ucuyor) return _surukle != null ? 1.08 + .08 * _yakinlik : 1;
     return 1 + (widget.hedefOlcek - 1) * Curves.easeOutCubic.transform(_ucus.value);
   }
 
@@ -158,7 +196,9 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
       _ucusSon = son;
       _ucusKontrol = orta - Offset(0, math.min(90, yol * .35));
     });
-    HapticFeedback.selectionClick();
+    widget.dokunsal?.surekliDur();
+    widget.ses?.call(Ses.firlat);
+    widget.dokunsal?.cal(Dokunus.firlatma);
     _ucus.duration = Duration(milliseconds: (220 + yol * .45).clamp(260, 520).round());
     _ucus.forward(from: 0);
   }
@@ -171,6 +211,7 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
 
   void _bitir() {
     if (_bitti) return;
+    widget.dokunsal?.surekliDur();
     _bitti = true;
     _ucuyor = false;
     widget.konum.value = null;
@@ -182,13 +223,49 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
     _ipucuDur();
     _geri.stop();
     _tutmaFark = d.globalPosition - _merkez;
+    _iz.clear();
+    _icerde = false;
+    _gonderilen = -1;
     setState(() => _surukle = d.globalPosition - _tutmaFark);
-    HapticFeedback.selectionClick();
+    widget.ses?.call(Ses.al);
+    widget.dokunsal?.cal(Dokunus.tutma);
+    widget.dokunsal?.surekliBasla();
+    _yaklasmaGuncelle();
+  }
+
+  /// Karaktere yakınlık (0 uzak – 1 yakalama alanında): doku şiddeti,
+  /// yiyeceğin büyümesi ve halka buna bağlı.
+  void _yaklasmaGuncelle() {
+    final s = _surukle;
+    if (s == null) return;
+    final d = (widget.hedef() - s).distance;
+    const r = AvucParasi.yakalamaYaricapi;
+    _yakinlik = (1 - (d - r) / (3 * r)).clamp(0.0, 1.0);
+    final icerde = d < r;
+    if (icerde && !_icerde) {
+      widget.dokunsal?.cal(Dokunus.yaklasma);
+      _halka.forward(from: 0);
+    }
+    _icerde = icerde;
+    // Doku: uzakta neredeyse yok, yaklaştıkça artar; yalnız belirgin
+    // değişimde gönderilir (kanalı her karede yormamak için).
+    final siddet = icerde ? .42 : .04 + .3 * _yakinlik * _yakinlik;
+    if ((siddet - _gonderilen).abs() > .03) {
+      _gonderilen = siddet;
+      widget.dokunsal?.surekliAyarla(siddet, .2 + .4 * _yakinlik);
+    }
+  }
+
+  void _izEkle() {
+    _iz.add(_merkez);
+    if (_iz.length > 4) _iz.removeAt(0);
   }
 
   void _guncelle(DragUpdateDetails d) {
     if (verildi) return;
     setState(() => _surukle = d.globalPosition - _tutmaFark);
+    _izEkle();
+    _yaklasmaGuncelle();
     _yayinla();
   }
 
@@ -197,15 +274,19 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
     if (verildi || s == null) return;
     final hedef = widget.hedef();
     final yon = hedef - s;
+    widget.dokunsal?.surekliDur();
     final hiz = d.velocity.pixelsPerSecond;
     final dogru = yon.distance == 0 ? 0.0 : (hiz.dx * yon.dx + hiz.dy * yon.dy) / yon.distance;
     // Karaktere yakın bırakıldı ya da ona doğru fırlatıldı → ver; değilse avuca döner.
-    if (yon.distance < 90 || dogru > 600) {
+    if (yon.distance < AvucParasi.yakalamaYaricapi || dogru > 600) {
       ver();
     } else {
       setState(() {
         _geriBas = s;
         _surukle = null;
+        _yakinlik = 0;
+        _icerde = false;
+        _iz.clear();
       });
       _geri.forward(from: 0);
     }
@@ -215,16 +296,40 @@ class AvucParasiState extends State<AvucParasi> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     if (_bitti) return const SizedBox.shrink();
     return AnimatedBuilder(
-      animation: Listenable.merge([_giris, _salinim, _ipucu, _ucus, _geri]),
+      animation: Listenable.merge([_giris, _salinim, _ipucu, _ucus, _geri, _halka]),
       builder: (context, _) {
         final m = _merkez;
         const d = AvucParasi.dokunma;
+        final suruklenir = _surukle != null;
         return Stack(children: [
+          if (widget.halka != null && (suruklenir || _halka.isAnimating))
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: YakalamaHalkasi(
+                    govde: widget.halka!(),
+                    yakinlik: suruklenir ? _yakinlik : 0,
+                    acilis: _halka.isAnimating ? _halka.value : null,
+                  ),
+                ),
+              ),
+            ),
+          if ((suruklenir || _ucuyor) && _iz.length > 1)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: _IzCizimi(tur: widget.tur, sembol: widget.sembol, noktalar: List.of(_iz), olcek: _olcek),
+                ),
+              ),
+            ),
           if (_ipucu.isAnimating)
             Positioned.fill(
               child: IgnorePointer(child: CustomPaint(painter: IpucuYayi(bas: m, son: widget.hedef(), t: _ipucu.value))),
             ),
+          // Anahtar: üstteki katmanlar sürükleme başlarken eklenir; anahtarsız
+          // olursa yiyeceğin elementi yeniden kurulur ve parmak hareketi kopar.
           Positioned(
+            key: const ValueKey('yiyecek'),
             left: m.dx - d / 2,
             top: m.dy - d / 2,
             width: d,
@@ -282,6 +387,70 @@ class _AvucCizimi extends CustomPainter {
 
   @override
   bool shouldRepaint(_AvucCizimi o) => o.olcek != olcek || o.aci != aci || o.hale != hale || o.tur != tur || o.sembol != sembol;
+}
+
+/// Yiyeceğin arkasındaki iz: son konumlarda küçülen, solan kopyalar
+/// (hız ve yön okunur, bulanıklık yok).
+class _IzCizimi extends CustomPainter {
+  _IzCizimi({required this.tur, required this.sembol, required this.noktalar, required this.olcek});
+  final VarlikTuru tur;
+  final String sembol;
+  final List<Offset> noktalar;
+  final double olcek;
+
+  @override
+  void paint(Canvas cv, Size size) {
+    final n = noktalar.length;
+    // En eski en solgun; sonuncusu yiyeceğin kendisi, çizilmez.
+    for (var i = 0; i < n - 1; i++) {
+      final k = (i + 1) / n;
+      if ((noktalar[i] - noktalar.last).distance < 6) continue;
+      cv.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, .2 * k));
+      yemekCiz(cv, tur, noktalar[i], AvucParasi.boyut / 2 * .8 * olcek * (.7 + .25 * k), sembol: sembol);
+      cv.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(_IzCizimi o) => true;
+}
+
+/// Karakterin etrafında yakalama halkası: sürüklerken yaklaştıkça belirir;
+/// alana girince bir kez dışa açılır ("bırakabilirsin").
+class YakalamaHalkasi extends CustomPainter {
+  YakalamaHalkasi({required this.govde, required this.yakinlik, this.acilis});
+  final (Offset, double) govde;
+  final double yakinlik;
+  final double? acilis;
+
+  @override
+  void paint(Canvas cv, Size size) {
+    const renk = Color(0xFFFFE296);
+    final (merkez, r) = govde;
+    if (yakinlik > 0) {
+      cv.drawCircle(
+          merkez,
+          r * (1 + .06 * yakinlik),
+          Paint()
+            ..color = renk.withValues(alpha: .5 * yakinlik * yakinlik)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.5);
+    }
+    final a = acilis;
+    if (a != null) {
+      final e = Curves.easeOutCubic.transform(a);
+      cv.drawCircle(
+          merkez,
+          r * (1 + .35 * e),
+          Paint()
+            ..color = renk.withValues(alpha: .7 * (1 - a))
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 3 * (1 - e) + 1);
+    }
+  }
+
+  @override
+  bool shouldRepaint(YakalamaHalkasi o) => o.govde != govde || o.yakinlik != yakinlik || o.acilis != acilis;
 }
 
 /// İpucu: avuçtan karaktere noktalı yay, üstünde ilerleyen parlak bir nokta.
