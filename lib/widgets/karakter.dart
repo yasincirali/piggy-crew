@@ -1138,6 +1138,14 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     if (evre != null && evre != Evre.minik) _sahneBitki = _Film('$t/${ad}_${evre.name}');
   }
 
+  _Film? _bekledigimAtlas;
+
+  void _atlasHazir() {
+    _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
+    _bekledigimAtlas = null;
+    if (mounted) setState(() {});
+  }
+
   /// 3D'de hareketi karede pişmiş sahne ve ilerlemesi (yoksa null).
   (String, double)? _pismisSahne() {
     if (_yeme.isAnimating || _evreC.isAnimating || _donusC.isAnimating || _istekC.value > 0) return null;
@@ -1170,7 +1178,14 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       final bitki = _sahneBitki;
       if (bitki != null) katmanlar.add((film: bitki, kare: bitki.sira(pismis.$2), opak: 1));
     } else {
-      if (atlas.kareler.isEmpty) return null;
+      if (atlas.kareler.isEmpty) {
+        // İlk kare çözülene kadar 2D; çözülünce bir kez yeniden kurulur.
+        if (_bekledigimAtlas != atlas) {
+          _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
+          _bekledigimAtlas = atlas..hazir.addListener(_atlasHazir);
+        }
+        return null;
+      }
       // Büyüme: önceki evrenin atlası altta, yenisi gecişle belirir.
       final onceki = evreT != null && _evreOnceki != null ? _atlas(widget.tur, _evreOnceki) : null;
       final karisim = atlasKarisimi(yuz, bakis);
@@ -1430,6 +1445,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _gulusC.dispose();
     _yeme.dispose();
     _sahneHazirla(null, null);
+    _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
     _evreC.dispose();
     super.dispose();
   }

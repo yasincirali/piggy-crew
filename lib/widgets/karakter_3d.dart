@@ -120,8 +120,15 @@ List<(AtlasIfade, double)> atlasKarisimi(Yuz y, Offset bakis) {
     out.add((AtlasIfade.bulutlu, 1));
     out.add((AtlasIfade.duz, ((g - .1) / .3).clamp(0.0, 1.0)));
   }
-  final yatay = bakis.dx.abs().clamp(0.0, 1.0);
-  final yukari = (-bakis.dy).clamp(0.0, 1.0) * (1 - yatay);
+  // Bakış: yön kareleri başı da çevirir; yarı opak karışım iki baş gösterir
+  // (hayalet). Bu yüzden yön, eşikte kısa bir geçişle tam olarak değişir.
+  double esik(double x) {
+    final u = ((x - .45) / .15).clamp(0.0, 1.0);
+    return u * u * (3 - 2 * u);
+  }
+
+  final yatay = esik(bakis.dx.abs());
+  final yukari = esik(-bakis.dy) * (1 - yatay);
   void yon(AtlasIfade sol, AtlasIfade sag, AtlasIfade ust, double w) {
     if (w <= 0) return;
     if (yatay > .01) out.add((bakis.dx < 0 ? sol : sag, yatay * w));

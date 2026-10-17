@@ -45,6 +45,8 @@ void main() {
     expect(karisim(const Yuz(gulus: 1))[AtlasIfade.mutlu], 1);
     expect(karisim(const Yuz(gulus: .1)).keys, [AtlasIfade.bulutlu]);
     expect(karisim(const Yuz(gulus: 1), const Offset(-1, 0))[AtlasIfade.mutluSol], 1);
+    // Küçük bakış kaymasında baş çevrilmez (yarı opak iki baş = hayalet).
+    expect(karisim(const Yuz(gulus: 1), const Offset(.3, -.2)).keys, isNot(contains(AtlasIfade.mutluSag)));
     expect(karisim(const Yuz(gulus: 1, kapak: 1))[AtlasIfade.kirp], 1);
     // Gerinme: kapalı göz + açık ağız = esneme (kırpma ya da "o" değil).
     final esne = karisim(const Yuz(kapak: 1, agizO: .9));

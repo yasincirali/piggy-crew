@@ -41,7 +41,9 @@ for k, tur in TUR.items():
     # Kalibrasyon: minik "mutlu" (bitkisiz) gövdesi 2D gövdesine oturur.
     ref = ac(f'{B}/uyg/{k}/atlas/minik/mutlu.png').getchannel('A').point(lambda a: 255 if a > 20 else 0).getbbox()
     x0, y0, x1, y1 = IKI_D[tur]
-    olc = (y1 - y0) / (ref[3] - ref[1])
+    # Yükseklik ve genişlik oranlarının geometrik ortası: kulak/kabuk oranı
+    # 2D ile 3D'de farklı; yalnız boya göre Zıpzıp küçük, Tortu iri kalıyordu.
+    olc = ((y1 - y0) / (ref[3] - ref[1]) * (x1 - x0) / (ref[2] - ref[0])) ** .5
     ox = (x0 + x1) / 2 - (ref[0] + ref[2]) / 2 * olc
     oy = y1 - ref[3] * olc
     satirlar.append(f"  VarlikTuru.{tur}: ({ox:.3f}, {oy:.3f}, {olc:.5f}),")
