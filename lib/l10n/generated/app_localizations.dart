@@ -652,6 +652,24 @@ abstract class AppLocalizations {
   /// **'Titreşim'**
   String get ayarlarTitresim;
 
+  /// Veli köşesi: karakterlerin klasik (2D) ya da 3D görünümü bölüm başlığı
+  ///
+  /// In tr, this message translates to:
+  /// **'Karakter görünümü'**
+  String get ayarlarGorunum;
+
+  /// Karakter görünümü: bugünkü çizim (2D)
+  ///
+  /// In tr, this message translates to:
+  /// **'Klasik'**
+  String get gorunumKlasik;
+
+  /// Karakter görünümü: 3D, deneme aşamasında
+  ///
+  /// In tr, this message translates to:
+  /// **'3D (deneme)'**
+  String get gorunum3d;
+
   /// No description provided for @ayarlarDil.
   ///
   /// In tr, this message translates to:

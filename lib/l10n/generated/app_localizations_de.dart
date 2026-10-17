@@ -331,6 +331,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ayarlarTitresim => 'Vibration';
 
   @override
+  String get ayarlarGorunum => 'Aussehen der Figuren';
+
+  @override
+  String get gorunumKlasik => 'Klassisch';
+
+  @override
+  String get gorunum3d => '3D (Test)';
+
+  @override
   String get ayarlarDil => 'Sprache';
 
   @override

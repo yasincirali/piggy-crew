@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 import '../models/evre.dart';
@@ -13,6 +15,8 @@ import '../theme/dunya.dart';
 
 part 'besleme_efektleri.dart';
 part 'besleme_sahnesi.dart';
+part 'karakter_3d.dart';
+part 'karakter_3d_yerlesim.g.dart';
 
 /// Kumbara Takımı çizimleri — prototipteki SVG'lerin birebir Dart karşılığı.
 ///
@@ -40,7 +44,11 @@ class KarakterPainter extends CustomPainter {
     this.derinlik = true,
     this.golgeCiz = true,
     this.yeme,
+    this.yalnizYemek = false,
   });
+
+  /// Yalnız yiyecek çizilir (3D görünümde gövde 3D, yiyecek 2D).
+  final bool yalnizYemek;
 
   /// Besleme ritüelinin anı (bkz. [yemeSahnesi]): yiyecek ve karaktere özgü
   /// parçalar (Sincap'ın yanakları ve kuyruğu, Baykuş'un kanatları ve göz
@@ -337,6 +345,18 @@ class KarakterPainter extends CustomPainter {
     canvas.translate(55, 100);
     canvas.scale(olcek);
     canvas.translate(-55, -100);
+    if (!yalnizYemek) _govdeCiz(canvas, ev);
+    final y = yeme;
+    if (y != null && y.yemek != null && y.yemekOlcek > 0) {
+      final opak = y.yemekOpak.clamp(0.0, 1.0);
+      if (opak < 1) canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, opak));
+      yemekCiz(canvas, tur, y.yemek!, yemekYaricap * y.yemekOlcek, aci: y.yemekAci, sembol: sembol);
+      if (opak < 1) canvas.restore();
+    }
+    canvas.restore();
+  }
+
+  void _govdeCiz(Canvas canvas, Evre? ev) {
     switch (tur) {
       case VarlikTuru.altin:
         _tortu(canvas);
@@ -348,14 +368,6 @@ class KarakterPainter extends CustomPainter {
         _sincap(canvas);
     }
     if (ev != null) _bitki(canvas, ev);
-    final y = yeme;
-    if (y != null && y.yemek != null && y.yemekOlcek > 0) {
-      final opak = y.yemekOpak.clamp(0.0, 1.0);
-      if (opak < 1) canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, opak));
-      yemekCiz(canvas, tur, y.yemek!, yemekYaricap * y.yemekOlcek, aci: y.yemekAci, sembol: sembol);
-      if (opak < 1) canvas.restore();
-    }
-    canvas.restore();
   }
 
   // ── Büyüme: baştaki bitki ─────────────────────────────────────────────
@@ -659,7 +671,7 @@ class KarakterPainter extends CustomPainter {
   @override
   bool shouldRepaint(KarakterPainter o) =>
       o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol ||
-      o.evre != evre || o.evreOnceki != evreOnceki || o.evreGecis != evreGecis || o.derinlik != derinlik || o.golgeCiz != golgeCiz || o.yeme != yeme;
+      o.evre != evre || o.evreOnceki != evreOnceki || o.evreGecis != evreGecis || o.derinlik != derinlik || o.golgeCiz != golgeCiz || o.yeme != yeme || o.yalnizYemek != yalnizYemek;
 }
 
 /// Yüzün sürekli değerleri (hepsi 0–1). Tek duygu sözlüğü:
@@ -1109,6 +1121,104 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   // Besleme ipuçlarından kaçıncısına gelindi (ses + titreşim).
   int _ipucuSira = 0;
 
+  // 3D görünüm: oynayan pişmiş sahnenin kareleri (gövde + evre bitkisi).
+  String? _sahneAd;
+  _Film? _sahneBeden, _sahneBitki;
+
+  void _sahneHazirla(String? ad, Evre? evre) {
+    final anahtar = ad == null ? null : '$ad/${evre?.name}';
+    if (anahtar == _sahneAd) return;
+    _sahneBeden?.birak();
+    _sahneBitki?.birak();
+    _sahneBeden = _sahneBitki = null;
+    _sahneAd = anahtar;
+    if (ad == null) return;
+    final t = widget.tur.name;
+    _sahneBeden = _Film('$t/${ad}_beden');
+    if (evre != null && evre != Evre.minik) _sahneBitki = _Film('$t/${ad}_${evre.name}');
+  }
+
+  _Film? _bekledigimAtlas;
+
+  void _atlasHazir() {
+    _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
+    _bekledigimAtlas = null;
+    if (mounted) setState(() {});
+  }
+
+  /// 3D'de hareketi karede pişmiş sahne ve ilerlemesi (yoksa null).
+  (String, double)? _pismisSahne() {
+    if (_yeme.isAnimating || _evreC.isAnimating || _donusC.isAnimating || _istekC.value > 0) return null;
+    if (_sevincC.isAnimating) return ('arti', _sevincC.value);
+    if (_hop.isAnimating) return ('dokunma', _hop.value);
+    if (_bostaC.isAnimating) {
+      final ad = switch (_bostaTur) {
+        _Bosta.ziplama => 'ziplama',
+        _Bosta.keyif => 'keyif',
+        _Bosta.etrafaBak => 'etrafa_bak',
+        _Bosta.dans => 'dans',
+        _ => null,
+      };
+      if (ad != null) return (ad, _bostaC.value);
+    }
+    return null;
+  }
+
+  /// 3D gövde (atlas ya da pişmiş sahne); atlas henüz yoksa null → 2D.
+  Widget? _ucBoyutGovde({required Yuz yuz, required Offset bakis, required double evreGecis, required double? evreT,
+      required (String, double)? pismis, YemeAni? yemeAni}) {
+    final evre = _evreCizilen;
+    final atlas = _atlas(widget.tur, evre);
+    if (atlas.hata) return null;
+    final katmanlar = <_Katman>[];
+    final beden = _sahneBeden;
+    if (pismis != null && beden != null && beden.kareler.isNotEmpty) {
+      final i = beden.sira(pismis.$2);
+      katmanlar.add((film: beden, kare: i, opak: 1));
+      final bitki = _sahneBitki;
+      if (bitki != null) katmanlar.add((film: bitki, kare: bitki.sira(pismis.$2), opak: 1));
+    } else {
+      if (atlas.kareler.isEmpty) {
+        // İlk kare çözülene kadar 2D; çözülünce bir kez yeniden kurulur.
+        if (_bekledigimAtlas != atlas) {
+          _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
+          _bekledigimAtlas = atlas..hazir.addListener(_atlasHazir);
+        }
+        return null;
+      }
+      // Büyüme: önceki evrenin atlası altta, yenisi gecişle belirir.
+      final onceki = evreT != null && _evreOnceki != null ? _atlas(widget.tur, _evreOnceki) : null;
+      final karisim = atlasKarisimi(yuz, bakis);
+      void ekle(_Film f, double carpan) {
+        for (final (ifade, w) in karisim) {
+          katmanlar.add((film: f, kare: ifade.index, opak: w * carpan));
+        }
+      }
+
+      if (onceki != null && onceki.kareler.isNotEmpty && evreGecis < 1) {
+        ekle(onceki, 1);
+        ekle(atlas, Curves.easeInOut.transform(evreGecis.clamp(0.0, 1.0)));
+      } else {
+        ekle(atlas, 1);
+      }
+    }
+    return CustomPaint(
+      size: Size.square(widget.boyut),
+      painter: _UcBoyutPainter(tur: widget.tur, katmanlar: katmanlar, olcek: _evreOlcegi(evreGecis), repaint: atlas.hazir),
+      foregroundPainter: yemeAni?.yemek == null
+          ? null
+          : KarakterPainter(
+              tur: widget.tur,
+              ruh: widget.ruh,
+              sembol: ParaSembolu.of(context),
+              evre: _evreCizilen,
+              golgeCiz: false,
+              yeme: yemeAni,
+              yalnizYemek: true,
+            ),
+    );
+  }
+
   bool get _hareketsiz => MediaQuery.of(context).disableAnimations;
 
   @override
@@ -1334,6 +1444,8 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _sevincC.dispose();
     _gulusC.dispose();
     _yeme.dispose();
+    _sahneHazirla(null, null);
+    _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
     _evreC.dispose();
     super.dispose();
   }
@@ -1360,6 +1472,11 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         var sx = 1.0 - .012 * nefes, sy = 1.0 + .02 * nefes, aci = 0.0;
         var bakis = Offset.zero;
         var yuz = Yuz(kapak: _kirp.isAnimating ? math.sin(_kirp.value * math.pi) : 0);
+        // 3D pişmiş sahnede hareket karededir; Flutter yalnız nefesi verir.
+        final ucBoyut = widget.derinlik && UcBoyut.of(context);
+        final pismis = ucBoyut ? _pismisSahne() : null;
+        if (ucBoyut) _sahneHazirla(pismis?.$1, _evreCizilen);
+        final nefesY = y, nefesSx = sx, nefesSy = sy;
 
         void zipla(double t, double yukseklik) {
           final z = ziplamaEgrisi(t, yukseklik);
@@ -1488,16 +1605,20 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
         final taban = _gulus + (1 - _gulus) * (gunes ?? 0);
         yuz = Yuz(gulus: taban).ust(yuz);
 
+        final govde3d = ucBoyut
+            ? _ucBoyutGovde(yuz: yuz, bakis: bakis, evreGecis: evreGecis, evreT: evreT, pismis: pismis, yemeAni: yemeAni)
+            : null;
+        final pismisOynuyor = pismis != null && (_sahneBeden?.kareler.isNotEmpty ?? false) && govde3d != null;
         final karakter = Transform.translate(
-          offset: Offset(dx, y),
+          offset: Offset(dx, pismisOynuyor ? nefesY : y),
           child: Transform.rotate(
-            angle: aci,
+            angle: pismisOynuyor ? 0 : aci,
             alignment: Alignment.bottomCenter,
             child: Transform.scale(
-              scaleX: sx,
-              scaleY: sy,
+              scaleX: pismisOynuyor ? nefesSx : sx,
+              scaleY: pismisOynuyor ? nefesSy : sy,
               alignment: Alignment.bottomCenter,
-              child: CustomPaint(
+              child: govde3d ?? CustomPaint(
                 size: Size.square(widget.boyut),
                 painter: KarakterPainter(
                   tur: widget.tur,

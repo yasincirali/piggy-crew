@@ -31,6 +31,7 @@ class AyarlarEkrani extends ConsumerWidget {
     final surum = ref.watch(_surumProvider).valueOrNull;
     final sesAcik = ref.watch(sesAcikProvider);
     final titresimAcik = ref.watch(titresimAcikProvider);
+    final ucBoyut = ref.watch(karakter3dProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
@@ -91,6 +92,21 @@ class AyarlarEkrani extends ConsumerWidget {
               onTap: () async {
                 await ref.read(titresimAcikProvider.notifier).ayarla(v);
                 if (v) ref.read(dokunsalProvider).cal(Dokunus.secim);
+              },
+            ),
+        ]),
+        const SizedBox(height: Bosluk.xl),
+        // Karakter görünümü: 3D deneme; varsayılan klasik (2D).
+        BolumBasligi(l.ayarlarGorunum),
+        const SizedBox(height: Bosluk.s),
+        Wrap(spacing: Bosluk.s, runSpacing: Bosluk.s, children: [
+          for (final v in const [false, true])
+            SecimCipi(
+              metin: v ? l.gorunum3d : l.gorunumKlasik,
+              secili: ucBoyut == v,
+              onTap: () {
+                ref.read(dokunsalProvider).cal(Dokunus.secim);
+                ref.read(karakter3dProvider.notifier).ayarla(v);
               },
             ),
         ]),
