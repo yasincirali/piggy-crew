@@ -29,6 +29,11 @@ const _yasak = <String>[
   // PT
   'me deixou triste', 'me alimenta', 'onde você estava', 'você esqueceu', 'estou com fome',
   'me abandonou', 'última chance', 'se apressa', 'anda logo', 'não perca', 'bravo com você',
+  // Yokluğu anma (geri dönüş karşılaması, yol haritası 1.4): "özledik",
+  // "günlerdir yoktun" gibi süre ya da hasret dili yok.
+  'özledi', 'günlerdir', 'uzun zaman', 'nihayet', 'missed you', 'long time', 'finally back',
+  'vermisst', 'endlich wieder', 'te extrañ', 'por fin', 'tu nous as manqué', 'enfin',
+  'saudade', 'finalmente',
 ];
 
 /// Tüm diller: yeni .arb eklenince test kendiliğinden kapsar.

@@ -463,4 +463,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ckTortuparlakAciklama => 'Tortu\'yu beş ayrı haftada besledin.';
+
+  @override
+  String get donusKarsilama => 'Takım seni görünce koşa koşa geldi!';
 }

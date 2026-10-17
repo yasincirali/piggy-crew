@@ -310,5 +310,9 @@
   "ckSabir30Ad": "Sabırlı",
   "ckSabir30Aciklama": "İlk beslemenden 30 gün geçti ve hâlâ buradasın.",
   "ckTortuparlakAd": "Parlayan Tortu",
-  "ckTortuparlakAciklama": "Tortu'yu beş ayrı haftada besledin."
+  "ckTortuparlakAciklama": "Tortu'yu beş ayrı haftada besledin.",
+  "donusKarsilama": "Takım seni görünce koşa koşa geldi!",
+  "@donusKarsilama": {
+    "description": "Birkaç gün sonra açılışta takım koşarak gelince görünen kısa mesaj. Yokluk süresini anmaz, bir şey istemez."
+  }
 }
