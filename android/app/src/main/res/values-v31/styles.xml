@@ -5,7 +5,7 @@
          kullanılır (aynı güvenli bölge kuralı). -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <item name="android:windowSplashScreenBackground">@color/logo_zemin</item>
+        <item name="android:windowSplashScreenBackground">@color/acilis_zemin</item>
         <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">

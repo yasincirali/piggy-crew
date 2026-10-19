@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Açılış ekranı: logo zemini + ortada kavanoz işareti. Koyu modda da aynı
-     (marka rengi); Flutter ilk kareyi çizince kalkar. -->
+<!-- Açılış ekranı: düz zemin. Flutter ilk karede hazine sandığı sahnesini
+     aynı zeminde açar (2026-10-19); logo ortada olsaydı sahne başlarken
+     kaybolurdu. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/logo_zemin" />
-    <item>
-        <bitmap android:gravity="center" android:src="@drawable/launch_image" />
-    </item>
+    <item android:drawable="@color/acilis_zemin" />
 </layer-list>

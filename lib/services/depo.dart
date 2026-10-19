@@ -26,6 +26,7 @@ class Depo {
   static const _sesAcik = 'ses_acik_v1';
   static const _titresimAcik = 'titresim_acik_v1';
   static const _karakter3d = 'karakter_3d_v1';
+  static const _sonAcilis = 'son_acilis_v1';
   static const _sonRuh = 'son_ruh_v1';
   static const _evre = 'evre_v1';
   static const _sonGorulme = 'son_gorulme_v1';
@@ -74,6 +75,12 @@ class Depo {
   /// 3D karakterler (deneme) varsayılan kapalı: kapalıyken 2D birebir aynı.
   bool karakter3dOku() => _sp.getBool(_karakter3d) ?? false;
   Future<void> karakter3dYaz(bool v) => _sp.setBool(_karakter3d, v);
+
+  /// Açılış sahnesinin en son tam oynadığı gün (yyyy-aa-gg, yerel saat).
+  /// Aynı gün sonraki açılışlarda kısa sürüm oynar. Cihaz tercihi gibi:
+  /// "veriyi sil" dokunmaz.
+  String? sonAcilisOku() => _sp.getString(_sonAcilis);
+  Future<void> sonAcilisYaz(String gun) => _sp.setString(_sonAcilis, gun);
 
   /// Son bilinen ruh hâlleri ("artıya geçti" sevinci bir kez oynasın diye).
   Map<VarlikTuru, Ruh> sonRuhOku() {

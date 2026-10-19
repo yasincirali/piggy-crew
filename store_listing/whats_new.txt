@@ -1,3 +1,5 @@
-• Kumbara Takımı ile ilk tanışma: Tortu, Zıpzıp, Baykuş ve Sincap
-• Besle, kamp ateşini büyüt, çıkartma kazan
-• 10 kısa ders, 6 kamp yeri, 7–10 ve 11–15 yaş modu
+Bu sürümde denenecekler:
+• Yeni açılış: uygulamayı açınca Sincap parayı hazine sandığının kumbara yuvasına atar, sandık açılır, Kumbara Takımı sevinir ve sandığın ışığından uygulamaya girersin.
+• Tam hâli günün ilk açılışında oynar; aynı gün tekrar açınca kısa sürüm gelir. Ekrana dokunursan hemen geçer.
+• Lütfen bakın: hayvanlar ve para net görünüyor mu, akıcı mı, ses ve titreşim yerinde mi? Telefonun "Hareketi azalt" ayarı açıksa sandık sakin şekilde açılır.
+• Önceki sürümden: Veli köşesi › Ayarlar › Karakter görünümü › 3D (deneme).
