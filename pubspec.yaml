@@ -38,6 +38,7 @@ flutter:
     - assets/sesler/
     # 3D karakterler (deneme): Blender'da önceden render, animasyonlu WebP.
     # Üretim tool/karakter3d/ (README). Veli köşesinden açılır.
+    - assets/karakter3d/acilis/
     - assets/karakter3d/altin/
     - assets/karakter3d/dolar/
     - assets/karakter3d/euro/

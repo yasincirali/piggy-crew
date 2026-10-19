@@ -2,4 +2,6 @@
 <resources>
     <!-- Logo zemini (store_listing/ikon/arka_plan.svg); açılış ekranı da aynı lila. -->
     <color name="logo_zemin">#7B5CF0</color>
+    <!-- Açılış zemini: Flutter açılış sahnesinin (hazine sandığı) ilk karesiyle aynı. -->
+    <color name="acilis_zemin">#0E2A22</color>
 </resources>

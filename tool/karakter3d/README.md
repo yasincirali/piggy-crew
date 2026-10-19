@@ -13,3 +13,13 @@ uygulama kareleri animasyonlu WebP olarak `assets/karakter3d/<tur>/` altında.
 Kalibrasyon: 3D "minik/mutlu" gövdesinin sınırları 2D gövdesinin (evresiz
 KarakterPainter) yüksekliğine, ayak tabanına ve ortasına oturtulur. 2D
 çizim değişirse `donustur.py`'deki `IKI_D` yeniden ölçülmeli.
+
+## Açılış sahnesi (hazine sandığı)
+
+- `sandik.py` (2026-10-19): sandığın modeli (tarz B) ve kapak açıklığı
+  süpürmesi 0 → 1,1 (36 adım), iki katman: `arka` (iç, kapak, paralar) ve
+  `on` (ön duvar; diğerleri holdout). `python sandik.py <klasor> --adim 36
+  --boyut 720 --ornek 16` (bulutta ≈ 6 dk).
+- Dönüştürme: her katmanın 36 karesi tüm karelerin ortak kırpım kutusuyla
+  kesilip `assets/karakter3d/acilis/sandik_{arka,on}.webp` (animasyonlu)
+  olur; kutular `lib/widgets/acilis_sahnesi.dart` → `_sandikArka/_sandikOn`.

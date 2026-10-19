@@ -13,6 +13,7 @@ import '../services/dokunsal.dart';
 import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 
+part 'acilis_sahnesi.dart';
 part 'besleme_efektleri.dart';
 part 'besleme_sahnesi.dart';
 part 'karakter_3d.dart';

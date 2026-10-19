@@ -11,6 +11,7 @@ import 'screens/karsilama_ekrani.dart';
 import 'services/depo.dart';
 import 'models/varlik.dart';
 import 'theme/dunya.dart';
+import 'widgets/acilis_katmani.dart';
 import 'widgets/karakter.dart';
 
 Future<void> main() async {
@@ -52,9 +53,13 @@ class HarcliklarimApp extends ConsumerWidget {
       ],
       // Sincap'ın parasında çocuğun para birimi görünür (global).
       // 3D karakterler (deneme): veli köşesindeki seçim, kapalıyken 2D.
+      // Açılış: hazine sandığı (para yuvası) bir kez oynar, uygulama ışığından açılır.
       builder: (context, child) => UcBoyut(
         acik: ref.watch(karakter3dProvider),
-        child: ParaSembolu(sembol: (cocuk?.para ?? ParaBirimi.tryy).sembol, child: child!),
+        child: ParaSembolu(
+          sembol: (cocuk?.para ?? ParaBirimi.tryy).sembol,
+          child: AcilisKatmani(child: child!),
+        ),
       ),
       home: cocuk == null ? const KarsilamaEkrani() : const AnaIskelet(),
     );
