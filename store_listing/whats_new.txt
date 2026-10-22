@@ -1,5 +1,4 @@
 Bu sürümde denenecekler:
-• Yeni açılış: uygulamayı açınca Sincap parayı hazine sandığının kumbara yuvasına atar, sandık açılır, Kumbara Takımı sevinir ve sandığın ışığından uygulamaya girersin.
-• Tam hâli günün ilk açılışında oynar; aynı gün tekrar açınca kısa sürüm gelir. Ekrana dokunursan hemen geçer.
-• Lütfen bakın: hayvanlar ve para net görünüyor mu, akıcı mı, ses ve titreşim yerinde mi? Telefonun "Hareketi azalt" ayarı açıksa sandık sakin şekilde açılır.
-• Önceki sürümden: Veli köşesi › Ayarlar › Karakter görünümü › 3D (deneme).
+• Kumbaradan aldım: bir karaktere dokun, ekranın altındaki "Kumbaradan aldım" düğmesine bas, aldığın tutarı yaz (ya da "Hepsi") ve "Aldım"a bas. Karakter "İyi kullan!" der; listede el sallama simgesiyle "Kumbaradan alındı" satırı görünür. Kumbaradakinden fazlası yazılamaz.
+• Kamp odunu: ateş artık paranın miktarıyla değil, beslediğin haftalarla büyür. Her yeni haftanın ilk beslemesinde "Bu hafta ateşe bir odun eklendi!" yazar ve ateşin iki yanında odun yığını büyür. Para alınca ya da fiyat düşünce ateş küçülmez.
+• Geri bildirim: Ayarlar › Anne baba köşesi › "Geri bildirim gönder". Önce veli kilidi (PIN) kurulu olmalı. Gönderilecek bilgileri görürsün (ad ve tutar yok), üç kısa soruyu istersen doldurup "Paylaş" ile WhatsApp ya da e-postayla gönderirsin.

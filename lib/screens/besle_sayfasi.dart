@@ -12,10 +12,17 @@ import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import '../services/dokunsal.dart';
 
-/// Besleme sonucu: hareket eklendi; varsa yeni açılan çıkartmanın adı.
+/// Besleme sonucu: hareket eklendi; varsa yeni açılan çıkartmanın adı ve
+/// haftanın ilk beslemesiyle ateşe odun gelip gelmediği.
 class BeslemeSonucu {
-  const BeslemeSonucu(this.yeniCikartma);
+  const BeslemeSonucu(this.yeniCikartma, {this.yeniOdun = false});
   final String? yeniCikartma;
+  final bool yeniOdun;
+
+  /// Gösterilecek tek mesaj: çıkartma > odun > doydu (üst üste mesaj yok).
+  String mesaj(AppLocalizations l, VarlikTuru t) => yeniCikartma != null
+      ? l.cikartmaAcildi(yeniCikartma!)
+      : (yeniOdun ? l.odunEklendi : l.besleDoydu(l.karakter(t)));
 }
 
 /// Besle alt sayfası: tutar yaz → bugünkü fiyatla miktar görünür → ver.
@@ -51,10 +58,12 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
       tutarTl: v,
       birimFiyat: fiyat,
     );
+    final odunOnce = ref.read(odunProvider);
     await ref.read(hareketlerProvider.notifier).ekle(h);
     final yeni = await _cikartmalariKontrolEt();
+    final yeniOdun = ref.read(odunProvider) > odunOnce;
     ref.read(dokunsalProvider).cal(Dokunus.onay);
-    if (mounted) Navigator.of(context).pop(BeslemeSonucu(yeni));
+    if (mounted) Navigator.of(context).pop(BeslemeSonucu(yeni, yeniOdun: yeniOdun));
   }
 
   /// Davranış çıkartmaları — tek yerden, besleme sonrası. İlk yeni açılanın
@@ -62,7 +71,8 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
   /// listede görünür).
   Future<String?> _cikartmalariKontrolEt() async {
     final l = context.l10n;
-    final hareketler = ref.read(hareketlerProvider);
+    // Kumbaradan almalar ödül hesabına girmez (bkz. [Hareket]).
+    final hareketler = ref.read(hareketlerProvider).beslemeler.toList();
     final k = ref.read(karakterlerProvider);
     final cik = ref.read(cikartmalarProvider.notifier);
     String? ilk;

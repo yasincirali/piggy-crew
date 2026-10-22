@@ -11,6 +11,7 @@ import '../utils/bicim.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import 'besle_sayfasi.dart';
+import 'kumbaradan_al_sayfasi.dart';
 
 /// Tekil karakter: büyük karakter, bugünkü değer, iki çubuk (Verdin / Bugün),
 /// "neden" kartı (karakter konuşur), besleme listesi. Grafik yok.
@@ -78,7 +79,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       tur: tur,
                       ruh: d.ruh,
                       boyut: 170,
-                      pulSayisi: tur == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
+                      pulSayisi: tur == VarlikTuru.altin ? (d.verilenTl / 250).floor().clamp(0, 3) : 0,
                       parlak: tur == VarlikTuru.altin && ref.watch(cikartmalarProvider).contains('tortu_parlak'),
                       // Buradan beslenip evre atlarsa büyüme sahnesi burada oynar.
                       evre: ref.watch(evrelerProvider)[tur],
@@ -141,16 +142,20 @@ class VarlikDetayEkrani extends ConsumerWidget {
                         child: Kart(
                           padding: const EdgeInsets.symmetric(horizontal: Bosluk.l, vertical: Bosluk.m),
                           onTap: () => _silSor(context, ref, h),
+                          // Alma satırı ikon + yazıyla ayrılır, yalnız renkle değil.
                           child: Row(children: [
-                            Icon(Icons.local_fire_department_rounded, color: r.petal),
+                            Icon(h.cikis ? Icons.waving_hand_rounded : Icons.local_fire_department_rounded,
+                                color: h.cikis ? r.sub : r.petal),
                             const SizedBox(width: Bosluk.m),
                             Expanded(
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Text(tarihF.format(h.tarih), style: context.t.titleMedium),
-                                if (!tur.nakitMi) Text(fmtMiktar(h.miktar, birim, cocuk.para), style: context.t.bodyMedium),
+                                if (h.cikis) Text(l.cikisSatir, style: context.t.bodyMedium),
+                                if (!tur.nakitMi) Text(fmtMiktar(h.miktar.abs(), birim, cocuk.para), style: context.t.bodyMedium),
                               ]),
                             ),
-                            Text(fmtPara(h.tutarTl, cocuk.para), style: context.t.titleMedium),
+                            Text(h.cikis ? fmtFark(h.tutarTl, cocuk.para) : fmtPara(h.tutarTl, cocuk.para),
+                                style: context.t.titleMedium),
                           ]),
                         ),
                       ),
@@ -160,11 +165,20 @@ class VarlikDetayEkrani extends ConsumerWidget {
                     metin: l.detayBirazDaha,
                     onTap: () async {
                       final s = await besleGoster(context, ref, tur);
-                      if (s != null && context.mounted) {
-                        bildir(context, s.yeniCikartma == null ? l.besleDoydu(ad) : l.cikartmaAcildi(s.yeniCikartma!));
-                      }
+                      if (s != null && context.mounted) bildir(context, s.mesaj(l, tur));
                     },
                   ),
+                  if (!d.bos) ...[
+                    const SizedBox(height: Bosluk.s),
+                    AnaDugme(
+                      metin: l.cikisBaslik,
+                      ikincil: true,
+                      onTap: () async {
+                        final tamam = await kumbaradanAlGoster(context, tur);
+                        if (tamam == true && context.mounted) bildir(context, l.cikisTamam(ad));
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -179,8 +193,8 @@ class VarlikDetayEkrani extends ConsumerWidget {
     final onay = await showDialog<bool>(
       context: context,
       builder: (c) => AlertDialog(
-        title: Text(l.detaySil),
-        content: Text(l.detaySilOnay),
+        title: Text(h.cikis ? l.cikisSil : l.detaySil),
+        content: Text(h.cikis ? l.cikisSilOnay : l.detaySilOnay),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.iptal)),
           TextButton(onPressed: () => Navigator.pop(c, true), child: Text(l.sil)),

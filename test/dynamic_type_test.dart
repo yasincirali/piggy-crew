@@ -79,6 +79,26 @@ void main() {
           await bekle(t);
         }
       }
+
+      // Veli köşesi › Geri bildirim (PIN kurulu olunca açılır).
+      final kap = ProviderScope.containerOf(t.element(find.byType(HarcliklarimApp)));
+      await kap.read(cocukProvider.notifier).guncelle((c) => c.copyWith(pinOzeti: Depo.pinOzeti('1234')));
+      await bekle(t);
+      // Satır alt çubuğun arkasında kalmasın: listenin sonuna kadar kaydır.
+      await t.scrollUntilVisible(find.text('Anne baba köşesi'), 300, scrollable: find.byType(Scrollable).hitTestable().first);
+      await t.drag(find.byType(Scrollable).hitTestable().first, const Offset(0, -2000));
+      await bekle(t);
+      await t.tap(find.text('Anne baba köşesi'));
+      await bekle(t);
+      await t.enterText(find.byType(TextField), '1234');
+      await bekle(t);
+      await dokun('Geri bildirim gönder');
+      expect(find.text('Gönderilecek bilgiler'), findsOneWidget);
+      await t.scrollUntilVisible(find.text('Paylaş'), 200, scrollable: find.byType(Scrollable).last);
+      Navigator.of(t.element(find.text('Paylaş'))).pop();
+      await bekle(t);
+      Navigator.of(t.element(find.text('Geri bildirim gönder'))).pop();
+      await bekle(t);
     });
   }
 }

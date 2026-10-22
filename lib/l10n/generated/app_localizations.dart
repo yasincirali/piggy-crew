@@ -939,6 +939,198 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Takım seni görünce koşa koşa geldi!'**
   String get donusKarsilama;
+
+  /// Ekran okuyucu: kamp ateşi ve yanındaki odun sayısı. Ekranda sayı yazılmaz.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamp ateşi, {n} odun'**
+  String kampOdunEtiket(int n);
+
+  /// Haftanın ilk beslemesinden sonra: ateşe bir odun geldi. Eksilmez, seri değildir.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu hafta ateşe bir odun eklendi!'**
+  String get odunEklendi;
+
+  /// Varlık ekranındaki düğme ve alt sayfa başlığı: gerçek kumbaradan para alındığını kaydeder.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kumbaradan aldım'**
+  String get cikisBaslik;
+
+  /// Alma alt sayfası: karakter suçlamaz, sebep sormaz.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} senin için sakladı. Ne kadar aldın?'**
+  String cikisAlt(String karakter);
+
+  /// Alınabilecek en çok tutar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kumbarada: {tutar}'**
+  String cikisKumbarada(String tutar);
+
+  /// Hızlı seçim: kumbaradakinin tamamı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hepsi'**
+  String get cikisHepsi;
+
+  /// Yazılan tutar kumbaradakini aşınca.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu, kumbaradakinden fazla.'**
+  String get cikisFazla;
+
+  /// Alma alt sayfasının onay düğmesi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aldım'**
+  String get cikisDugme;
+
+  /// Alma kaydedilince karakterin sözü. Harcamak kötü değil: karakter iyi dilekle uğurlar, sebep sormaz.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: İyi kullan!'**
+  String cikisTamam(String karakter);
+
+  /// Hareket listesinde alma satırının etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kumbaradan alındı'**
+  String get cikisSatir;
+
+  /// Alma kaydını silme iletişimi başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu kaydı sil'**
+  String get cikisSil;
+
+  /// Alma kaydını silme onayı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu kayıt silinsin mi?'**
+  String get cikisSilOnay;
+
+  /// Veli köşesi düğmesi ve sayfa başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geri bildirim gönder'**
+  String get geriBildirim;
+
+  /// Geri bildirim sayfası açıklaması (veliye).
+  ///
+  /// In tr, this message translates to:
+  /// **'Yalnız aşağıdakiler gönderilir: tutar, ad ya da kişisel bilgi yok. Göndermeden önce okuyabilir, nereye gideceğini sen seçersin.'**
+  String get geriBildirimAciklama;
+
+  /// Özet bölüm başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gönderilecek bilgiler'**
+  String get geriBildirimOzet;
+
+  /// İsteğe bağlı soru 1.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çocuğunun en sevdiği an neydi?'**
+  String get geriBildirimSoru1;
+
+  /// İsteğe bağlı soru 2.
+  ///
+  /// In tr, this message translates to:
+  /// **'Nerede takıldı?'**
+  String get geriBildirimSoru2;
+
+  /// İsteğe bağlı soru 3.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kullanmayı bıraktıysa, neden?'**
+  String get geriBildirimSoru3;
+
+  /// Sistem paylaşım sayfasını açar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Paylaş'**
+  String get geriBildirimPaylas;
+
+  /// Paylaşım uygulama dışına çıktığı için ebeveyn kapısı (PIN) şart (Apple Kids).
+  ///
+  /// In tr, this message translates to:
+  /// **'Göndermek için önce veli kilidi kur.'**
+  String get geriBildirimKilitGerek;
+
+  /// Paylaşım konusu (e-posta konusu).
+  ///
+  /// In tr, this message translates to:
+  /// **'Harçlıklarım geri bildirim'**
+  String get geriBildirimKonu;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sürüm'**
+  String get gbSurum;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Dil'**
+  String get gbDil;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para birimi'**
+  String get gbPara;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yaş modu'**
+  String get gbYas;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karakter görünümü'**
+  String get gbGorunum;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kurulalı (gün)'**
+  String get gbKurulu;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Farklı besleme günü'**
+  String get gbGun;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamp odunu'**
+  String get gbOdun;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kumbaradan alma'**
+  String get gbCikis;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Okunan ders'**
+  String get gbDers;
+
+  /// Özet satırı etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açılan çıkartma'**
+  String get gbCikartma;
 }
 
 class _AppLocalizationsDelegate

@@ -485,4 +485,110 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get donusKarsilama => 'A equipe veio correndo te ver!';
+
+  @override
+  String kampOdunEtiket(int n) {
+    return 'Fogueira, $n lenhas';
+  }
+
+  @override
+  String get odunEklendi => 'Uma lenha nova na fogueira esta semana!';
+
+  @override
+  String get cikisBaslik => 'Tirei dinheiro';
+
+  @override
+  String cikisAlt(String karakter) {
+    return '$karakter guardou para você. Quanto você tirou?';
+  }
+
+  @override
+  String cikisKumbarada(String tutar) {
+    return 'No cofrinho: $tutar';
+  }
+
+  @override
+  String get cikisHepsi => 'Tudo';
+
+  @override
+  String get cikisFazla => 'É mais do que tem no cofrinho.';
+
+  @override
+  String get cikisDugme => 'Pronto';
+
+  @override
+  String cikisTamam(String karakter) {
+    return '$karakter: Aproveite!';
+  }
+
+  @override
+  String get cikisSatir => 'Retirado';
+
+  @override
+  String get cikisSil => 'Apagar este registro';
+
+  @override
+  String get cikisSilOnay => 'Apagar este registro?';
+
+  @override
+  String get geriBildirim => 'Enviar feedback';
+
+  @override
+  String get geriBildirimAciklama =>
+      'Só o que aparece abaixo é enviado: sem valores, nomes ou dados pessoais. Você pode ler antes e escolhe para onde vai.';
+
+  @override
+  String get geriBildirimOzet => 'O que será enviado';
+
+  @override
+  String get geriBildirimSoru1 => 'Do que seu filho ou filha mais gostou?';
+
+  @override
+  String get geriBildirimSoru2 => 'Onde travou?';
+
+  @override
+  String get geriBildirimSoru3 => 'Se parou de usar, por quê?';
+
+  @override
+  String get geriBildirimPaylas => 'Compartilhar';
+
+  @override
+  String get geriBildirimKilitGerek =>
+      'Crie primeiro um PIN dos pais para enviar feedback.';
+
+  @override
+  String get geriBildirimKonu => 'Feedback do Harçlıklarım';
+
+  @override
+  String get gbSurum => 'Versão';
+
+  @override
+  String get gbDil => 'Idioma';
+
+  @override
+  String get gbPara => 'Moeda';
+
+  @override
+  String get gbYas => 'Modo de idade';
+
+  @override
+  String get gbGorunum => 'Estilo dos personagens';
+
+  @override
+  String get gbKurulu => 'Dias desde a instalação';
+
+  @override
+  String get gbGun => 'Dias diferentes de alimentar';
+
+  @override
+  String get gbOdun => 'Lenhas da fogueira';
+
+  @override
+  String get gbCikis => 'Vezes que tirou';
+
+  @override
+  String get gbDers => 'Lições lidas';
+
+  @override
+  String get gbCikartma => 'Figurinhas desbloqueadas';
 }

@@ -73,9 +73,17 @@ enum ParaBirimi {
 /// gelir, suçluluk değil).
 enum Ruh { mutlu, duz, bulutlu }
 
-/// Bir besleme (yatırma). Fiyat o gün alınan birim fiyattır; sonradan değişmez.
-/// Çocuk tutarı EV para biriminde yazar, miktar = tutar / birimFiyat.
-/// Alan adlarındaki "Tl" tarihsel: "ev para birimi" okunur (TR ilk pazar).
+/// Bir besleme (yatırma) ya da kumbaradan alma. Fiyat o gün alınan birim
+/// fiyattır; sonradan değişmez. Çocuk tutarı EV para biriminde yazar,
+/// miktar = tutar / birimFiyat. Alan adlarındaki "Tl" tarihsel: "ev para
+/// birimi" okunur (TR ilk pazar).
+///
+/// Kumbaradan alma (2026-10-23, Ar-Ge raporu `harcliklarim/arge/raporlar/
+/// 2026-10-23_0150.md` #1): gerçek kumbaradan para çıkınca uygulama gerçeği
+/// bırakmasın diye. Ayrı tür alanı yerine EKSİ tutar: kayıt biçimi aynı kalır,
+/// eski kayıtlar olduğu gibi okunur. Alma besleme SAYILMAZ: evre, odun ve
+/// çıkartmalar yalnız [beslemeler]'den hesaplanır (harcamak cezalandırılmaz,
+/// ama ödül de vermez).
 @immutable
 class Hareket {
   const Hareket({
@@ -94,6 +102,9 @@ class Hareket {
 
   double get miktar => birimFiyat > 0 ? tutarTl / birimFiyat : 0;
 
+  /// Kumbaradan alma mı (eksi tutar).
+  bool get cikis => tutarTl < 0;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'tur': tur.anahtar,
@@ -111,6 +122,11 @@ class Hareket {
       );
 }
 
+extension Beslemeler on Iterable<Hareket> {
+  /// Yalnız beslemeler (kumbaradan almalar hariç): ödül hesapları bunu kullanır.
+  Iterable<Hareket> get beslemeler => where((h) => !h.cikis);
+}
+
 /// Bir karakterin bugünkü durumu (hesap model katmanında, build() içinde değil).
 @immutable
 class KarakterDurumu {
@@ -119,16 +135,49 @@ class KarakterDurumu {
     required this.miktar,
     required this.maliyetTl,
     required this.fiyat,
-  });
+    double? verilenTl,
+  }) : verilenTl = verilenTl ?? maliyetTl;
+
+  /// Hareketlerden durum. Kumbaradan almada maliyet ORTALAMA maliyetle düşer:
+  /// 10 doları 300'e alıp 5'ini 200 ederken alan çocukta kalan 5 doların
+  /// maliyeti 150'dir. Alınan tutar (200) düşülseydi kalan kâr şişerdi.
+  factory KarakterDurumu.hesapla(VarlikTuru tur, Iterable<Hareket> hareketler, double? fiyat) {
+    final sirali = hareketler.where((h) => h.tur == tur).toList()..sort((a, b) => a.tarih.compareTo(b.tarih));
+    var miktar = 0.0, maliyet = 0.0, verilen = 0.0;
+    for (final h in sirali) {
+      if (h.cikis) {
+        final oran = miktar > 0 ? (-h.miktar / miktar).clamp(0.0, 1.0) : 1.0;
+        maliyet -= maliyet * oran;
+      } else {
+        maliyet += h.tutarTl;
+        verilen += h.tutarTl;
+      }
+      miktar += h.miktar;
+    }
+    // Hepsi alındıysa kayan nokta artığı "boş değil" saydırmasın.
+    if (miktar <= bosEsik) {
+      miktar = 0;
+      maliyet = 0;
+    }
+    return KarakterDurumu(tur: tur, miktar: miktar, maliyetTl: maliyet, fiyat: fiyat, verilenTl: verilen);
+  }
+
+  static const bosEsik = 1e-9;
 
   final VarlikTuru tur;
   final double miktar;
+
+  /// Elde kalanın maliyeti (alınan kısım ortalama maliyetle düşülmüş).
   final double maliyetTl;
+
+  /// Bugüne kadar verilen toplam (almalar düşülmez). Tutara bağlı küçük süs
+  /// (Tortu'nun pulları) bunu kullanır ki harcayınca süs kaybolmasın.
+  final double verilenTl;
 
   /// Bugünkü birim fiyat; bilinmiyorsa null → değer gösterilmez, UYDURULMAZ.
   final double? fiyat;
 
-  bool get bos => miktar <= 0;
+  bool get bos => miktar <= bosEsik;
   double? get degerTl => tur.nakitMi ? miktar : (fiyat == null ? null : miktar * fiyat!);
   double? get farkTl => degerTl == null ? null : degerTl! - maliyetTl;
   double? get farkYuzde =>

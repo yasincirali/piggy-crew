@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -250,11 +249,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
         ref.read(dokunsalProvider).cal(Dokunus.cikartma);
       });
     }
-    final l = context.l10n;
-    final mesaj = sonuc.yeniCikartma == null
-        ? l.besleDoydu(l.karakter(t))
-        : l.cikartmaAcildi(sonuc.yeniCikartma!);
-    bildir(context, mesaj);
+    bildir(context, sonuc.mesaj(context.l10n, t));
   }
 
   @override
@@ -316,7 +311,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
             bosta: true,
             ses: ref.read(sesProvider).cal,
             dokun: ref.read(dokunsalProvider).cal,
-            pulSayisi: t == VarlikTuru.altin ? (d.maliyetTl / 250).floor().clamp(0, 3) : 0,
+            pulSayisi: t == VarlikTuru.altin ? (d.verilenTl / 250).floor().clamp(0, 3) : 0,
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
             evre: ref.watch(evrelerProvider)[t],
             evreKutla: true,
@@ -375,9 +370,10 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
                 children: [
                   _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
                   _sigdir(140, KampAtesi(
-                        // Ateş piyasa düşüşünde küçülmez: en az verilen kadar
-                        // yanar (çocuğun emeği sönmez), kazançla büyür.
-                        toplamTl: math.max(toplam.degerTl ?? 0, toplam.maliyetTl),
+                        // Ateş odunla büyür, tutarla değil: piyasa düşüşü de
+                        // kumbaradan alma da onu küçültmez (bkz. [Odun]).
+                        odun: ref.watch(odunProvider),
+                        etiket: l.kampOdunEtiket(ref.watch(odunProvider)),
                         boyut: 140,
                         parlamaTetik: _yeme.values.fold(0, (a, b) => a + b),
                       )),
