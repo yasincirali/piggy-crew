@@ -487,4 +487,109 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get donusKarsilama => 'Takım seni görünce koşa koşa geldi!';
+
+  @override
+  String kampOdunEtiket(int n) {
+    return 'Kamp ateşi, $n odun';
+  }
+
+  @override
+  String get odunEklendi => 'Bu hafta ateşe bir odun eklendi!';
+
+  @override
+  String get cikisBaslik => 'Kumbaradan aldım';
+
+  @override
+  String cikisAlt(String karakter) {
+    return '$karakter senin için sakladı. Ne kadar aldın?';
+  }
+
+  @override
+  String cikisKumbarada(String tutar) {
+    return 'Kumbarada: $tutar';
+  }
+
+  @override
+  String get cikisHepsi => 'Hepsi';
+
+  @override
+  String get cikisFazla => 'Bu, kumbaradakinden fazla.';
+
+  @override
+  String get cikisDugme => 'Aldım';
+
+  @override
+  String cikisTamam(String karakter) {
+    return '$karakter: İyi kullan!';
+  }
+
+  @override
+  String get cikisSatir => 'Kumbaradan alındı';
+
+  @override
+  String get cikisSil => 'Bu kaydı sil';
+
+  @override
+  String get cikisSilOnay => 'Bu kayıt silinsin mi?';
+
+  @override
+  String get geriBildirim => 'Geri bildirim gönder';
+
+  @override
+  String get geriBildirimAciklama =>
+      'Yalnız aşağıdakiler gönderilir: tutar, ad ya da kişisel bilgi yok. Göndermeden önce okuyabilir, nereye gideceğini sen seçersin.';
+
+  @override
+  String get geriBildirimOzet => 'Gönderilecek bilgiler';
+
+  @override
+  String get geriBildirimSoru1 => 'Çocuğunun en sevdiği an neydi?';
+
+  @override
+  String get geriBildirimSoru2 => 'Nerede takıldı?';
+
+  @override
+  String get geriBildirimSoru3 => 'Kullanmayı bıraktıysa, neden?';
+
+  @override
+  String get geriBildirimPaylas => 'Paylaş';
+
+  @override
+  String get geriBildirimKilitGerek => 'Göndermek için önce veli kilidi kur.';
+
+  @override
+  String get geriBildirimKonu => 'Harçlıklarım geri bildirim';
+
+  @override
+  String get gbSurum => 'Sürüm';
+
+  @override
+  String get gbDil => 'Dil';
+
+  @override
+  String get gbPara => 'Para birimi';
+
+  @override
+  String get gbYas => 'Yaş modu';
+
+  @override
+  String get gbGorunum => 'Karakter görünümü';
+
+  @override
+  String get gbKurulu => 'Kurulalı (gün)';
+
+  @override
+  String get gbGun => 'Farklı besleme günü';
+
+  @override
+  String get gbOdun => 'Kamp odunu';
+
+  @override
+  String get gbCikis => 'Kumbaradan alma';
+
+  @override
+  String get gbDers => 'Okunan ders';
+
+  @override
+  String get gbCikartma => 'Açılan çıkartma';
 }

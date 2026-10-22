@@ -38,13 +38,14 @@ enum Evre {
 }
 
 /// Bir karakterin kaç FARKLI günde beslendiği (yerel takvim günü).
+/// Kumbaradan almalar sayılmaz.
 int beslemeGunu(Iterable<Hareket> h, VarlikTuru t) =>
-    h.where((e) => e.tur == t).map((e) => DateTime(e.tarih.year, e.tarih.month, e.tarih.day)).toSet().length;
+    h.beslemeler.where((e) => e.tur == t).map((e) => DateTime(e.tarih.year, e.tarih.month, e.tarih.day)).toSet().length;
 
 /// Hesaplanan evreler (yalnız en az bir kez beslenmiş karakterler).
 Map<VarlikTuru, Evre> evreler(Iterable<Hareket> h) => {
       for (final t in VarlikTuru.values)
-        if (h.any((e) => e.tur == t)) t: Evre.gunden(beslemeGunu(h, t)),
+        if (h.beslemeler.any((e) => e.tur == t)) t: Evre.gunden(beslemeGunu(h, t)),
     };
 
 /// Gösterilen evre: hesaplanan ile saklanan en yükseğin büyüğü (geri gitmez).

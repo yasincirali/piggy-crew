@@ -31,6 +31,7 @@ class Depo {
   static const _evre = 'evre_v1';
   static const _sonGorulme = 'son_gorulme_v1';
   static const _sonDonus = 'son_donus_v1';
+  static const _odun = 'odun_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -120,6 +121,10 @@ class Depo {
   Future<void> evreYaz(Map<VarlikTuru, Evre> m) =>
       _sp.setString(_evre, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
 
+  /// Ulaşılan en yüksek odun sayısı (odun eksilmez; bkz. [Odun]).
+  int odunOku() => _sp.getInt(_odun) ?? 0;
+  Future<void> odunYaz(int n) => _sp.setInt(_odun, n);
+
   /// Geri dönüş karşılaması için iki an (bkz. `donusKarsilamasiGerekli`):
   /// uygulamanın en son ön planda olduğu ve karşılamanın en son oynadığı an.
   /// Milisaniye olarak; bozuk değer "hiç" sayılır (karşılama oynamaz, zarar yok).
@@ -141,6 +146,7 @@ class Depo {
     await _sp.remove(_dersIlerleme);
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
+    await _sp.remove(_odun);
     // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
     await _sp.remove(_sonGorulme);
     await _sp.remove(_sonDonus);

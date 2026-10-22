@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cocuk.dart';
 import '../models/evre.dart';
+import '../models/odun.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
 import '../services/dokunsal.dart';
@@ -142,15 +143,7 @@ final karakterlerProvider = Provider<Map<VarlikTuru, KarakterDurumu>>((ref) {
   final ev = ref.watch(cocukProvider)?.para ?? ParaBirimi.tryy;
   return {
     for (final t in VarlikTuru.values.where((t) => t.gorunur(ev)))
-      t: () {
-        final h = hareketler.where((e) => e.tur == t);
-        return KarakterDurumu(
-          tur: t,
-          miktar: h.fold(0.0, (a, e) => a + e.miktar),
-          maliyetTl: h.fold(0.0, (a, e) => a + e.tutarTl),
-          fiyat: fiyatlar.fiyat(t, ev),
-        );
-      }(),
+      t: KarakterDurumu.hesapla(t, hareketler, fiyatlar.fiyat(t, ev)),
   };
 });
 
@@ -167,6 +160,15 @@ final evrelerProvider = Provider<Map<VarlikTuru, Evre>>((ref) {
   };
   if (!mapEquals(kayit, kayitli)) depo.evreYaz(kayit);
   return {for (final t in VarlikTuru.values) t: kayit[t] ?? Evre.minik};
+});
+
+/// Kamp ateşindeki odun: hesaplanan ile saklananın büyüğü (eksilmez; bkz. [Odun]).
+final odunProvider = Provider<int>((ref) {
+  final depo = ref.read(depoProvider);
+  final kayitli = depo.odunOku();
+  final n = Odun.gosterilen(Odun.say(ref.watch(hareketlerProvider)), kayitli);
+  if (n != kayitli) depo.odunYaz(n);
+  return n;
 });
 
 /// Toplam değer; bir karakterin fiyatı bilinmiyorsa o karakter toplamdan

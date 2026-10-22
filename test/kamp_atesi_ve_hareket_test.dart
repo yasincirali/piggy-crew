@@ -10,7 +10,7 @@ Widget _ates({int parlama = 0, bool hareketsiz = false}) => MaterialApp(
       theme: dunyaTemasi(Dunya.values.first),
       home: MediaQuery(
         data: MediaQueryData(disableAnimations: hareketsiz),
-        child: Center(child: KampAtesi(toplamTl: 2500, boyut: 140, parlamaTetik: parlama)),
+        child: Center(child: KampAtesi(odun: 6, boyut: 140, parlamaTetik: parlama)),
       ),
     );
 

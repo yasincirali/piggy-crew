@@ -5,10 +5,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../models/odun.dart';
 import '../theme/dunya.dart';
 
-/// Kamp ateşi = toplam birikim. Alev ölçeği toplamla büyür
-/// (`olcek` 0,5–1,15), parıltı genişler. Prototipteki `#fire` ile aynı yollar.
+/// Kamp ateşi = düzenlilik. Alev ölçeği ODUN sayısıyla büyür (`olcek`
+/// 0,5–1,15; [Odun.tamBoy] odunda tam boy), parıltı genişler, yanında odun
+/// yığını birikir. Prototipteki `#fire` ile aynı yollar.
+///
+/// Eskiden toplam tutarla büyürdü (2026-10-23'e kadar): bu ailenin harçlık
+/// miktarını ödüllendiriyordu ve kumbaradan alma ateşi küçültürdü. Neden
+/// değiştiği [Odun]'da. Odun eksilmediği için ateş hiç küçülmez.
 ///
 /// Canlı yanar: üç alev katmanı farklı hız ve fazda esner/eğilir (tek sinüs
 /// mekanik görünür; asal oranlı iki sinüsün toplamı tekrar etmez), parıltı
@@ -16,14 +22,17 @@ import '../theme/dunya.dart';
 /// (`parlamaTetik`) alev bir an kabarır ve kıvılcım fışkırır.
 /// Hareketi azalt açıksa durağan çizilir (yalnız toplam değişince büyür).
 class KampAtesi extends StatefulWidget {
-  const KampAtesi({super.key, required this.toplamTl, this.boyut = 150, this.parlamaTetik = 0});
-  final double toplamTl;
+  const KampAtesi({super.key, required this.odun, this.boyut = 150, this.parlamaTetik = 0, this.etiket});
+  final int odun;
   final double boyut;
   final int parlamaTetik;
 
-  /// 6.000 ₺'de tam boy; üstü hafif aşar, sonsuz büyümez (ekranı taşmasın).
-  static double olcek(double toplam) => (0.5 + (toplam / 6000) * 0.65).clamp(0.5, 1.15);
-  static double parilti(double toplam) => (0.12 + toplam / 12000).clamp(0.12, 0.4);
+  /// Ekran okuyucu etiketi (odun sayısını söyler; ekranda sayı yazılmaz).
+  final String? etiket;
+
+  /// Odunsuz (henüz beslenmemiş) ateş küçük bir kıvılcım; [Odun.tamBoy]'da tam boy.
+  static double olcek(int odun) => 0.5 + 0.65 * (odun.clamp(0, Odun.tamBoy) / Odun.tamBoy);
+  static double parilti(int odun) => 0.12 + 0.28 * (odun.clamp(0, Odun.tamBoy) / Odun.tamBoy);
 
   @override
   State<KampAtesi> createState() => _KampAtesiState();
@@ -64,8 +73,8 @@ class _KampAtesiState extends State<KampAtesi> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final r = context.r;
     final canli = !MediaQuery.of(context).disableAnimations;
-    return TweenAnimationBuilder<double>(
-      tween: Tween(end: KampAtesi.olcek(widget.toplamTl)),
+    final ates = TweenAnimationBuilder<double>(
+      tween: Tween(end: KampAtesi.olcek(widget.odun)),
       duration: Devinim.sure(context, Devinim.yavas),
       curve: Devinim.cikis,
       builder: (_, s, _) => AnimatedBuilder(
@@ -74,23 +83,36 @@ class _KampAtesiState extends State<KampAtesi> with TickerProviderStateMixin {
           size: Size.square(widget.boyut),
           painter: _AtesPainter(
             s,
-            KampAtesi.parilti(widget.toplamTl),
+            KampAtesi.parilti(widget.odun),
             r,
+            yigin: widget.odun.clamp(0, Odun.tamBoy),
             zaman: canli ? _saat.value * 60 : null,
             parlama: _parlama.isAnimating ? _parlama.value : 0,
           ),
         ),
       ),
     );
+    final e = widget.etiket;
+    return e == null ? ates : Semantics(label: e, image: true, child: ates);
   }
 }
 
 class _AtesPainter extends CustomPainter {
-  _AtesPainter(this.olcek, this.parilti, this.r, {this.zaman, this.parlama = 0});
+  _AtesPainter(this.olcek, this.parilti, this.r, {this.zaman, this.parlama = 0, this.yigin = 0});
   final double olcek;
   final double parilti;
   final DunyaRenkleri r;
 
+  /// Yığındaki odun (0–[Odun.tamBoy]): iki yanda üçgen yığın, kesik uçları görünür.
+  final int yigin;
+
+  /// Yığın yerleri: her yanda 3-2-1 üçgen; sıra sol-sağ dönüşümlü ve alttan
+  /// üste, böylece ilk odunlar ateşin iki yanını dengeli doldurur.
+  static const _yiginYeri = <Offset>[
+    Offset(6, 112), Offset(114, 112), Offset(15, 112), Offset(105, 112),
+    Offset(10.5, 104), Offset(109.5, 104), Offset(24, 112), Offset(96, 112),
+    Offset(19.5, 104), Offset(100.5, 104), Offset(15, 96), Offset(105, 96),
+  ];
   /// Saniye; null → durağan (hareketi azalt).
   final double? zaman;
 
@@ -191,10 +213,18 @@ class _AtesPainter extends CustomPainter {
     cv.drawLine(const Offset(26, 110), const Offset(34, 110), damar);
     cv.drawLine(const Offset(50, 110), const Offset(60, 110), damar);
     cv.drawLine(const Offset(80, 110), const Offset(88, 110), damar);
+    // Odun yığını (taban odunlarının önünde, iki yanda): her biri kesik uçlu kütük.
+    for (var i = 0; i < yigin && i < _yiginYeri.length; i++) {
+      final m = _yiginYeri[i];
+      cv.drawCircle(m, 4.6, Paint()..color = r.soil);
+      cv.drawCircle(m, 4.6, kontur..strokeWidth = 1.6);
+      cv.drawCircle(m, 2, Paint()..color = r.soil2);
+    }
+    kontur.strokeWidth = 2;
     cv.restore();
   }
 
   @override
   bool shouldRepaint(_AtesPainter o) =>
-      o.olcek != olcek || o.parilti != parilti || o.r != r || o.zaman != zaman || o.parlama != parlama;
+      o.olcek != olcek || o.parilti != parilti || o.r != r || o.zaman != zaman || o.parlama != parlama || o.yigin != yigin;
 }

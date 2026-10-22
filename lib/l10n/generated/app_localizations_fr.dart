@@ -486,4 +486,110 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get donusKarsilama => 'L\'équipe accourt pour te voir !';
+
+  @override
+  String kampOdunEtiket(int n) {
+    return 'Feu de camp, $n bûches';
+  }
+
+  @override
+  String get odunEklendi => 'Une nouvelle bûche pour le feu cette semaine !';
+
+  @override
+  String get cikisBaslik => 'J\'ai pris de l\'argent';
+
+  @override
+  String cikisAlt(String karakter) {
+    return '$karakter l\'a gardé pour toi. Combien as-tu pris ?';
+  }
+
+  @override
+  String cikisKumbarada(String tutar) {
+    return 'Dans la tirelire : $tutar';
+  }
+
+  @override
+  String get cikisHepsi => 'Tout';
+
+  @override
+  String get cikisFazla => 'C\'est plus que ce qu\'il y a dans la tirelire.';
+
+  @override
+  String get cikisDugme => 'C\'est fait';
+
+  @override
+  String cikisTamam(String karakter) {
+    return '$karakter : profites-en bien !';
+  }
+
+  @override
+  String get cikisSatir => 'Retiré';
+
+  @override
+  String get cikisSil => 'Supprimer cette entrée';
+
+  @override
+  String get cikisSilOnay => 'Supprimer cette entrée ?';
+
+  @override
+  String get geriBildirim => 'Envoyer un avis';
+
+  @override
+  String get geriBildirimAciklama =>
+      'Seul ce qui figure ci-dessous est envoyé : ni montants, ni noms, ni données personnelles. Tu peux le lire avant et tu choisis où il part.';
+
+  @override
+  String get geriBildirimOzet => 'Ce qui sera envoyé';
+
+  @override
+  String get geriBildirimSoru1 => 'Qu\'est-ce que ton enfant a préféré ?';
+
+  @override
+  String get geriBildirimSoru2 => 'Où a-t-il ou elle bloqué ?';
+
+  @override
+  String get geriBildirimSoru3 => 'S\'il ou elle a arrêté, pourquoi ?';
+
+  @override
+  String get geriBildirimPaylas => 'Partager';
+
+  @override
+  String get geriBildirimKilitGerek =>
+      'Crée d\'abord un code parent pour envoyer un avis.';
+
+  @override
+  String get geriBildirimKonu => 'Avis sur Harçlıklarım';
+
+  @override
+  String get gbSurum => 'Version';
+
+  @override
+  String get gbDil => 'Langue';
+
+  @override
+  String get gbPara => 'Devise';
+
+  @override
+  String get gbYas => 'Mode d\'âge';
+
+  @override
+  String get gbGorunum => 'Style des personnages';
+
+  @override
+  String get gbKurulu => 'Jours depuis l\'installation';
+
+  @override
+  String get gbGun => 'Jours différents de nourrissage';
+
+  @override
+  String get gbOdun => 'Bûches du feu';
+
+  @override
+  String get gbCikis => 'Retraits';
+
+  @override
+  String get gbDers => 'Leçons lues';
+
+  @override
+  String get gbCikartma => 'Autocollants débloqués';
 }

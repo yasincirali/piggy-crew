@@ -252,13 +252,21 @@
   "sesAcik": "Açık",
   "sesKapali": "Kapalı",
   "ayarlarTitresim": "Titreşim",
-  "@ayarlarTitresim": {"description": "Ayarlar: titreşim (dokunsal geri bildirim) bölüm başlığı; seçenekler sesAcik/sesKapali"},
+  "@ayarlarTitresim": {
+    "description": "Ayarlar: titreşim (dokunsal geri bildirim) bölüm başlığı; seçenekler sesAcik/sesKapali"
+  },
   "ayarlarGorunum": "Karakter görünümü",
-  "@ayarlarGorunum": {"description": "Veli köşesi: karakterlerin klasik (2D) ya da 3D görünümü bölüm başlığı"},
+  "@ayarlarGorunum": {
+    "description": "Veli köşesi: karakterlerin klasik (2D) ya da 3D görünümü bölüm başlığı"
+  },
   "gorunumKlasik": "Klasik",
-  "@gorunumKlasik": {"description": "Karakter görünümü: bugünkü çizim (2D)"},
+  "@gorunumKlasik": {
+    "description": "Karakter görünümü: bugünkü çizim (2D)"
+  },
   "gorunum3d": "3D (deneme)",
-  "@gorunum3d": {"description": "Karakter görünümü: 3D, deneme aşamasında"},
+  "@gorunum3d": {
+    "description": "Karakter görünümü: 3D, deneme aşamasında"
+  },
   "ayarlarDil": "Dil",
   "ayarlarVeli": "Anne baba köşesi",
   "ayarlarSurum": "Sürüm {s}",
@@ -326,5 +334,153 @@
   "donusKarsilama": "Takım seni görünce koşa koşa geldi!",
   "@donusKarsilama": {
     "description": "Birkaç gün sonra açılışta takım koşarak gelince görünen kısa mesaj. Yokluk süresini anmaz, bir şey istemez."
+  },
+  "kampOdunEtiket": "Kamp ateşi, {n} odun",
+  "@kampOdunEtiket": {
+    "description": "Ekran okuyucu: kamp ateşi ve yanındaki odun sayısı. Ekranda sayı yazılmaz.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "odunEklendi": "Bu hafta ateşe bir odun eklendi!",
+  "@odunEklendi": {
+    "description": "Haftanın ilk beslemesinden sonra: ateşe bir odun geldi. Eksilmez, seri değildir."
+  },
+  "cikisBaslik": "Kumbaradan aldım",
+  "@cikisBaslik": {
+    "description": "Varlık ekranındaki düğme ve alt sayfa başlığı: gerçek kumbaradan para alındığını kaydeder."
+  },
+  "cikisAlt": "{karakter} senin için sakladı. Ne kadar aldın?",
+  "@cikisAlt": {
+    "description": "Alma alt sayfası: karakter suçlamaz, sebep sormaz.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "cikisKumbarada": "Kumbarada: {tutar}",
+  "@cikisKumbarada": {
+    "description": "Alınabilecek en çok tutar.",
+    "placeholders": {
+      "tutar": {
+        "type": "String"
+      }
+    }
+  },
+  "cikisHepsi": "Hepsi",
+  "@cikisHepsi": {
+    "description": "Hızlı seçim: kumbaradakinin tamamı."
+  },
+  "cikisFazla": "Bu, kumbaradakinden fazla.",
+  "@cikisFazla": {
+    "description": "Yazılan tutar kumbaradakini aşınca."
+  },
+  "cikisDugme": "Aldım",
+  "@cikisDugme": {
+    "description": "Alma alt sayfasının onay düğmesi."
+  },
+  "cikisTamam": "{karakter}: İyi kullan!",
+  "@cikisTamam": {
+    "description": "Alma kaydedilince karakterin sözü. Harcamak kötü değil: karakter iyi dilekle uğurlar, sebep sormaz.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "cikisSatir": "Kumbaradan alındı",
+  "@cikisSatir": {
+    "description": "Hareket listesinde alma satırının etiketi."
+  },
+  "cikisSil": "Bu kaydı sil",
+  "@cikisSil": {
+    "description": "Alma kaydını silme iletişimi başlığı."
+  },
+  "cikisSilOnay": "Bu kayıt silinsin mi?",
+  "@cikisSilOnay": {
+    "description": "Alma kaydını silme onayı."
+  },
+  "geriBildirim": "Geri bildirim gönder",
+  "@geriBildirim": {
+    "description": "Veli köşesi düğmesi ve sayfa başlığı."
+  },
+  "geriBildirimAciklama": "Yalnız aşağıdakiler gönderilir: tutar, ad ya da kişisel bilgi yok. Göndermeden önce okuyabilir, nereye gideceğini sen seçersin.",
+  "@geriBildirimAciklama": {
+    "description": "Geri bildirim sayfası açıklaması (veliye)."
+  },
+  "geriBildirimOzet": "Gönderilecek bilgiler",
+  "@geriBildirimOzet": {
+    "description": "Özet bölüm başlığı."
+  },
+  "geriBildirimSoru1": "Çocuğunun en sevdiği an neydi?",
+  "@geriBildirimSoru1": {
+    "description": "İsteğe bağlı soru 1."
+  },
+  "geriBildirimSoru2": "Nerede takıldı?",
+  "@geriBildirimSoru2": {
+    "description": "İsteğe bağlı soru 2."
+  },
+  "geriBildirimSoru3": "Kullanmayı bıraktıysa, neden?",
+  "@geriBildirimSoru3": {
+    "description": "İsteğe bağlı soru 3."
+  },
+  "geriBildirimPaylas": "Paylaş",
+  "@geriBildirimPaylas": {
+    "description": "Sistem paylaşım sayfasını açar."
+  },
+  "geriBildirimKilitGerek": "Göndermek için önce veli kilidi kur.",
+  "@geriBildirimKilitGerek": {
+    "description": "Paylaşım uygulama dışına çıktığı için ebeveyn kapısı (PIN) şart (Apple Kids)."
+  },
+  "geriBildirimKonu": "Harçlıklarım geri bildirim",
+  "@geriBildirimKonu": {
+    "description": "Paylaşım konusu (e-posta konusu)."
+  },
+  "gbSurum": "Sürüm",
+  "@gbSurum": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbDil": "Dil",
+  "@gbDil": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbPara": "Para birimi",
+  "@gbPara": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbYas": "Yaş modu",
+  "@gbYas": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbGorunum": "Karakter görünümü",
+  "@gbGorunum": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbKurulu": "Kurulalı (gün)",
+  "@gbKurulu": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbGun": "Farklı besleme günü",
+  "@gbGun": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbOdun": "Kamp odunu",
+  "@gbOdun": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbCikis": "Kumbaradan alma",
+  "@gbCikis": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbDers": "Okunan ders",
+  "@gbDers": {
+    "description": "Özet satırı etiketi."
+  },
+  "gbCikartma": "Açılan çıkartma",
+  "@gbCikartma": {
+    "description": "Özet satırı etiketi."
   }
 }

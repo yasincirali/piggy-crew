@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../l10n/l10n.dart';
 import '../models/cocuk.dart';
+import '../models/geri_bildirim.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/depo.dart';
@@ -183,7 +185,7 @@ class _PinSayfasiState extends State<_PinSayfasi> {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final r = context.r;
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(Bosluk.xl),
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text(l.kilitBaslik, style: context.t.titleLarge),
@@ -237,13 +239,14 @@ class _VeliKosesi extends ConsumerWidget {
     if (cocuk == null) return const SizedBox.shrink();
     final hareketler = ref.watch(hareketlerProvider);
     final toplam = ref.watch(toplamProvider);
-    return Padding(
+    // Kaydırılır: büyük yazıda (Dynamic Type 2×+) sayfa ekrana sığmıyordu.
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(Bosluk.xl),
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Text(l.veliBaslik, style: context.t.titleLarge),
         const SizedBox(height: Bosluk.s),
         Text(
-          l.veliOzet(cocuk.ad, hareketler.length, fmtPara(toplam.degerTl ?? toplam.maliyetTl, cocuk.para)),
+          l.veliOzet(cocuk.ad, hareketler.beslemeler.length, fmtPara(toplam.degerTl ?? toplam.maliyetTl, cocuk.para)),
           style: context.t.bodyLarge,
         ),
         const SizedBox(height: Bosluk.s),
@@ -269,6 +272,20 @@ class _VeliKosesi extends ConsumerWidget {
             if (yeni != null) {
               await ref.read(cocukProvider.notifier).guncelle((c) => c.copyWith(pinOzeti: Depo.pinOzeti(yeni)));
             }
+          },
+        ),
+        const SizedBox(height: Bosluk.s),
+        // Paylaşım uygulama dışına çıkar: Apple Kids ebeveyn kapısı ister.
+        // PIN yoksa önce kurdurulur (veli köşesi PIN'siz de açılabiliyor).
+        AnaDugme(
+          metin: l.geriBildirim,
+          ikincil: true,
+          onTap: () async {
+            if (!cocuk.veliKilidiVar) {
+              bildir(context, l.geriBildirimKilitGerek);
+              return;
+            }
+            await altSayfaGoster(context, const _GeriBildirimSayfasi());
           },
         ),
         const SizedBox(height: Bosluk.s),
@@ -328,5 +345,91 @@ class _VeliKosesi extends ConsumerWidget {
     );
     c.dispose();
     return sonuc;
+  }
+}
+
+/// Veli onaylı geri bildirim: gönderilecek metin olduğu gibi görünür, üç
+/// isteğe bağlı soru, sistem paylaşım sayfası (alıcıyı veli seçer). Metin
+/// [geriBildirimMetni]'nden gelir; ad ve tutar içermez.
+class _GeriBildirimSayfasi extends ConsumerStatefulWidget {
+  const _GeriBildirimSayfasi();
+  @override
+  ConsumerState<_GeriBildirimSayfasi> createState() => _GeriBildirimState();
+}
+
+class _GeriBildirimState extends ConsumerState<_GeriBildirimSayfasi> {
+  final _cevaplar = List.generate(3, (_) => TextEditingController());
+  final _paylasAnahtar = GlobalKey();
+
+  @override
+  void dispose() {
+    for (final c in _cevaplar) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  String _metin(AppLocalizations l, {bool cevapli = true}) {
+    final cocuk = ref.read(cocukProvider)!;
+    return geriBildirimMetni(
+      l: l,
+      cocuk: cocuk,
+      hareketler: ref.read(hareketlerProvider),
+      odun: ref.read(odunProvider),
+      ders: ref.read(dersIlerlemeProvider),
+      cikartma: ref.read(cikartmalarProvider).length,
+      ucBoyut: ref.read(karakter3dProvider),
+      surum: ref.read(_surumProvider).valueOrNull,
+      dil: Localizations.localeOf(context).languageCode,
+      simdi: DateTime.now(),
+      cevaplar: cevapli ? [for (final c in _cevaplar) c.text] : const [],
+    );
+  }
+
+  Future<void> _paylas(AppLocalizations l) async {
+    final kutu = _paylasAnahtar.currentContext?.findRenderObject() as RenderBox?;
+    await SharePlus.instance.share(ShareParams(
+      text: _metin(l),
+      subject: l.geriBildirimKonu,
+      // iPad'de paylaşım balonu düğmeden çıkar.
+      sharePositionOrigin: kutu == null ? null : kutu.localToGlobal(Offset.zero) & kutu.size,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final r = context.r;
+    // Özet sayfa açıkken değişmez; yalnız cevaplar değişir (onlar alanlarda).
+    ref.watch(_surumProvider);
+    final ozet = _metin(l, cevapli: false);
+    InputDecoration alan(String ipucu) => InputDecoration(
+          labelText: ipucu,
+          filled: true,
+          fillColor: r.card,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(Kose.m), borderSide: BorderSide(color: r.line)),
+        );
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(Bosluk.xl),
+      child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(l.geriBildirim, style: context.t.titleLarge),
+        const SizedBox(height: Bosluk.s),
+        Text(l.geriBildirimAciklama, style: context.t.bodyMedium),
+        const SizedBox(height: Bosluk.l),
+        BolumBasligi(l.geriBildirimOzet),
+        const SizedBox(height: Bosluk.s),
+        Kart(child: Text(ozet, style: context.t.bodyMedium)),
+        const SizedBox(height: Bosluk.l),
+        for (final (i, soru) in [l.geriBildirimSoru1, l.geriBildirimSoru2, l.geriBildirimSoru3].indexed) ...[
+          TextField(controller: _cevaplar[i], maxLines: null, textCapitalization: TextCapitalization.sentences, decoration: alan(soru)),
+          const SizedBox(height: Bosluk.m),
+        ],
+        const SizedBox(height: Bosluk.s),
+        KeyedSubtree(
+          key: _paylasAnahtar,
+          child: AnaDugme(metin: l.geriBildirimPaylas, onTap: () => _paylas(l)),
+        ),
+      ]),
+    );
   }
 }

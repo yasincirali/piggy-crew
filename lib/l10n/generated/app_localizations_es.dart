@@ -482,4 +482,111 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get donusKarsilama => '¡El equipo vino corriendo a verte!';
+
+  @override
+  String kampOdunEtiket(int n) {
+    return 'Fogata, $n troncos';
+  }
+
+  @override
+  String get odunEklendi => '¡Esta semana el fuego tiene un tronco nuevo!';
+
+  @override
+  String get cikisBaslik => 'Saqué dinero';
+
+  @override
+  String cikisAlt(String karakter) {
+    return '$karakter lo guardó para ti. ¿Cuánto sacaste?';
+  }
+
+  @override
+  String cikisKumbarada(String tutar) {
+    return 'En la alcancía: $tutar';
+  }
+
+  @override
+  String get cikisHepsi => 'Todo';
+
+  @override
+  String get cikisFazla => 'Es más de lo que hay en la alcancía.';
+
+  @override
+  String get cikisDugme => 'Listo';
+
+  @override
+  String cikisTamam(String karakter) {
+    return '$karakter: ¡Que lo disfrutes!';
+  }
+
+  @override
+  String get cikisSatir => 'Sacado';
+
+  @override
+  String get cikisSil => 'Borrar este registro';
+
+  @override
+  String get cikisSilOnay => '¿Borrar este registro?';
+
+  @override
+  String get geriBildirim => 'Enviar comentarios';
+
+  @override
+  String get geriBildirimAciklama =>
+      'Solo se envía lo que ves abajo: sin cantidades, nombres ni datos personales. Puedes leerlo antes y tú eliges a dónde va.';
+
+  @override
+  String get geriBildirimOzet => 'Lo que se enviará';
+
+  @override
+  String get geriBildirimSoru1 =>
+      '¿Qué fue lo que más disfrutó tu hijo o hija?';
+
+  @override
+  String get geriBildirimSoru2 => '¿Dónde se atascó?';
+
+  @override
+  String get geriBildirimSoru3 => 'Si dejó de usarla, ¿por qué?';
+
+  @override
+  String get geriBildirimPaylas => 'Compartir';
+
+  @override
+  String get geriBildirimKilitGerek =>
+      'Primero crea un PIN de padres para enviar comentarios.';
+
+  @override
+  String get geriBildirimKonu => 'Comentarios de Harçlıklarım';
+
+  @override
+  String get gbSurum => 'Versión';
+
+  @override
+  String get gbDil => 'Idioma';
+
+  @override
+  String get gbPara => 'Moneda';
+
+  @override
+  String get gbYas => 'Modo de edad';
+
+  @override
+  String get gbGorunum => 'Estilo de personajes';
+
+  @override
+  String get gbKurulu => 'Días desde la instalación';
+
+  @override
+  String get gbGun => 'Días distintos de alimentar';
+
+  @override
+  String get gbOdun => 'Troncos de la fogata';
+
+  @override
+  String get gbCikis => 'Veces que sacó';
+
+  @override
+  String get gbDers => 'Lecciones leídas';
+
+  @override
+  String get gbCikartma => 'Pegatinas desbloqueadas';
 }
