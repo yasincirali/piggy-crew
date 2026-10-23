@@ -170,5 +170,12 @@
   "gbOdun": "Lenhas da fogueira",
   "gbCikis": "Vezes que tirou",
   "gbDers": "Lições lidas",
-  "gbCikartma": "Figurinhas desbloqueadas"
+  "gbCikartma": "Figurinhas desbloqueadas",
+  "ikilemBaslik": "{karakter} está pensando",
+  "ikilemSoru": "{karakter} tem um pouco de dinheiro. Bolotas novas ou uma tábua para o ninho de inverno?",
+  "ikilemIstek": "Bolotas novas",
+  "ikilemIhtiyac": "Uma tábua para o ninho",
+  "ikilemIstekCevap": "Algo que dá vontade! Isso é um desejo. Desejos também são bons, na hora certa.",
+  "ikilemIhtiyacCevap": "Um ninho quentinho para o inverno! Isso é uma necessidade. Primeiro o necessário, depois os desejos.",
+  "ikilemTamam": "OK"
 }

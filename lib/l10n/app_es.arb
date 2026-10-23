@@ -170,5 +170,12 @@
   "gbOdun": "Troncos de la fogata",
   "gbCikis": "Veces que sacó",
   "gbDers": "Lecciones leídas",
-  "gbCikartma": "Pegatinas desbloqueadas"
+  "gbCikartma": "Pegatinas desbloqueadas",
+  "ikilemBaslik": "{karakter} está pensando",
+  "ikilemSoru": "{karakter} tiene un poco de dinero. ¿Bellotas nuevas o una tabla para el nido de invierno?",
+  "ikilemIstek": "Bellotas nuevas",
+  "ikilemIhtiyac": "Una tabla para el nido",
+  "ikilemIstekCevap": "¡Algo que le apetece! Eso es un deseo. Los deseos también están bien, a su tiempo.",
+  "ikilemIhtiyacCevap": "¡Un nido calentito para el invierno! Eso es una necesidad. Primero lo necesario, luego los deseos.",
+  "ikilemTamam": "Vale"
 }

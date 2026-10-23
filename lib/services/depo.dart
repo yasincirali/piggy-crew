@@ -32,6 +32,7 @@ class Depo {
   static const _sonGorulme = 'son_gorulme_v1';
   static const _sonDonus = 'son_donus_v1';
   static const _odun = 'odun_v1';
+  static const _ikilem = 'ikilem_gosterildi_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -133,6 +134,11 @@ class Depo {
   DateTime? sonDonusOku() => _anOku(_sonDonus);
   Future<void> sonDonusYaz(DateTime t) => _sp.setInt(_sonDonus, t.millisecondsSinceEpoch);
 
+  /// Sincap'ın ikilemi ilk kumbaradan almadan sonra bir kez gösterilir;
+  /// sayaç değil, yalnız "gösterildi" bilgisi (Ar-Ge raporu 2026-10-23 11:07).
+  bool ikilemGosterildiOku() => _sp.getBool(_ikilem) ?? false;
+  Future<void> ikilemGosterildiYaz() => _sp.setBool(_ikilem, true);
+
   DateTime? _anOku(String anahtar) {
     final v = _sp.get(anahtar);
     return v is int ? DateTime.fromMillisecondsSinceEpoch(v) : null;
@@ -147,6 +153,7 @@ class Depo {
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
     await _sp.remove(_odun);
+    await _sp.remove(_ikilem);
     // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
     await _sp.remove(_sonGorulme);
     await _sp.remove(_sonDonus);

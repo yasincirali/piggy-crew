@@ -589,4 +589,31 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get gbCikartma => 'Pegatinas desbloqueadas';
+
+  @override
+  String ikilemBaslik(String karakter) {
+    return '$karakter está pensando';
+  }
+
+  @override
+  String ikilemSoru(String karakter) {
+    return '$karakter tiene un poco de dinero. ¿Bellotas nuevas o una tabla para el nido de invierno?';
+  }
+
+  @override
+  String get ikilemIstek => 'Bellotas nuevas';
+
+  @override
+  String get ikilemIhtiyac => 'Una tabla para el nido';
+
+  @override
+  String get ikilemIstekCevap =>
+      '¡Algo que le apetece! Eso es un deseo. Los deseos también están bien, a su tiempo.';
+
+  @override
+  String get ikilemIhtiyacCevap =>
+      '¡Un nido calentito para el invierno! Eso es una necesidad. Primero lo necesario, luego los deseos.';
+
+  @override
+  String get ikilemTamam => 'Vale';
 }

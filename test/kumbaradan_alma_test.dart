@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:harcliklarim/main.dart';
@@ -83,6 +84,8 @@ void main() {
       addTearDown(t.platformDispatcher.clearAllTestValues);
       addTearDown(t.view.reset);
       SharedPreferences.setMockInitialValues({});
+      // Önbellekteki varlık okuması önceki testin sahte saatinde kalmış olabilir.
+      rootBundle.clear();
       final sp = await SharedPreferences.getInstance();
       final sahteHttp = MockClient(
         (_) async => http.Response('{"USD":{"Satış":40},"EUR":{"Satış":48},"GRA":{"Satış":5800},"GBP":{"Satış":55}}', 200, headers: {'content-type': 'application/json; charset=utf-8'}),
@@ -165,7 +168,55 @@ void main() {
         expect(d.bos, isTrue);
         expect(kap.read(odunProvider), odunOnce, reason: 'alma odunu eksiltmez');
         expect(kap.read(hareketlerProvider).last.cikis, isTrue);
+
+        // İlk almadan sonra Sincap'ın ikilemi (bir kez). Büyük yazıda da sığar.
+        expect(find.text('Sincap düşünüyor'), findsOneWidget);
+        // Ders dosyası gerçek G/Ç ile okunur; sahte saat onu ilerletmez.
+        await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+        await t.ensureVisible(find.text('Yuvaya tahta'));
+        await t.tap(find.text('Yuvaya tahta'));
+        await bekle(t);
+        expect(find.text('Kışın sıcak bir yuva lazım! Bu bir ihtiyaç. Önce ihtiyaç, sonra istek.'), findsOneWidget);
+        expect(find.text('Lazım mı, canın mı çekti?'), findsOneWidget, reason: 'ders sırası beklenmeden açılır');
+        expect(kap.read(dersIlerlemeProvider), 0, reason: 'Öğren sırası değişmez');
+        await t.ensureVisible(find.text('Tamam'));
+        await t.tap(find.text('Tamam'));
+        await bekle(t);
+        expect(find.text('Sincap düşünüyor'), findsNothing);
+        expect(sp.getBool('ikilem_gosterildi_v1'), isTrue);
       });
     }
+
+    testWidgets('ikilem yalnız ilk almadan sonra; istek de sıcak karşılanır', (t) async {
+      final sp = await kampaGel(t);
+      await sp.setString('hareketler_v1', '[{"id":"a","tur":"nakit","tarih":"2026-10-19T10:00:00.000","tutarTl":120,"birimFiyat":1}]');
+      final kap = ProviderScope.containerOf(t.element(find.byType(HarcliklarimApp)));
+      kap.invalidate(hareketlerProvider);
+      await bekle(t);
+      Navigator.of(t.element(find.byType(KampEkrani))).push(VarlikDetayEkrani.rota(VarlikTuru.nakit));
+      await bekle(t);
+
+      Future<void> al() async {
+        await t.scrollUntilVisible(find.text('Kumbaradan aldım'), 200, scrollable: find.byType(Scrollable).last);
+        await t.tap(find.text('Kumbaradan aldım'));
+        await bekle(t);
+        await t.enterText(find.byType(TextField), '10');
+        await bekle(t);
+        await t.tap(find.text('Aldım'));
+        await bekle(t);
+      }
+
+      await al();
+      expect(find.text('Sincap düşünüyor'), findsOneWidget);
+      await t.tap(find.text('Yeni palamut'));
+      await bekle(t);
+      expect(find.text('Canının çektiği bir şey! Bu bir istek. İstekler de güzel, sırası gelince.'), findsOneWidget);
+      await t.tap(find.text('Tamam'));
+      await bekle(t);
+
+      await al();
+      expect(find.text('Sincap düşünüyor'), findsNothing, reason: 'ikinci almada tekrar etmez');
+      expect(kap.read(hareketlerProvider).where((h) => h.cikis).length, 2);
+    });
   });
 }

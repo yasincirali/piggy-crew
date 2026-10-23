@@ -585,4 +585,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gbCikartma => 'Stickers unlocked';
+
+  @override
+  String ikilemBaslik(String karakter) {
+    return '$karakter is thinking';
+  }
+
+  @override
+  String ikilemSoru(String karakter) {
+    return '$karakter has a little money. New acorns, or a plank for the winter nest?';
+  }
+
+  @override
+  String get ikilemIstek => 'New acorns';
+
+  @override
+  String get ikilemIhtiyac => 'A plank for the nest';
+
+  @override
+  String get ikilemIstekCevap =>
+      'Something nice to have! That\'s a want. Wants are fine too, when their turn comes.';
+
+  @override
+  String get ikilemIhtiyacCevap =>
+      'A warm nest for winter! That\'s a need. Needs first, then wants.';
+
+  @override
+  String get ikilemTamam => 'OK';
 }

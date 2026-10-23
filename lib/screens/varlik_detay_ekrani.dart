@@ -11,6 +11,7 @@ import '../utils/bicim.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import 'besle_sayfasi.dart';
+import 'ikilem_sayfasi.dart';
 import 'kumbaradan_al_sayfasi.dart';
 
 /// Tekil karakter: büyük karakter, bugünkü değer, iki çubuk (Verdin / Bugün),
@@ -175,7 +176,9 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       ikincil: true,
                       onTap: () async {
                         final tamam = await kumbaradanAlGoster(context, tur);
-                        if (tamam == true && context.mounted) bildir(context, l.cikisTamam(ad));
+                        if (tamam != true || !context.mounted) return;
+                        bildir(context, l.cikisTamam(ad));
+                        await ikilemGosterGerekirse(context, ref);
                       },
                     ),
                   ],
