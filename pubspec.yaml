@@ -35,6 +35,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/dersler/
+    # Gizlilik politikası: mağaza URL'si ile uygulama içi sayfa aynı dosya (tek kaynak).
+    - legal/
     # Ses efektleri: CC0 kayıtlar, kaynaklar assets/sesler/LISANS.md.
     - assets/sesler/
     # 3D karakterler (deneme): Blender'da önceden render, animasyonlu WebP.

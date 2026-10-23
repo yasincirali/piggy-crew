@@ -1173,6 +1173,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Tamam'**
   String get ikilemTamam;
+
+  /// Ayarlar'daki gizlilik politikası satırı. Metin legal/*.md'den okunur (mağazadaki URL ile aynı dosya).
+  ///
+  /// In tr, this message translates to:
+  /// **'Gizlilik'**
+  String get ayarlarGizlilik;
 }
 
 class _AppLocalizationsDelegate

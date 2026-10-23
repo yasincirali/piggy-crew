@@ -520,5 +520,9 @@
   "ikilemTamam": "Tamam",
   "@ikilemTamam": {
     "description": "Sayfayı kapatan düğme."
+  },
+  "ayarlarGizlilik": "Gizlilik",
+  "@ayarlarGizlilik": {
+    "description": "Ayarlar'daki gizlilik politikası satırı. Metin legal/*.md'den okunur (mağazadaki URL ile aynı dosya)."
   }
 }

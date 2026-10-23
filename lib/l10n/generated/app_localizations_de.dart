@@ -619,4 +619,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ikilemTamam => 'OK';
+
+  @override
+  String get ayarlarGizlilik => 'Datenschutz';
 }

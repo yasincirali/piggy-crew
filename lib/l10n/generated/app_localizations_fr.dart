@@ -619,4 +619,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ikilemTamam => 'D\'accord';
+
+  @override
+  String get ayarlarGizlilik => 'Confidentialité';
 }

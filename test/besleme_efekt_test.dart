@@ -148,8 +148,9 @@ void main() {
     final baslik = find.text('Titreşim');
     await t.ensureVisible(baslik);
     await bekle(t);
-    // Titreşim bölümündeki "Kapalı" (Seslerinkinden sonra ikinci).
-    await t.tap(find.text('Kapalı').at(1));
+    // Titreşim bölümündeki "Kapalı": Seslerinkinden sonra gelir; Sesler kaydırma
+    // dışında kalıp kurulmamış olabilir, bu yüzden sırası değil sonuncusu.
+    await t.tap(find.text('Kapalı').last);
     await bekle(t);
     expect(sp.getBool('titresim_acik_v1'), isFalse);
     expect(sp.getBool('ses_acik_v1'), isNull, reason: 'ses seçimi değişmedi');

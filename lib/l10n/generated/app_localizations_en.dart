@@ -612,4 +612,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ikilemTamam => 'OK';
+
+  @override
+  String get ayarlarGizlilik => 'Privacy';
 }

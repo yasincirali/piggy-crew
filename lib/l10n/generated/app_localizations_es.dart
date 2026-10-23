@@ -616,4 +616,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ikilemTamam => 'Vale';
+
+  @override
+  String get ayarlarGizlilik => 'Privacidad';
 }

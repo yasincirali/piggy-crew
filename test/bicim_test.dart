@@ -13,6 +13,8 @@ void main() {
     expect(fmtFark(64, ParaBirimi.tryy), '+64 ₺');
     expect(fmtFark(64.5, ParaBirimi.tryy), '+64,50 ₺');
     expect(fmtFark(-12, ParaBirimi.usd), '−\$12');
+    expect(fmtFark(-1e-13, ParaBirimi.tryy), '0 ₺', reason: 'kayan nokta artığı "−0" yazmaz');
+    expect(fmtFark(-0.001, ParaBirimi.usd), r'$0');
   });
 
   test('yüzde konumu dile göre', () {
@@ -27,5 +29,11 @@ void main() {
     expect(parseSayi('250'), 250);
     expect(parseSayi('0'), isNull);
     expect(parseSayi('abc'), isNull);
+  });
+
+  test('ev birimindeki nakit tutar gibi yazılır, yabancı birim miktar gibi', () {
+    expect(fmtMiktar(12, r'$', ParaBirimi.usd), r'$12');
+    expect(fmtMiktar(360, '₺', ParaBirimi.tryy), '360 ₺');
+    expect(fmtMiktar(8.738, r'$', ParaBirimi.tryy), r'8,738 $');
   });
 }

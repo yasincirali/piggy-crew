@@ -1,3 +1,3 @@
 Bu sürümde denenecekler:
-• Sincap'ın sorusu: bir karaktere dokun, "Kumbaradan aldım"a bas, bir tutar yaz ve "Aldım"a bas. İlk seferde alttan Sincap'ın sorusu açılır: "Yeni palamut mu alsın, kış yuvasına tahta mı?" İki seçenekten birine bas; Sincap ikisine de sevinçle cevap verir ve altında "Lazım mı, canın mı çekti?" dersi görünür. "Tamam"a bas. Bir kez daha para al: soru bu sefer gelmemeli.
-• Daha küçük uygulama: başlık yazı tipi küçültüldü, uygulama yaklaşık 1 MB hafifledi. Türkçe harfler (ç, ğ, ı, İ, ö, ş, ü) başlıklarda doğru görünmeli; dili İngilizce, Almanca, İspanyolca, Fransızca ya da Portekizce yapıp birkaç ekrana bakabilirsin.
+• Gizlilik: Ayarlar'ın en altında "Gizlilik" satırına bas. Uygulamanın dilinde gizlilik politikası açılır (veri telefonda kalır, reklam ve takip yok). Dili değiştirip tekrar açınca metin o dilde gelmeli.
+• Küçük düzeltme: para birimi dolar ya da euro seçiliyse Sincap'ın satırında tutar artık "$15" gibi doğru yazılır ("15 $" değil). Değişim olmayan karakterin altında "−0" yerine "0" görünür.

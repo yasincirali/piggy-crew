@@ -27,8 +27,9 @@ String fmtPara(double v, ParaBirimi p) {
 
 /// İşaretli fark: "+64 ₺" / "−12 ₺". Eksi için gerçek eksi işareti (U+2212).
 String fmtFark(double v, ParaBirimi p) {
-  if (v == 0) return fmtPara(0, p);
   final s = fmtPara(v.abs(), p);
+  // Kayan nokta artığı (ör. −1e-13) yuvarlanınca sıfır görünür: "−0 ₺" yazılmaz.
+  if (s == fmtPara(0, p)) return s;
   return v > 0 ? '+$s' : '−$s';
 }
 
@@ -42,6 +43,8 @@ String fmtYuzde(double v, ParaBirimi p) {
 /// Miktar: "0,5 g", "12 $". Sondaki sıfırlar atılır
 /// (kullanıcı kuralı: fiyat yuvarlanmaz, sondaki sıfır atılır).
 String fmtMiktar(double v, String birim, ParaBirimi p) {
+  // Ev birimindeki nakit miktar değil tutardır: "12 $" değil "$12".
+  if (birim == p.sembol) return fmtPara(v, p);
   final s = NumberFormat('#,##0.###', p.yerel).format(v);
   return '$s $birim';
 }
