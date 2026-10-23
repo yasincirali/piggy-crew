@@ -592,4 +592,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get gbCikartma => 'Açılan çıkartma';
+
+  @override
+  String ikilemBaslik(String karakter) {
+    return '$karakter düşünüyor';
+  }
+
+  @override
+  String ikilemSoru(String karakter) {
+    return '$karakter\'ın biraz parası var. Yeni palamut mu alsın, kış yuvasına tahta mı?';
+  }
+
+  @override
+  String get ikilemIstek => 'Yeni palamut';
+
+  @override
+  String get ikilemIhtiyac => 'Yuvaya tahta';
+
+  @override
+  String get ikilemIstekCevap =>
+      'Canının çektiği bir şey! Bu bir istek. İstekler de güzel, sırası gelince.';
+
+  @override
+  String get ikilemIhtiyacCevap =>
+      'Kışın sıcak bir yuva lazım! Bu bir ihtiyaç. Önce ihtiyaç, sonra istek.';
+
+  @override
+  String get ikilemTamam => 'Tamam';
 }

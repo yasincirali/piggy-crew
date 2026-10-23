@@ -592,4 +592,31 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get gbCikartma => 'Freigeschaltete Sticker';
+
+  @override
+  String ikilemBaslik(String karakter) {
+    return '$karakter überlegt';
+  }
+
+  @override
+  String ikilemSoru(String karakter) {
+    return '$karakter hat ein bisschen Geld. Neue Eicheln oder ein Brett für das Winternest?';
+  }
+
+  @override
+  String get ikilemIstek => 'Neue Eicheln';
+
+  @override
+  String get ikilemIhtiyac => 'Ein Brett fürs Nest';
+
+  @override
+  String get ikilemIstekCevap =>
+      'Etwas Schönes! Das ist ein Wunsch. Wünsche sind auch gut, wenn sie dran sind.';
+
+  @override
+  String get ikilemIhtiyacCevap =>
+      'Ein warmes Nest für den Winter! Das braucht man. Erst was man braucht, dann was man sich wünscht.';
+
+  @override
+  String get ikilemTamam => 'OK';
 }

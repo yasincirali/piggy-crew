@@ -1131,6 +1131,48 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Açılan çıkartma'**
   String get gbCikartma;
+
+  /// İlk kumbaradan almadan sonra bir kez açılan ikilem sayfasının başlığı. Soru çocuğun harcaması hakkında değil, karakterin ikilemi.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} düşünüyor'**
+  String ikilemBaslik(String karakter);
+
+  /// Nakit karakterinin ikilemi: istek (palamut) mı ihtiyaç (yuva tahtası) mı. İki seçenek de sıcak karşılanır; yanlış cevap yok.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}\'ın biraz parası var. Yeni palamut mu alsın, kış yuvasına tahta mı?'**
+  String ikilemSoru(String karakter);
+
+  /// Seçenek: istek.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni palamut'**
+  String get ikilemIstek;
+
+  /// Seçenek: ihtiyaç.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yuvaya tahta'**
+  String get ikilemIhtiyac;
+
+  /// İstek seçilince. Suçlamaz, isteği küçümsemez.
+  ///
+  /// In tr, this message translates to:
+  /// **'Canının çektiği bir şey! Bu bir istek. İstekler de güzel, sırası gelince.'**
+  String get ikilemIstekCevap;
+
+  /// İhtiyaç seçilince.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kışın sıcak bir yuva lazım! Bu bir ihtiyaç. Önce ihtiyaç, sonra istek.'**
+  String get ikilemIhtiyacCevap;
+
+  /// Sayfayı kapatan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tamam'**
+  String get ikilemTamam;
 }
 
 class _AppLocalizationsDelegate

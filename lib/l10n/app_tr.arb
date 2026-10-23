@@ -482,5 +482,43 @@
   "gbCikartma": "Açılan çıkartma",
   "@gbCikartma": {
     "description": "Özet satırı etiketi."
+  },
+  "ikilemBaslik": "{karakter} düşünüyor",
+  "@ikilemBaslik": {
+    "description": "İlk kumbaradan almadan sonra bir kez açılan ikilem sayfasının başlığı. Soru çocuğun harcaması hakkında değil, karakterin ikilemi.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "ikilemSoru": "{karakter}'ın biraz parası var. Yeni palamut mu alsın, kış yuvasına tahta mı?",
+  "@ikilemSoru": {
+    "description": "Nakit karakterinin ikilemi: istek (palamut) mı ihtiyaç (yuva tahtası) mı. İki seçenek de sıcak karşılanır; yanlış cevap yok.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "ikilemIstek": "Yeni palamut",
+  "@ikilemIstek": {
+    "description": "Seçenek: istek."
+  },
+  "ikilemIhtiyac": "Yuvaya tahta",
+  "@ikilemIhtiyac": {
+    "description": "Seçenek: ihtiyaç."
+  },
+  "ikilemIstekCevap": "Canının çektiği bir şey! Bu bir istek. İstekler de güzel, sırası gelince.",
+  "@ikilemIstekCevap": {
+    "description": "İstek seçilince. Suçlamaz, isteği küçümsemez."
+  },
+  "ikilemIhtiyacCevap": "Kışın sıcak bir yuva lazım! Bu bir ihtiyaç. Önce ihtiyaç, sonra istek.",
+  "@ikilemIhtiyacCevap": {
+    "description": "İhtiyaç seçilince."
+  },
+  "ikilemTamam": "Tamam",
+  "@ikilemTamam": {
+    "description": "Sayfayı kapatan düğme."
   }
 }

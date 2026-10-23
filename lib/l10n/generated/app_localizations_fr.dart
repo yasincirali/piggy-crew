@@ -592,4 +592,31 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gbCikartma => 'Autocollants débloqués';
+
+  @override
+  String ikilemBaslik(String karakter) {
+    return '$karakter réfléchit';
+  }
+
+  @override
+  String ikilemSoru(String karakter) {
+    return '$karakter a un peu d\'argent. De nouveaux glands ou une planche pour le nid d\'hiver ?';
+  }
+
+  @override
+  String get ikilemIstek => 'De nouveaux glands';
+
+  @override
+  String get ikilemIhtiyac => 'Une planche pour le nid';
+
+  @override
+  String get ikilemIstekCevap =>
+      'Une envie ! C\'est un désir. Les envies, c\'est bien aussi, chacune à son tour.';
+
+  @override
+  String get ikilemIhtiyacCevap =>
+      'Un nid bien chaud pour l\'hiver ! C\'est un besoin. D\'abord les besoins, ensuite les envies.';
+
+  @override
+  String get ikilemTamam => 'D\'accord';
 }

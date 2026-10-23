@@ -347,5 +347,12 @@
   "gbOdun": "Campfire logs",
   "gbCikis": "Times taken out",
   "gbDers": "Lessons read",
-  "gbCikartma": "Stickers unlocked"
+  "gbCikartma": "Stickers unlocked",
+  "ikilemBaslik": "{karakter} is thinking",
+  "ikilemSoru": "{karakter} has a little money. New acorns, or a plank for the winter nest?",
+  "ikilemIstek": "New acorns",
+  "ikilemIhtiyac": "A plank for the nest",
+  "ikilemIstekCevap": "Something nice to have! That's a want. Wants are fine too, when their turn comes.",
+  "ikilemIhtiyacCevap": "A warm nest for winter! That's a need. Needs first, then wants.",
+  "ikilemTamam": "OK"
 }
