@@ -15,6 +15,8 @@ import '../theme/dunya.dart';
 import '../utils/bicim.dart';
 import '../widgets/ortak.dart';
 
+import 'gizlilik_sayfasi.dart';
+
 final _surumProvider = FutureProvider<String>((_) async {
   final p = await PackageInfo.fromPlatform();
   return '${p.version} (${p.buildNumber})';
@@ -141,6 +143,16 @@ class AyarlarEkrani extends ConsumerWidget {
             Icon(Icons.lock_outline_rounded, color: r.fg),
             const SizedBox(width: Bosluk.m),
             Expanded(child: Text(l.ayarlarVeli, style: context.t.titleMedium)),
+            Icon(Icons.chevron_right_rounded, color: r.sub),
+          ]),
+        ),
+        const SizedBox(height: Bosluk.s),
+        Kart(
+          onTap: () => gizlilikGoster(context),
+          child: Row(children: [
+            Icon(Icons.privacy_tip_outlined, color: r.fg),
+            const SizedBox(width: Bosluk.m),
+            Expanded(child: Text(l.ayarlarGizlilik, style: context.t.titleMedium)),
             Icon(Icons.chevron_right_rounded, color: r.sub),
           ]),
         ),

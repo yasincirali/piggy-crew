@@ -619,4 +619,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ikilemTamam => 'Tamam';
+
+  @override
+  String get ayarlarGizlilik => 'Gizlilik';
 }

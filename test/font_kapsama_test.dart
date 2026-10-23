@@ -11,6 +11,7 @@ void main() {
   final metinler = [
     ...Directory('lib/l10n').listSync().where((f) => f.path.endsWith('.arb')),
     ...Directory('assets/dersler').listSync().where((f) => f.path.endsWith('.json')),
+    ...Directory('legal').listSync().where((f) => f.path.endsWith('.md')),
   ].map((f) => File(f.path).readAsStringSync());
   // Kontrol karakterleri (satır sonu vb.) çizilmez.
   final gerekli = {for (final m in metinler) ...m.runes.where((r) => r >= 0x20)};
