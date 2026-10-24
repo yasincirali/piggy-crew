@@ -178,5 +178,19 @@
   "ikilemIstekCevap": "Etwas Schönes! Das ist ein Wunsch. Wünsche sind auch gut, wenn sie dran sind.",
   "ikilemIhtiyacCevap": "Ein warmes Nest für den Winter! Das braucht man. Erst was man braucht, dann was man sich wünscht.",
   "ikilemTamam": "OK",
-  "ayarlarGizlilik": "Datenschutz"
+  "ayarlarGizlilik": "Datenschutz",
+  "hedefBaslik": "Ziel",
+  "hedefSec": "Ziel wählen",
+  "hedefDegistir": "Ändern",
+  "hedefYeni": "Neues Ziel",
+  "hedefKaydet": "Ziel setzen",
+  "hedefKaldir": "Ziel entfernen",
+  "hedefYok": "Sparst du für etwas? Wähle es aus, dann trägt {karakter} es; beim Füttern füllt es sich.",
+  "hedefEsyaAdi": "{esya, select, bisiklet{Fahrrad} top{Ball} kitap{Buch} kulaklik{Kopfhörer} oyuncak{Spielzeug} kaykay{Skateboard} oyun{Spiel} hediye{Geschenk} other{Geschenk}}",
+  "hedefCumle": "{karakter} spart für {esya, select, bisiklet{ein Fahrrad} top{einen Ball} kitap{ein Buch} kulaklik{Kopfhörer} oyuncak{ein Spielzeug} kaykay{ein Skateboard} oyun{ein Spiel} hediye{ein Geschenk} other{ein Geschenk}}",
+  "hedefHazir": "{esya, select, bisiklet{Das Fahrrad ist bereit!} top{Der Ball ist bereit!} kitap{Das Buch ist bereit!} kulaklik{Die Kopfhörer sind bereit!} oyuncak{Das Spielzeug ist bereit!} kaykay{Das Skateboard ist bereit!} oyun{Das Spiel ist bereit!} hediye{Das Geschenk ist bereit!} other{Das Ziel ist erreicht!}} {karakter} freut sich sehr.",
+  "hedefKademe": "{kademe, select, yeni{Füllt sich ab dem ersten Füttern} basladi{Füllt sich} yarim{Halb voll} neredeyse{Fast voll} hazir{Voll!} other{Füllt sich}}",
+  "hedefSayfaBaslik": "Wofür soll {karakter} sparen?",
+  "hedefFiyat": "Ungefähr wie viel?",
+  "hedefFiyatNot": "Diese Zahl siehst du nur hier; danach füllt sich der Gegenstand."
 }

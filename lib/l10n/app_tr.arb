@@ -524,5 +524,74 @@
   "ayarlarGizlilik": "Gizlilik",
   "@ayarlarGizlilik": {
     "description": "Ayarlar'daki gizlilik politikası satırı. Metin legal/*.md'den okunur (mağazadaki URL ile aynı dosya)."
-  }
+  },
+  "hedefBaslik": "Hedef",
+  "@hedefBaslik": {
+    "description": "Varlık ekranındaki hedef kartının başlığı."
+  },
+  "hedefSec": "Hedef seç",
+  "hedefDegistir": "Değiştir",
+  "hedefYeni": "Yeni hedef",
+  "hedefKaydet": "Hedefi koy",
+  "hedefKaldir": "Hedefi kaldır",
+  "hedefYok": "Bir şey için mi biriktiriyorsun? Seçersen {karakter} onu taşır; sen besledikçe eşya dolar.",
+  "@hedefYok": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefEsyaAdi": "{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} other{Hediye}}",
+  "@hedefEsyaAdi": {
+    "description": "Hedef seçimindeki eşya adı (büyük harfle başlar).",
+    "placeholders": {
+      "esya": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefCumle": "{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} other{hediye}} için biriktiriyor",
+  "@hedefCumle": {
+    "description": "Hedef kartı: \"Zıpzıp bisiklet için biriktiriyor\". Sayı yok.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "esya": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefHazir": "{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} other{Hedef hazır!}} {karakter} çok sevindi.",
+  "@hedefHazir": {
+    "description": "Hedefe ilk ulaşıldığında bir kez gösterilir.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "esya": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefKademe": "{kademe, select, yeni{İlk beslemeyle dolmaya başlar} basladi{Dolmaya başladı} yarim{Yarısı doldu} neredeyse{Neredeyse doldu} hazir{Doldu!} other{Dolmaya başladı}}",
+  "@hedefKademe": {
+    "description": "Doluluk sayı yerine kelimeyle (yeni/basladi/yarim/neredeyse/hazir).",
+    "placeholders": {
+      "kademe": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefSayfaBaslik": "{karakter} ne için biriktirsin?",
+  "@hedefSayfaBaslik": {
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "hedefFiyat": "Yaklaşık ne kadar?",
+  "hedefFiyatNot": "Bu sayı yalnız burada görünür; sonra ekranda eşya dolar."
 }

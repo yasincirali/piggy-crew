@@ -1,3 +1,5 @@
 Bu sürümde denenecekler:
-• Gizlilik: Ayarlar'ın en altında "Gizlilik" satırına bas. Uygulamanın dilinde gizlilik politikası açılır (veri telefonda kalır, reklam ve takip yok). Dili değiştirip tekrar açınca metin o dilde gelmeli.
-• Küçük düzeltme: para birimi dolar ya da euro seçiliyse Sincap'ın satırında tutar artık "$15" gibi doğru yazılır ("15 $" değil). Değişim olmayan karakterin altında "−0" yerine "0" görünür.
+• Hedef: Kamp ekranında bir karaktere dokun, açılan sayfada "Hedef" kartını bul ve "Hedef seç"e bas. Bir eşya seç (ör. Bisiklet), yaklaşık fiyat yaz, "Hedefi koy"a bas. Kartta "Sincap bisiklet için biriktiriyor" yazmalı ve bisiklet, kumbaraya konan para kadar alttan dolmalı. Ekranda fiyat görünmemeli.
+• Karakteri biraz daha besle: eşya biraz daha dolmalı, altındaki kelime değişmeli ("Yarısı doldu", "Neredeyse doldu").
+• Hedefe ulaşınca bir kez ses ve "Bisiklet hazır!" bildirimi gelmeli; sayfadan çıkıp tekrar girince ikinci kez çalmamalı. Kumbaradan para alsan da eşya dolu kalmalı. "Yeni hedef" ile yenisi seçilebilmeli; hedef kartına dokunup "Hedefi kaldır" ile kaldırılabilmeli.
+• Telefonda yazı boyutunu büyüt: hedef kartı ve seçim sayfası taşmadan okunmalı.

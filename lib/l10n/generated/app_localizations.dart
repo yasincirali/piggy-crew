@@ -1179,6 +1179,90 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Gizlilik'**
   String get ayarlarGizlilik;
+
+  /// Varlık ekranındaki hedef kartının başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hedef'**
+  String get hedefBaslik;
+
+  /// No description provided for @hedefSec.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hedef seç'**
+  String get hedefSec;
+
+  /// No description provided for @hedefDegistir.
+  ///
+  /// In tr, this message translates to:
+  /// **'Değiştir'**
+  String get hedefDegistir;
+
+  /// No description provided for @hedefYeni.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni hedef'**
+  String get hedefYeni;
+
+  /// No description provided for @hedefKaydet.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hedefi koy'**
+  String get hedefKaydet;
+
+  /// No description provided for @hedefKaldir.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hedefi kaldır'**
+  String get hedefKaldir;
+
+  /// No description provided for @hedefYok.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir şey için mi biriktiriyorsun? Seçersen {karakter} onu taşır; sen besledikçe eşya dolar.'**
+  String hedefYok(String karakter);
+
+  /// Hedef seçimindeki eşya adı (büyük harfle başlar).
+  ///
+  /// In tr, this message translates to:
+  /// **'{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} other{Hediye}}'**
+  String hedefEsyaAdi(String esya);
+
+  /// Hedef kartı: "Zıpzıp bisiklet için biriktiriyor". Sayı yok.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} other{hediye}} için biriktiriyor'**
+  String hedefCumle(String karakter, String esya);
+
+  /// Hedefe ilk ulaşıldığında bir kez gösterilir.
+  ///
+  /// In tr, this message translates to:
+  /// **'{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} other{Hedef hazır!}} {karakter} çok sevindi.'**
+  String hedefHazir(String karakter, String esya);
+
+  /// Doluluk sayı yerine kelimeyle (yeni/basladi/yarim/neredeyse/hazir).
+  ///
+  /// In tr, this message translates to:
+  /// **'{kademe, select, yeni{İlk beslemeyle dolmaya başlar} basladi{Dolmaya başladı} yarim{Yarısı doldu} neredeyse{Neredeyse doldu} hazir{Doldu!} other{Dolmaya başladı}}'**
+  String hedefKademe(String kademe);
+
+  /// No description provided for @hedefSayfaBaslik.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} ne için biriktirsin?'**
+  String hedefSayfaBaslik(String karakter);
+
+  /// No description provided for @hedefFiyat.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yaklaşık ne kadar?'**
+  String get hedefFiyat;
+
+  /// No description provided for @hedefFiyatNot.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu sayı yalnız burada görünür; sonra ekranda eşya dolar.'**
+  String get hedefFiyatNot;
 }
 
 class _AppLocalizationsDelegate

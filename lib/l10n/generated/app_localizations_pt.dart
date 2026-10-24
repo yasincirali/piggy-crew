@@ -621,4 +621,100 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ayarlarGizlilik => 'Privacidade';
+
+  @override
+  String get hedefBaslik => 'Meta';
+
+  @override
+  String get hedefSec => 'Escolher meta';
+
+  @override
+  String get hedefDegistir => 'Trocar';
+
+  @override
+  String get hedefYeni => 'Nova meta';
+
+  @override
+  String get hedefKaydet => 'Definir meta';
+
+  @override
+  String get hedefKaldir => 'Tirar meta';
+
+  @override
+  String hedefYok(String karakter) {
+    return 'Está juntando para alguma coisa? Escolha e $karakter vai carregar; o objeto enche quando você alimenta.';
+  }
+
+  @override
+  String hedefEsyaAdi(String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'Bicicleta',
+      'top': 'Bola',
+      'kitap': 'Livro',
+      'kulaklik': 'Fones',
+      'oyuncak': 'Brinquedo',
+      'kaykay': 'Skate',
+      'oyun': 'Jogo',
+      'hediye': 'Presente',
+      'other': 'Presente',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefCumle(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'uma bicicleta',
+      'top': 'uma bola',
+      'kitap': 'um livro',
+      'kulaklik': 'fones de ouvido',
+      'oyuncak': 'um brinquedo',
+      'kaykay': 'um skate',
+      'oyun': 'um jogo',
+      'hediye': 'um presente',
+      'other': 'um presente',
+    });
+    return '$karakter está juntando para $_temp0';
+  }
+
+  @override
+  String hedefHazir(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'A bicicleta está pronta!',
+      'top': 'A bola está pronta!',
+      'kitap': 'O livro está pronto!',
+      'kulaklik': 'Os fones estão prontos!',
+      'oyuncak': 'O brinquedo está pronto!',
+      'kaykay': 'O skate está pronto!',
+      'oyun': 'O jogo está pronto!',
+      'hediye': 'O presente está pronto!',
+      'other': 'A meta está pronta!',
+    });
+    return '$_temp0 $karakter está muito feliz.';
+  }
+
+  @override
+  String hedefKademe(String kademe) {
+    String _temp0 = intl.Intl.selectLogic(kademe, {
+      'yeni': 'Começa a encher na primeira vez',
+      'basladi': 'Enchendo',
+      'yarim': 'Na metade',
+      'neredeyse': 'Quase lá',
+      'hazir': 'Completo!',
+      'other': 'Enchendo',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefSayfaBaslik(String karakter) {
+    return 'Para que $karakter vai juntar?';
+  }
+
+  @override
+  String get hedefFiyat => 'Mais ou menos quanto?';
+
+  @override
+  String get hedefFiyatNot =>
+      'Este número só aparece aqui; depois, o objeto enche na tela.';
 }

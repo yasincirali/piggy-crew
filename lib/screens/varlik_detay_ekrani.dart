@@ -4,18 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/hedef.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
+import '../services/dokunsal.dart';
+import '../services/ses_servisi.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
+import '../widgets/hedef_esyasi.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import 'besle_sayfasi.dart';
+import 'hedef_sayfasi.dart';
 import 'ikilem_sayfasi.dart';
 import 'kumbaradan_al_sayfasi.dart';
 
 /// Tekil karakter: büyük karakter, bugünkü değer, iki çubuk (Verdin / Bugün),
-/// "neden" kartı (karakter konuşur), besleme listesi. Grafik yok.
+/// "neden" kartı (karakter konuşur), hedef eşyası, besleme listesi. Grafik yok.
 class VarlikDetayEkrani extends ConsumerWidget {
   const VarlikDetayEkrani({super.key, required this.tur});
   final VarlikTuru tur;
@@ -133,6 +138,8 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       Text(neden(), style: context.t.bodyLarge),
                     ]),
                   ),
+                  const SizedBox(height: Bosluk.l),
+                  _HedefKarti(tur: tur, durum: d),
                   if (hareketler.isNotEmpty) ...[
                     const SizedBox(height: Bosluk.xl),
                     BolumBasligi(l.detayBeslemeler),
@@ -205,6 +212,96 @@ class VarlikDetayEkrani extends ConsumerWidget {
       ),
     );
     if (onay == true) await ref.read(hareketlerProvider.notifier).sil(h.id);
+  }
+}
+
+/// Hedef eşyası kartı (yol haritası 2.1): sayı yok; eşya dolar, bir cümle
+/// ve doluluk kelimesi. Hedef ilk kez dolduğunda burada bir kez sevinilir
+/// (kampta beslenip dolduysa da burada, ilk açılışta); işaret saklanır,
+/// ikinci kez oynamaz.
+class _HedefKarti extends ConsumerStatefulWidget {
+  const _HedefKarti({required this.tur, required this.durum});
+  final VarlikTuru tur;
+  final KarakterDurumu durum;
+  @override
+  ConsumerState<_HedefKarti> createState() => _HedefKartiState();
+}
+
+class _HedefKartiState extends ConsumerState<_HedefKarti> {
+  bool _bakiliyor = false;
+
+  void _dolduMuDenetle(Hedef? h) {
+    if (h == null || _bakiliyor || !h.simdiDoldu(widget.durum)) return;
+    _bakiliyor = true;
+    // Kayıt build dışında: sağlayıcı build sırasında değiştirilmez.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final oldu = await ref.read(hedeflerProvider.notifier).ulastiysaIsaretle(widget.tur, widget.durum);
+      _bakiliyor = false;
+      if (!oldu || !mounted) return;
+      ref.read(sesProvider).cal(Ses.yasasin);
+      ref.read(dokunsalProvider).cal(Dokunus.sevinc);
+      bildir(context, context.l10n.hedefHazir(context.l10n.karakter(widget.tur), h.esya.name));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final r = context.r;
+    final h = ref.watch(hedeflerProvider)[widget.tur];
+    final ad = l.karakter(widget.tur);
+    _dolduMuDenetle(h);
+
+    if (h == null) {
+      return Kart(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          BolumBasligi(l.hedefBaslik),
+          const SizedBox(height: Bosluk.s),
+          Text(l.hedefYok(ad), style: context.t.bodyLarge),
+          const SizedBox(height: Bosluk.m),
+          AnaDugme(metin: l.hedefSec, ikincil: true, onTap: () => hedefGoster(context, widget.tur)),
+        ]),
+      );
+    }
+
+    final v = h.doluluk(widget.durum);
+    final hazir = h.ulasildi != null;
+    final esya = HedefEsyasi(esya: h.esya, doluluk: v);
+    final metin = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(hazir ? l.hedefHazir(ad, h.esya.name) : l.hedefCumle(ad, h.esya.name), style: context.t.titleMedium),
+      const SizedBox(height: Bosluk.xs),
+      Text(
+        l.hedefKademe(widget.durum.maliyetTl <= 0 && !hazir ? 'yeni' : hedefKademe(v).name),
+        style: context.t.bodyMedium?.copyWith(color: hazir ? r.acc : r.sub, fontWeight: FontWeight.w700),
+      ),
+    ]);
+    // Büyük yazıda (≥1,6×) eşya metnin üstüne çıkar: yan yanayken kelimeler
+    // dar sütunda harf harf bölünür.
+    final buyukYazi = MediaQuery.textScalerOf(context).scale(10) > 16;
+    return Kart(
+      onTap: hazir ? null : () => hedefGoster(context, widget.tur),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        // Wrap: büyük yazıda "Değiştir" başlığın altına iner, taşmaz.
+        Wrap(alignment: WrapAlignment.spaceBetween, crossAxisAlignment: WrapCrossAlignment.center, children: [
+          BolumBasligi(l.hedefBaslik),
+          if (!hazir)
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.edit_rounded, size: 18, color: r.sub),
+              const SizedBox(width: Bosluk.xs),
+              Flexible(child: Text(l.hedefDegistir, style: context.t.labelLarge?.copyWith(color: r.sub))),
+            ]),
+        ]),
+        const SizedBox(height: Bosluk.m),
+        if (buyukYazi)
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [esya, const SizedBox(height: Bosluk.m), metin])
+        else
+          Row(children: [esya, const SizedBox(width: Bosluk.l), Expanded(child: metin)]),
+        if (hazir) ...[
+          const SizedBox(height: Bosluk.m),
+          AnaDugme(metin: l.hedefYeni, ikincil: true, onTap: () => hedefGoster(context, widget.tur)),
+        ],
+      ]),
+    );
   }
 }
 

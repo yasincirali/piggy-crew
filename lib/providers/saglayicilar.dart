@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cocuk.dart';
 import '../models/evre.dart';
+import '../models/hedef.dart';
 import '../models/odun.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
@@ -90,6 +91,7 @@ class CocukNotifier extends Notifier<Cocuk?> {
     await ref.read(depoProvider).hepsiniSil();
     ref.invalidate(hareketlerProvider);
     ref.invalidate(cikartmalarProvider);
+    ref.invalidate(hedeflerProvider);
     state = null;
   }
 }
@@ -135,6 +137,32 @@ class HareketlerNotifier extends Notifier<List<Hareket>> {
 }
 
 final hareketlerProvider = NotifierProvider<HareketlerNotifier, List<Hareket>>(HareketlerNotifier.new);
+
+/// Karakter başına hedef eşya (bkz. [Hedef]).
+class HedeflerNotifier extends Notifier<Map<VarlikTuru, Hedef>> {
+  @override
+  Map<VarlikTuru, Hedef> build() => ref.read(depoProvider).hedefleriOku();
+
+  Future<void> koy(VarlikTuru t, Hedef h) async {
+    state = {...state, t: h};
+    await ref.read(depoProvider).hedefleriYaz(state);
+  }
+
+  Future<void> kaldir(VarlikTuru t) async {
+    state = {...state}..remove(t);
+    await ref.read(depoProvider).hedefleriYaz(state);
+  }
+
+  /// Hedef bu durumla ilk kez dolduysa işaretler ve true döner (sevinç bir kez).
+  Future<bool> ulastiysaIsaretle(VarlikTuru t, KarakterDurumu d) async {
+    final h = state[t];
+    if (h == null || !h.simdiDoldu(d)) return false;
+    await koy(t, h.ulas(DateTime.now()));
+    return true;
+  }
+}
+
+final hedeflerProvider = NotifierProvider<HedeflerNotifier, Map<VarlikTuru, Hedef>>(HedeflerNotifier.new);
 
 /// Karakter durumları — hesap burada, build() içinde değil.
 final karakterlerProvider = Provider<Map<VarlikTuru, KarakterDurumu>>((ref) {
