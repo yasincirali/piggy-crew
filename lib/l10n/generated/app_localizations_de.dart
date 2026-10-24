@@ -58,7 +58,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Dein Erspartes wohnt in vier freundlichen Figuren. Füttere sie, und dein Lagerfeuer wächst.';
+      'Wenn du Geld in dein echtes Sparschwein steckst, gib es hier einer Figur. Die vier Figuren wachsen mit deinem Ersparten, und dein Lagerfeuer brennt.';
 
   @override
   String get karsilamaBasla => 'Los geht\'s';
@@ -137,7 +137,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Dein Lagerfeuer brennt noch nicht. Tippe auf eine Figur und füttere sie.';
+      'Dein Lagerfeuer brennt noch nicht. Wenn du Geld ins Sparschwein steckst, tippe auf eine Figur und gib es ihr.';
 
   @override
   String get kampFiyatYok =>

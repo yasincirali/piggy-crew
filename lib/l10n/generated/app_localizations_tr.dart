@@ -58,7 +58,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Birikimlerin dört sevimli karakterde yaşar. Onları besle, kamp ateşin büyüsün.';
+      'Gerçek kumbarana para koyunca burada bir karaktere ver. Dört karakter birikimle büyür, kamp ateşin yanar.';
 
   @override
   String get karsilamaBasla => 'Başla';
@@ -137,7 +137,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Kamp ateşin henüz yanmadı. Bir karaktere dokun ve besle.';
+      'Kamp ateşin henüz yanmadı. Kumbarana para koyduğunda bir karaktere dokun ve ona ver.';
 
   @override
   String get kampFiyatYok => 'Fiyat alınamadı, değer gösterilemiyor.';

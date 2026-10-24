@@ -1,5 +1,3 @@
 Bu sürümde denenecekler:
-• Hedef: Kamp ekranında bir karaktere dokun, açılan sayfada "Hedef" kartını bul ve "Hedef seç"e bas. Bir eşya seç (ör. Bisiklet), yaklaşık fiyat yaz, "Hedefi koy"a bas. Kartta "Sincap bisiklet için biriktiriyor" yazmalı ve bisiklet, kumbaraya konan para kadar alttan dolmalı. Ekranda fiyat görünmemeli.
-• Karakteri biraz daha besle: eşya biraz daha dolmalı, altındaki kelime değişmeli ("Yarısı doldu", "Neredeyse doldu").
-• Hedefe ulaşınca bir kez ses ve "Bisiklet hazır!" bildirimi gelmeli; sayfadan çıkıp tekrar girince ikinci kez çalmamalı. Kumbaradan para alsan da eşya dolu kalmalı. "Yeni hedef" ile yenisi seçilebilmeli; hedef kartına dokunup "Hedefi kaldır" ile kaldırılabilmeli.
-• Telefonda yazı boyutunu büyüt: hedef kartı ve seçim sayfası taşmadan okunmalı.
+• Daha sakin kamp ekranı: kamp ekranında artık yalnız iki sayı var, üstte toplam ve fark. Karakterlerin altındaki artı/eksi tutarlar ve alttaki listedeki miktarlar kalktı. Bir karaktere dokununca o bilgiler karakterin kendi ekranında görünmeli.
+• Daha açık ilk adım: uygulamayı silip yeniden kur ya da Anne baba köşesinden verileri sil. Karşılama ekranı "Gerçek kumbarana para koyunca burada bir karaktere ver" demeli; boş kampta da aynı ipucu görünmeli.

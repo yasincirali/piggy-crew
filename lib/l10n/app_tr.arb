@@ -15,7 +15,7 @@
   "huyEuro": "Sakin bakarım. Uzaktaki ülkelerin parası bende saklı.",
   "huyNakit": "Ne verirsen onu saklarım. Ama fiyatlar artarsa aldığım şey azalır.",
   "karsilamaBaslik": "Kumbara Takımı seni bekliyor",
-  "karsilamaAlt": "Birikimlerin dört sevimli karakterde yaşar. Onları besle, kamp ateşin büyüsün.",
+  "karsilamaAlt": "Gerçek kumbarana para koyunca burada bir karaktere ver. Dört karakter birikimle büyür, kamp ateşin yanar.",
   "karsilamaBasla": "Başla",
   "adSoru": "Sana ne diyelim?",
   "adIpucu": "Adın ya da takma adın",
@@ -47,7 +47,7 @@
     }
   },
   "kampAtesim": "Kamp ateşim",
-  "kampBos": "Kamp ateşin henüz yanmadı. Bir karaktere dokun ve besle.",
+  "kampBos": "Kamp ateşin henüz yanmadı. Kumbarana para koyduğunda bir karaktere dokun ve ona ver.",
   "kampFiyatYok": "Fiyat alınamadı, değer gösterilemiyor.",
   "kampFiyatEski": "Fiyatlar {zaman} itibarıyla",
   "@kampFiyatEski": {
@@ -593,5 +593,11 @@
     }
   },
   "hedefFiyat": "Yaklaşık ne kadar?",
-  "hedefFiyatNot": "Bu sayı yalnız burada görünür; sonra ekranda eşya dolar."
+  "hedefFiyatNot": "Bu sayı yalnız burada görünür; sonra ekranda eşya dolar.",
+  "@karsilamaAlt": {
+    "description": "Karşılama alt cümlesi. Uygulama para tutmaz: gerçek kumbaraya konan para burada karaktere verilir (Ar-Ge 24 Eki 11:07 #1)."
+  },
+  "@kampBos": {
+    "description": "Boş kamp ipucu: önce gerçek kumbara, sonra karaktere ver ritüeli."
+  }
 }
