@@ -59,7 +59,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Suas economias moram em quatro amigos fofos. Alimente-os e sua fogueira cresce.';
+      'Quando colocar dinheiro no seu cofrinho de verdade, dê para um amigo aqui. Os quatro crescem com suas economias e sua fogueira acende.';
 
   @override
   String get karsilamaBasla => 'Começar';
@@ -138,7 +138,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Sua fogueira ainda não foi acesa. Toque em um amigo e alimente-o.';
+      'Sua fogueira ainda não foi acesa. Quando colocar dinheiro no cofrinho, toque em um amigo e dê para ele.';
 
   @override
   String get kampFiyatYok =>

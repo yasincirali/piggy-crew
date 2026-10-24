@@ -15,7 +15,7 @@
   "huyEuro": "I watch calmly. I keep the money of faraway countries.",
   "huyNakit": "I keep whatever you give me. But when prices rise, it buys less.",
   "karsilamaBaslik": "The Piggy Crew is waiting",
-  "karsilamaAlt": "Your savings live in four friendly characters. Feed them and your campfire grows.",
+  "karsilamaAlt": "When you put money in your real piggy bank, give it to a character here. The four characters grow with your savings and your campfire lights up.",
   "karsilamaBasla": "Start",
   "adSoru": "What should we call you?",
   "adIpucu": "Your name or nickname",
@@ -47,7 +47,7 @@
     }
   },
   "kampAtesim": "My campfire",
-  "kampBos": "Your campfire isn't lit yet. Tap a character and feed it.",
+  "kampBos": "Your campfire isn't lit yet. When you put money in your piggy bank, tap a character and give it to them.",
   "kampFiyatYok": "Prices unavailable, value can't be shown.",
   "kampFiyatEski": "Prices as of {zaman}",
   "@kampFiyatEski": {

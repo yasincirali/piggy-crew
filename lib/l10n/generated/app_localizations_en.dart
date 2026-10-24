@@ -58,7 +58,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Your savings live in four friendly characters. Feed them and your campfire grows.';
+      'When you put money in your real piggy bank, give it to a character here. The four characters grow with your savings and your campfire lights up.';
 
   @override
   String get karsilamaBasla => 'Start';
@@ -137,7 +137,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Your campfire isn\'t lit yet. Tap a character and feed it.';
+      'Your campfire isn\'t lit yet. When you put money in your piggy bank, tap a character and give it to them.';
 
   @override
   String get kampFiyatYok => 'Prices unavailable, value can\'t be shown.';

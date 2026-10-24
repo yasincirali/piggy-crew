@@ -58,7 +58,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Tus ahorros viven en cuatro personajes amigos. Dales de comer y tu fogata crece.';
+      'Cuando metas dinero en tu hucha de verdad, dáselo aquí a un personaje. Los cuatro crecen con tus ahorros y tu fogata se enciende.';
 
   @override
   String get karsilamaBasla => 'Empezar';
@@ -137,7 +137,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Tu fogata todavía no está encendida. Toca un personaje y dale de comer.';
+      'Tu fogata todavía no está encendida. Cuando metas dinero en tu hucha, toca un personaje y dáselo.';
 
   @override
   String get kampFiyatYok => 'No hay precios, no se puede mostrar el valor.';

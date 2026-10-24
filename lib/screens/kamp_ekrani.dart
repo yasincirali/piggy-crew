@@ -320,15 +320,10 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
             donusGecikme: donusGecikme,
             avuc: _avucTur == t ? _avuc : null,
           ),
+          // Karakterin kendi farkı burada yazılmaz (Ar-Ge 24 Eki 11:07 #2): ekranda
+          // en fazla iki sayı, toplam ve fark. Değişimi yüz ve hava durumu anlatır;
+          // tutar karakter ekranında.
           Text(l.karakter(t), style: context.t.labelLarge),
-          if (!d.bos && d.farkTl != null)
-            Text(
-              fmtFark(d.farkTl!, cocuk.para),
-              style: context.t.labelMedium?.copyWith(
-                color: d.ruh == Ruh.mutlu ? r.gain : r.sub,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
         ]),
       );
     }
@@ -418,12 +413,8 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
                       SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh, sembol: cocuk.para.sembol))),
                       const SizedBox(width: Bosluk.m),
                       Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text('${l.karakter(t)} · ${l.varlik(t)}', style: context.t.titleMedium),
-                          if (!k[t]!.bos)
-                            Text(fmtMiktar(k[t]!.miktar, l.birim(t, cocuk.para), cocuk.para),
-                                style: context.t.bodyMedium),
-                        ]),
+                        // Miktar karakter ekranında ("Elinde …"); burada yalnız ad.
+                        child: Text('${l.karakter(t)} · ${l.varlik(t)}', style: context.t.titleMedium),
                       ),
                       Container(
                         height: 40,

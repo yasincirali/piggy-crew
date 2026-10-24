@@ -59,7 +59,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get karsilamaAlt =>
-      'Tes économies vivent dans quatre personnages amis. Nourris-les et ton feu de camp grandit.';
+      'Quand tu mets de l\'argent dans ta vraie tirelire, donne-le ici à un personnage. Les quatre grandissent avec tes économies et ton feu de camp s\'allume.';
 
   @override
   String get karsilamaBasla => 'Commencer';
@@ -138,7 +138,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get kampBos =>
-      'Ton feu de camp n\'est pas encore allumé. Touche un personnage pour le nourrir.';
+      'Ton feu de camp n\'est pas encore allumé. Quand tu mets de l\'argent dans ta tirelire, touche un personnage et donne-le-lui.';
 
   @override
   String get kampFiyatYok =>

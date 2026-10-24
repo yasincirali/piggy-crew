@@ -196,10 +196,10 @@ abstract class AppLocalizations {
   /// **'Kumbara Takımı seni bekliyor'**
   String get karsilamaBaslik;
 
-  /// No description provided for @karsilamaAlt.
+  /// Karşılama alt cümlesi. Uygulama para tutmaz: gerçek kumbaraya konan para burada karaktere verilir (Ar-Ge 24 Eki 11:07 #1).
   ///
   /// In tr, this message translates to:
-  /// **'Birikimlerin dört sevimli karakterde yaşar. Onları besle, kamp ateşin büyüsün.'**
+  /// **'Gerçek kumbarana para koyunca burada bir karaktere ver. Dört karakter birikimle büyür, kamp ateşin yanar.'**
   String get karsilamaAlt;
 
   /// No description provided for @karsilamaBasla.
@@ -346,10 +346,10 @@ abstract class AppLocalizations {
   /// **'Kamp ateşim'**
   String get kampAtesim;
 
-  /// No description provided for @kampBos.
+  /// Boş kamp ipucu: önce gerçek kumbara, sonra karaktere ver ritüeli.
   ///
   /// In tr, this message translates to:
-  /// **'Kamp ateşin henüz yanmadı. Bir karaktere dokun ve besle.'**
+  /// **'Kamp ateşin henüz yanmadı. Kumbarana para koyduğunda bir karaktere dokun ve ona ver.'**
   String get kampBos;
 
   /// No description provided for @kampFiyatYok.
