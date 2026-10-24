@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocuk.dart';
 import '../models/evre.dart';
+import '../models/hedef.dart';
 import '../models/varlik.dart';
 
 /// Yerel kalıcılık — tek dosya, tek sürüm anahtarı.
@@ -33,6 +34,7 @@ class Depo {
   static const _sonDonus = 'son_donus_v1';
   static const _odun = 'odun_v1';
   static const _ikilem = 'ikilem_gosterildi_v1';
+  static const _hedefler = 'hedefler_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -139,6 +141,25 @@ class Depo {
   bool ikilemGosterildiOku() => _sp.getBool(_ikilem) ?? false;
   Future<void> ikilemGosterildiYaz() => _sp.setBool(_ikilem, true);
 
+  /// Karakter başına bir hedef (bkz. [Hedef]). Bozuk kayıt atlanır.
+  Map<VarlikTuru, Hedef> hedefleriOku() {
+    final s = _sp.getString(_hedefler);
+    if (s == null) return const {};
+    try {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return {
+        for (final e in m.entries)
+          if (VarlikTuru.values.any((t) => t.name == e.key) && e.value is Map<String, dynamic>)
+            VarlikTuru.values.byName(e.key): ?Hedef.fromJson(e.value as Map<String, dynamic>),
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<void> hedefleriYaz(Map<VarlikTuru, Hedef> m) =>
+      _sp.setString(_hedefler, jsonEncode({for (final e in m.entries) e.key.name: e.value.toJson()}));
+
   DateTime? _anOku(String anahtar) {
     final v = _sp.get(anahtar);
     return v is int ? DateTime.fromMillisecondsSinceEpoch(v) : null;
@@ -154,6 +175,7 @@ class Depo {
     await _sp.remove(_evre);
     await _sp.remove(_odun);
     await _sp.remove(_ikilem);
+    await _sp.remove(_hedefler);
     // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
     await _sp.remove(_sonGorulme);
     await _sp.remove(_sonDonus);

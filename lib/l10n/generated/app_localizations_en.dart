@@ -615,4 +615,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ayarlarGizlilik => 'Privacy';
+
+  @override
+  String get hedefBaslik => 'Goal';
+
+  @override
+  String get hedefSec => 'Pick a goal';
+
+  @override
+  String get hedefDegistir => 'Change';
+
+  @override
+  String get hedefYeni => 'New goal';
+
+  @override
+  String get hedefKaydet => 'Set goal';
+
+  @override
+  String get hedefKaldir => 'Remove goal';
+
+  @override
+  String hedefYok(String karakter) {
+    return 'Saving up for something? Pick it and $karakter will carry it; the item fills up as you feed.';
+  }
+
+  @override
+  String hedefEsyaAdi(String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'Bike',
+      'top': 'Ball',
+      'kitap': 'Book',
+      'kulaklik': 'Headphones',
+      'oyuncak': 'Toy',
+      'kaykay': 'Skateboard',
+      'oyun': 'Game',
+      'hediye': 'Gift',
+      'other': 'Gift',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefCumle(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'a bike',
+      'top': 'a ball',
+      'kitap': 'a book',
+      'kulaklik': 'headphones',
+      'oyuncak': 'a toy',
+      'kaykay': 'a skateboard',
+      'oyun': 'a game',
+      'hediye': 'a gift',
+      'other': 'a gift',
+    });
+    return '$karakter is saving for $_temp0';
+  }
+
+  @override
+  String hedefHazir(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'The bike is ready!',
+      'top': 'The ball is ready!',
+      'kitap': 'The book is ready!',
+      'kulaklik': 'The headphones are ready!',
+      'oyuncak': 'The toy is ready!',
+      'kaykay': 'The skateboard is ready!',
+      'oyun': 'The game is ready!',
+      'hediye': 'The gift is ready!',
+      'other': 'The goal is ready!',
+    });
+    return '$_temp0 $karakter is so happy.';
+  }
+
+  @override
+  String hedefKademe(String kademe) {
+    String _temp0 = intl.Intl.selectLogic(kademe, {
+      'yeni': 'Starts filling at the first feeding',
+      'basladi': 'Filling up',
+      'yarim': 'Half full',
+      'neredeyse': 'Almost full',
+      'hazir': 'Full!',
+      'other': 'Filling up',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefSayfaBaslik(String karakter) {
+    return 'What should $karakter save for?';
+  }
+
+  @override
+  String get hedefFiyat => 'About how much?';
+
+  @override
+  String get hedefFiyatNot =>
+      'This number only shows here; after that, the item fills up on screen.';
 }

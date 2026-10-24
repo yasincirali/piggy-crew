@@ -622,4 +622,100 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ayarlarGizlilik => 'Gizlilik';
+
+  @override
+  String get hedefBaslik => 'Hedef';
+
+  @override
+  String get hedefSec => 'Hedef seç';
+
+  @override
+  String get hedefDegistir => 'Değiştir';
+
+  @override
+  String get hedefYeni => 'Yeni hedef';
+
+  @override
+  String get hedefKaydet => 'Hedefi koy';
+
+  @override
+  String get hedefKaldir => 'Hedefi kaldır';
+
+  @override
+  String hedefYok(String karakter) {
+    return 'Bir şey için mi biriktiriyorsun? Seçersen $karakter onu taşır; sen besledikçe eşya dolar.';
+  }
+
+  @override
+  String hedefEsyaAdi(String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'Bisiklet',
+      'top': 'Top',
+      'kitap': 'Kitap',
+      'kulaklik': 'Kulaklık',
+      'oyuncak': 'Oyuncak',
+      'kaykay': 'Kaykay',
+      'oyun': 'Oyun',
+      'hediye': 'Hediye',
+      'other': 'Hediye',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefCumle(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'bisiklet',
+      'top': 'top',
+      'kitap': 'kitap',
+      'kulaklik': 'kulaklık',
+      'oyuncak': 'oyuncak',
+      'kaykay': 'kaykay',
+      'oyun': 'oyun',
+      'hediye': 'hediye',
+      'other': 'hediye',
+    });
+    return '$karakter $_temp0 için biriktiriyor';
+  }
+
+  @override
+  String hedefHazir(String karakter, String esya) {
+    String _temp0 = intl.Intl.selectLogic(esya, {
+      'bisiklet': 'Bisiklet hazır!',
+      'top': 'Top hazır!',
+      'kitap': 'Kitap hazır!',
+      'kulaklik': 'Kulaklık hazır!',
+      'oyuncak': 'Oyuncak hazır!',
+      'kaykay': 'Kaykay hazır!',
+      'oyun': 'Oyun hazır!',
+      'hediye': 'Hediye hazır!',
+      'other': 'Hedef hazır!',
+    });
+    return '$_temp0 $karakter çok sevindi.';
+  }
+
+  @override
+  String hedefKademe(String kademe) {
+    String _temp0 = intl.Intl.selectLogic(kademe, {
+      'yeni': 'İlk beslemeyle dolmaya başlar',
+      'basladi': 'Dolmaya başladı',
+      'yarim': 'Yarısı doldu',
+      'neredeyse': 'Neredeyse doldu',
+      'hazir': 'Doldu!',
+      'other': 'Dolmaya başladı',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hedefSayfaBaslik(String karakter) {
+    return '$karakter ne için biriktirsin?';
+  }
+
+  @override
+  String get hedefFiyat => 'Yaklaşık ne kadar?';
+
+  @override
+  String get hedefFiyatNot =>
+      'Bu sayı yalnız burada görünür; sonra ekranda eşya dolar.';
 }

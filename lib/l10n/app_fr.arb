@@ -178,5 +178,19 @@
   "ikilemIstekCevap": "Une envie ! C'est un désir. Les envies, c'est bien aussi, chacune à son tour.",
   "ikilemIhtiyacCevap": "Un nid bien chaud pour l'hiver ! C'est un besoin. D'abord les besoins, ensuite les envies.",
   "ikilemTamam": "D'accord",
-  "ayarlarGizlilik": "Confidentialité"
+  "ayarlarGizlilik": "Confidentialité",
+  "hedefBaslik": "Objectif",
+  "hedefSec": "Choisir un objectif",
+  "hedefDegistir": "Changer",
+  "hedefYeni": "Nouvel objectif",
+  "hedefKaydet": "Fixer l’objectif",
+  "hedefKaldir": "Retirer l’objectif",
+  "hedefYok": "Tu économises pour quelque chose ? Choisis-le et {karakter} le portera ; il se remplit quand tu nourris.",
+  "hedefEsyaAdi": "{esya, select, bisiklet{Vélo} top{Ballon} kitap{Livre} kulaklik{Casque} oyuncak{Jouet} kaykay{Skate} oyun{Jeu} hediye{Cadeau} other{Cadeau}}",
+  "hedefCumle": "{karakter} économise pour {esya, select, bisiklet{un vélo} top{un ballon} kitap{un livre} kulaklik{un casque} oyuncak{un jouet} kaykay{un skate} oyun{un jeu} hediye{un cadeau} other{un cadeau}}",
+  "hedefHazir": "{esya, select, bisiklet{Le vélo est prêt !} top{Le ballon est prêt !} kitap{Le livre est prêt !} kulaklik{Le casque est prêt !} oyuncak{Le jouet est prêt !} kaykay{Le skate est prêt !} oyun{Le jeu est prêt !} hediye{Le cadeau est prêt !} other{L’objectif est atteint !}} {karakter} est très content.",
+  "hedefKademe": "{kademe, select, yeni{Se remplit dès le premier repas} basladi{Ça se remplit} yarim{À moitié} neredeyse{Presque plein} hazir{Plein !} other{Ça se remplit}}",
+  "hedefSayfaBaslik": "Pour quoi {karakter} économise ?",
+  "hedefFiyat": "Environ combien ?",
+  "hedefFiyatNot": "Ce nombre ne se voit qu’ici ; ensuite, l’objet se remplit à l’écran."
 }

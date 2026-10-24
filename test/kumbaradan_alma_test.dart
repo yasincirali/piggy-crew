@@ -151,6 +151,8 @@ void main() {
         Navigator.of(t.element(find.byType(KampEkrani))).push(VarlikDetayEkrani.rota(VarlikTuru.nakit));
         await bekle(t);
         await t.scrollUntilVisible(find.text('Kumbaradan aldım'), 200, scrollable: find.byType(Scrollable).last);
+        await t.ensureVisible(find.text('Kumbaradan aldım'));
+        await t.pump();
         await t.tap(find.text('Kumbaradan aldım'));
         await bekle(t);
         // Fazlası alınamaz.
@@ -198,6 +200,8 @@ void main() {
 
       Future<void> al() async {
         await t.scrollUntilVisible(find.text('Kumbaradan aldım'), 200, scrollable: find.byType(Scrollable).last);
+        await t.ensureVisible(find.text('Kumbaradan aldım'));
+        await t.pump();
         await t.tap(find.text('Kumbaradan aldım'));
         await bekle(t);
         await t.enterText(find.byType(TextField), '10');

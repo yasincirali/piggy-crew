@@ -178,5 +178,19 @@
   "ikilemIstekCevap": "¡Algo que le apetece! Eso es un deseo. Los deseos también están bien, a su tiempo.",
   "ikilemIhtiyacCevap": "¡Un nido calentito para el invierno! Eso es una necesidad. Primero lo necesario, luego los deseos.",
   "ikilemTamam": "Vale",
-  "ayarlarGizlilik": "Privacidad"
+  "ayarlarGizlilik": "Privacidad",
+  "hedefBaslik": "Meta",
+  "hedefSec": "Elegir meta",
+  "hedefDegistir": "Cambiar",
+  "hedefYeni": "Nueva meta",
+  "hedefKaydet": "Poner meta",
+  "hedefKaldir": "Quitar meta",
+  "hedefYok": "¿Ahorras para algo? Elígelo y {karakter} lo llevará; se llena cada vez que le das de comer.",
+  "hedefEsyaAdi": "{esya, select, bisiklet{Bici} top{Pelota} kitap{Libro} kulaklik{Auriculares} oyuncak{Juguete} kaykay{Monopatín} oyun{Juego} hediye{Regalo} other{Regalo}}",
+  "hedefCumle": "{karakter} ahorra para {esya, select, bisiklet{una bici} top{una pelota} kitap{un libro} kulaklik{unos auriculares} oyuncak{un juguete} kaykay{un monopatín} oyun{un juego} hediye{un regalo} other{un regalo}}",
+  "hedefHazir": "{esya, select, bisiklet{¡La bici está lista!} top{¡La pelota está lista!} kitap{¡El libro está listo!} kulaklik{¡Los auriculares están listos!} oyuncak{¡El juguete está listo!} kaykay{¡El monopatín está listo!} oyun{¡El juego está listo!} hediye{¡El regalo está listo!} other{¡La meta está lista!}} {karakter} está muy feliz.",
+  "hedefKademe": "{kademe, select, yeni{Se empieza a llenar al dar de comer} basladi{Se está llenando} yarim{Va por la mitad} neredeyse{Falta poquito} hazir{¡Completo!} other{Se está llenando}}",
+  "hedefSayfaBaslik": "¿Para qué ahorra {karakter}?",
+  "hedefFiyat": "¿Más o menos cuánto?",
+  "hedefFiyatNot": "Este número solo se ve aquí; luego, en pantalla, el objeto se llena."
 }

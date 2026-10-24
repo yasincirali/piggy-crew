@@ -355,5 +355,19 @@
   "ikilemIstekCevap": "Something nice to have! That's a want. Wants are fine too, when their turn comes.",
   "ikilemIhtiyacCevap": "A warm nest for winter! That's a need. Needs first, then wants.",
   "ikilemTamam": "OK",
-  "ayarlarGizlilik": "Privacy"
+  "ayarlarGizlilik": "Privacy",
+  "hedefBaslik": "Goal",
+  "hedefSec": "Pick a goal",
+  "hedefDegistir": "Change",
+  "hedefYeni": "New goal",
+  "hedefKaydet": "Set goal",
+  "hedefKaldir": "Remove goal",
+  "hedefYok": "Saving up for something? Pick it and {karakter} will carry it; the item fills up as you feed.",
+  "hedefEsyaAdi": "{esya, select, bisiklet{Bike} top{Ball} kitap{Book} kulaklik{Headphones} oyuncak{Toy} kaykay{Skateboard} oyun{Game} hediye{Gift} other{Gift}}",
+  "hedefCumle": "{karakter} is saving for {esya, select, bisiklet{a bike} top{a ball} kitap{a book} kulaklik{headphones} oyuncak{a toy} kaykay{a skateboard} oyun{a game} hediye{a gift} other{a gift}}",
+  "hedefHazir": "{esya, select, bisiklet{The bike is ready!} top{The ball is ready!} kitap{The book is ready!} kulaklik{The headphones are ready!} oyuncak{The toy is ready!} kaykay{The skateboard is ready!} oyun{The game is ready!} hediye{The gift is ready!} other{The goal is ready!}} {karakter} is so happy.",
+  "hedefKademe": "{kademe, select, yeni{Starts filling at the first feeding} basladi{Filling up} yarim{Half full} neredeyse{Almost full} hazir{Full!} other{Filling up}}",
+  "hedefSayfaBaslik": "What should {karakter} save for?",
+  "hedefFiyat": "About how much?",
+  "hedefFiyatNot": "This number only shows here; after that, the item fills up on screen."
 }
