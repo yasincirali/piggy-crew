@@ -93,7 +93,7 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
                           constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                         ),
                       const Spacer(),
-                      _Noktalar(adim: _adim, toplam: 5),
+                      _Noktalar(adim: _adim, toplam: 4),
                       const Spacer(),
                       if (_adim > 0) const SizedBox(width: 44),
                     ]),
@@ -136,8 +136,10 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
   Widget _govde(AppLocalizations l, DunyaRenkleri r) => switch (_adim) {
         0 => _adimGiris(l, r),
         1 => _adimAd(l, r),
-        2 => _adimPara(l, r),
-        3 => _adimDunya(l, r),
+        // Para birimi ayrı adım değil (Ar-Ge 24 Eki): "Paran hangisi?" 7 yaşa
+        // anlamsızdı ve cevap zaten bölgeden hazır geliyordu. Seçim veli
+        // adımında; ilk beslemeden sonra değişmediği için veli görsün.
+        2 => _adimDunya(l, r),
         _ => _adimVeli(l, r),
       };
 
@@ -201,25 +203,6 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
         ],
       );
 
-  Widget _adimPara(AppLocalizations l, DunyaRenkleri r) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: Bosluk.dev),
-          Text(l.paraSoru, style: context.t.headlineMedium),
-          const SizedBox(height: Bosluk.xl),
-          Wrap(
-            spacing: Bosluk.s,
-            runSpacing: Bosluk.s,
-            children: [
-              for (final p in ParaBirimi.values)
-                SecimCipi(metin: '${p.sembol}  ${p.kod}', secili: _para == p, onTap: () => setState(() => _para = p)),
-            ],
-          ),
-          const Spacer(),
-          AnaDugme(metin: l.devam, onTap: _ileri),
-        ],
-      );
-
   Widget _adimDunya(AppLocalizations l, DunyaRenkleri r) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -251,21 +234,73 @@ class _KarsilamaState extends ConsumerState<KarsilamaEkrani> {
         ],
       );
 
+  Future<void> _paraSec(BuildContext context) => altSayfaGoster<void>(
+        context,
+        Builder(builder: (c) {
+          final l = c.l10n;
+          return Padding(
+            padding: const EdgeInsets.all(Bosluk.xl),
+            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              BolumBasligi(l.ayarlarPara),
+              const SizedBox(height: Bosluk.s),
+              Wrap(spacing: Bosluk.s, runSpacing: Bosluk.s, children: [
+                for (final p in ParaBirimi.values)
+                  SecimCipi(
+                    metin: '${p.sembol}  ${p.kod}',
+                    secili: _para == p,
+                    onTap: () {
+                      setState(() => _para = p);
+                      Navigator.of(c).pop();
+                    },
+                  ),
+              ]),
+              const SizedBox(height: Bosluk.s),
+              Text(l.karsilamaParaNot, style: c.t.bodySmall?.copyWith(color: c.r.sub)),
+            ]),
+          );
+        }),
+      );
+
   Widget _adimVeli(AppLocalizations l, DunyaRenkleri r) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: Bosluk.dev),
-          Text(l.veliBaslik, style: context.t.headlineMedium),
+          // Üst boşluk diğer adımlardan kısa: para birimi satırı eklendi, iPhone SE'de
+          // "Hazır" ve "Şimdilik geç" kaydırmadan görünsün.
           const SizedBox(height: Bosluk.s),
+          Text(l.veliBaslik, style: context.t.headlineMedium),
+          const SizedBox(height: Bosluk.xs),
           Text(l.veliAciklama, style: context.t.bodyLarge?.copyWith(color: r.sub)),
-          const SizedBox(height: Bosluk.xl),
+          const SizedBox(height: Bosluk.l),
           _PinAlani(controller: _pin1, ipucu: l.veliPinIpucu, onChanged: () => setState(() => _pinHata = null)),
-          const SizedBox(height: Bosluk.m),
+          const SizedBox(height: Bosluk.s),
           _PinAlani(controller: _pin2, ipucu: l.veliPinTekrar, onChanged: () => setState(() => _pinHata = null)),
           if (_pinHata != null) ...[
             const SizedBox(height: Bosluk.s),
             Text(_pinHata!, style: context.t.bodyMedium?.copyWith(color: r.loss, fontWeight: FontWeight.w700)),
           ],
+          const SizedBox(height: Bosluk.s),
+          // PIN "Şimdilik geç" ile geçilse de görünür: düğmelerin üstünde. Tek
+          // satır, dokununca seçim sayfası: küçük ekranda düğmeler kaydırmadan
+          // görünsün (dört çip + not iki satır daha itiyordu).
+          Kart(
+            padding: const EdgeInsets.symmetric(horizontal: Bosluk.l, vertical: Bosluk.s),
+            onTap: () => _paraSec(context),
+            // Wrap: büyük yazıda "Değiştir" alt satıra iner, taşmaz.
+            // En az 44 pt dokunma alanı (HIG).
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44 - 2 * Bosluk.s),
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: Bosluk.s,
+                runSpacing: Bosluk.xs,
+                children: [
+                  Text('${l.ayarlarPara}: ${_para.sembol} ${_para.kod}', style: context.t.bodyLarge),
+                  Text(l.hedefDegistir, style: context.t.bodyLarge?.copyWith(color: r.acc, fontWeight: FontWeight.w700)),
+                ],
+              ),
+            ),
+          ),
           const Spacer(),
           AnaDugme(metin: l.hazir, onTap: (_pin1.text.length == 4 && _pin2.text.length == 4) ? _bitir : null),
           const SizedBox(height: Bosluk.s),

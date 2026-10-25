@@ -22,7 +22,6 @@
   "yasSoru": "Quel âge as-tu ?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "Quelle monnaie utilises-tu ?",
   "dunyaSoru": "Où installer le camp ?",
   "dunyaAlt": "Tu peux changer quand tu veux.",
   "devam": "Continuer",
@@ -192,5 +191,6 @@
   "hedefKademe": "{kademe, select, yeni{Se remplit dès le premier repas} basladi{Ça se remplit} yarim{À moitié} neredeyse{Presque plein} hazir{Plein !} other{Ça se remplit}}",
   "hedefSayfaBaslik": "Pour quoi {karakter} économise ?",
   "hedefFiyat": "Environ combien ?",
-  "hedefFiyatNot": "Ce nombre ne se voit qu’ici ; ensuite, l’objet se remplit à l’écran."
+  "hedefFiyatNot": "Ce nombre ne se voit qu’ici ; ensuite, l’objet se remplit à l’écran.",
+  "karsilamaParaNot": "La monnaie ne peut plus être changée une fois qu’on a donné de l’argent à un personnage."
 }

@@ -117,6 +117,19 @@ class FiyatNotifier extends AsyncNotifier<Fiyatlar> {
     final f = await ref.read(fiyatServisiProvider).cek();
     if (f != null) state = AsyncData(f);
   }
+
+  /// Fiyat bu kadar eskiyse uygulamaya dönüşte sessizce yenilenir.
+  static const tazelikSuresi = Duration(hours: 1);
+
+  /// Uygulamaya dönüşte (askıdan çıkış): `build` yeniden koşmaz, iOS uygulamayı
+  /// günlerce askıda tutabilir; çocuk aşağı çekmeyi bilmez, dünkü fiyatı ve
+  /// dünkü havayı görürdü (Ar-Ge 24 Eki). Fiyat [tazelikSuresi]'nden eskiyse
+  /// çekilir; yükleniyor göstergesi yok, başarısızsa mevcut değer ve not kalır.
+  Future<void> tazeleGerekirse([DateTime? simdi]) async {
+    final z = state.valueOrNull?.zaman;
+    if (z != null && (simdi ?? DateTime.now()).difference(z) < tazelikSuresi) return;
+    await yenile();
+  }
 }
 
 final fiyatProvider = AsyncNotifierProvider<FiyatNotifier, Fiyatlar>(FiyatNotifier.new);

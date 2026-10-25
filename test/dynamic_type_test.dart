@@ -63,7 +63,6 @@ void main() {
       await bekle(t);
       await dokun('Devam');
       await dokun('Devam');
-      await dokun('Devam');
       await dokun('Şimdilik geç');
       expect(find.text('Merhaba Deniz'), findsOneWidget);
 

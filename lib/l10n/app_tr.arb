@@ -22,7 +22,6 @@
   "yasSoru": "Kaç yaşındasın?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "Paran hangisi?",
   "dunyaSoru": "Kampını nereye kuralım?",
   "dunyaAlt": "İstediğin zaman değiştirebilirsin.",
   "devam": "Devam",
@@ -599,5 +598,9 @@
   },
   "@kampBos": {
     "description": "Boş kamp ipucu: önce gerçek kumbara, sonra karaktere ver ritüeli."
+  },
+  "karsilamaParaNot": "Para birimi, karakterlere ilk kez para verildikten sonra değişmez.",
+  "@karsilamaParaNot": {
+    "description": "Karşılamanın veli adımında para birimi çiplerinin altındaki not: birim ilk hareketten sonra kilitlenir."
   }
 }

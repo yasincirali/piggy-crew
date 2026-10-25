@@ -22,7 +22,6 @@
   "yasSoru": "Quantos anos você tem?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "Qual dinheiro você usa?",
   "dunyaSoru": "Onde vamos montar o acampamento?",
   "dunyaAlt": "Você pode mudar quando quiser.",
   "devam": "Continuar",
@@ -192,5 +191,6 @@
   "hedefKademe": "{kademe, select, yeni{Começa a encher na primeira vez} basladi{Enchendo} yarim{Na metade} neredeyse{Quase lá} hazir{Completo!} other{Enchendo}}",
   "hedefSayfaBaslik": "Para que {karakter} vai juntar?",
   "hedefFiyat": "Mais ou menos quanto?",
-  "hedefFiyatNot": "Este número só aparece aqui; depois, o objeto enche na tela."
+  "hedefFiyatNot": "Este número só aparece aqui; depois, o objeto enche na tela.",
+  "karsilamaParaNot": "A moeda não pode ser trocada depois que o primeiro dinheiro for dado a um personagem."
 }

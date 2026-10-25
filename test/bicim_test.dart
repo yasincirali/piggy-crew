@@ -31,6 +31,22 @@ void main() {
     expect(parseSayi('abc'), isNull);
   });
 
+  test('tek ayırıcı ve ardından üç hane binliktir (TR "1.500" = bin beş yüz)', () {
+    expect(parseSayi('1.500'), 1500);
+    expect(parseSayi('1,500'), 1500);
+    expect(parseSayi('12.000'), 12000);
+    expect(parseSayi('1.250.000'), 1250000);
+    expect(parseSayi('1,250,000'), 1250000);
+    // Üç haneden az ya da çok: ondalık.
+    expect(parseSayi('12,5'), 12.5);
+    expect(parseSayi('12.50'), 12.5);
+    expect(parseSayi('0.25'), 0.25);
+    expect(parseSayi('1.2345'), 1.2345);
+    // Başı 0 olan grup binlik olamaz.
+    expect(parseSayi('0,500'), 0.5);
+    expect(parseSayi(',5'), 0.5);
+  });
+
   test('ev birimindeki nakit tutar gibi yazılır, yabancı birim miktar gibi', () {
     expect(fmtMiktar(12, r'$', ParaBirimi.usd), r'$12');
     expect(fmtMiktar(360, '₺', ParaBirimi.tryy), '360 ₺');

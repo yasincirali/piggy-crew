@@ -121,6 +121,12 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(Kose.m), borderSide: BorderSide(color: r.acc, width: 2)),
             ),
           ),
+          // Yazılan fiyat biçimli yankılanır: "1.500" bin beş yüz mü bir buçuk mu,
+          // aile kaydetmeden görür (yanlış okunan fiyat hedefi anında doldururdu).
+          if (fiyat != null && fiyat >= 1000) ...[
+            const SizedBox(height: Bosluk.s),
+            Text(fmtPara(fiyat, cocuk.para), style: context.t.titleMedium?.copyWith(color: r.acc)),
+          ],
           const SizedBox(height: Bosluk.s),
           Text(l.hedefFiyatNot, style: context.t.bodyMedium?.copyWith(color: r.sub)),
           const SizedBox(height: Bosluk.xl),

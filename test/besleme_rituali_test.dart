@@ -44,7 +44,7 @@ void main() {
     await bekle(t);
     await t.enterText(find.byType(TextField), 'Deniz');
     await bekle(t);
-    for (final d in ['Devam', 'Devam', 'Devam', 'Şimdilik geç']) {
+    for (final d in ['Devam', 'Devam', 'Şimdilik geç']) {
       await t.tap(find.text(d));
       await bekle(t);
     }

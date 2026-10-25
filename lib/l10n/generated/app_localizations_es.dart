@@ -79,9 +79,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get yasBuyuk => '11–15';
 
   @override
-  String get paraSoru => '¿Qué dinero usas?';
-
-  @override
   String get dunyaSoru => '¿Dónde ponemos el campamento?';
 
   @override
@@ -715,4 +712,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get hedefFiyatNot =>
       'Este número solo se ve aquí; luego, en pantalla, el objeto se llena.';
+
+  @override
+  String get karsilamaParaNot =>
+      'La moneda no se puede cambiar después de dar dinero por primera vez a un personaje.';
 }

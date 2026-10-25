@@ -1,3 +1,5 @@
 Bu sürümde denenecekler:
-• Daha sakin kamp ekranı: kamp ekranında artık yalnız iki sayı var, üstte toplam ve fark. Karakterlerin altındaki artı/eksi tutarlar ve alttaki listedeki miktarlar kalktı. Bir karaktere dokununca o bilgiler karakterin kendi ekranında görünmeli.
-• Daha açık ilk adım: uygulamayı silip yeniden kur ya da Anne baba köşesinden verileri sil. Karşılama ekranı "Gerçek kumbarana para koyunca burada bir karaktere ver" demeli; boş kampta da aynı ipucu görünmeli.
+• Hedefte "1.500" artık bin beş yüz: bir karaktere dokun, Hedef'te bir eşya seç ve fiyata "1.500" yaz. Alanın altında "1.500 ₺" görünmeli. Hedefi koyup 250 ₺ ver: hedef dolmaya başlamalı, hemen "Doldu!" dememeli.
+• Daha kısa karşılama: verileri silip baştan başla. "Paran hangisi?" adımı artık yok. Para birimi son adımda (Anne baba köşesi) tek satır olarak duruyor; "Değiştir"e dokununca seçilebilmeli.
+• Dil ve yaş artık Anne baba köşesinde: Ayarlar'da dil ve yaş seçimi görünmemeli, Anne baba köşesinde para biriminin altında olmalı.
+• Taze fiyat: uygulamayı arka plana al, bir saatten fazla sonra geri aç. Fiyat kendiliğinden yenilenmeli; aşağı çekmen gerekmemeli.

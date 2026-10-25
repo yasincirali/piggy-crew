@@ -22,7 +22,6 @@
   "yasSoru": "Wie alt bist du?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "Welches Geld benutzt du?",
   "dunyaSoru": "Wo sollen wir unser Lager aufschlagen?",
   "dunyaAlt": "Du kannst es jederzeit ändern.",
   "devam": "Weiter",
@@ -192,5 +191,6 @@
   "hedefKademe": "{kademe, select, yeni{Füllt sich ab dem ersten Füttern} basladi{Füllt sich} yarim{Halb voll} neredeyse{Fast voll} hazir{Voll!} other{Füllt sich}}",
   "hedefSayfaBaslik": "Wofür soll {karakter} sparen?",
   "hedefFiyat": "Ungefähr wie viel?",
-  "hedefFiyatNot": "Diese Zahl siehst du nur hier; danach füllt sich der Gegenstand."
+  "hedefFiyatNot": "Diese Zahl siehst du nur hier; danach füllt sich der Gegenstand.",
+  "karsilamaParaNot": "Die Währung lässt sich nicht mehr ändern, sobald einer Figur zum ersten Mal Geld gegeben wurde."
 }
