@@ -711,5 +711,5 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get karsilamaParaNot =>
-      'The currency can’t be changed after the first money is given to a character.';
+      'The currency can\'t be changed after the first money is given to a character.';
 }
