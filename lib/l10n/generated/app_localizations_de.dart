@@ -79,9 +79,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get yasBuyuk => '11–15';
 
   @override
-  String get paraSoru => 'Welches Geld benutzt du?';
-
-  @override
   String get dunyaSoru => 'Wo sollen wir unser Lager aufschlagen?';
 
   @override
@@ -718,4 +715,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get hedefFiyatNot =>
       'Diese Zahl siehst du nur hier; danach füllt sich der Gegenstand.';
+
+  @override
+  String get karsilamaParaNot =>
+      'Die Währung lässt sich nicht mehr ändern, sobald einer Figur zum ersten Mal Geld gegeben wurde.';
 }

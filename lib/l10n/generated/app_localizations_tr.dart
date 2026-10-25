@@ -79,9 +79,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get yasBuyuk => '11–15';
 
   @override
-  String get paraSoru => 'Paran hangisi?';
-
-  @override
   String get dunyaSoru => 'Kampını nereye kuralım?';
 
   @override
@@ -718,4 +715,8 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get hedefFiyatNot =>
       'Bu sayı yalnız burada görünür; sonra ekranda eşya dolar.';
+
+  @override
+  String get karsilamaParaNot =>
+      'Para birimi, karakterlere ilk kez para verildikten sonra değişmez.';
 }

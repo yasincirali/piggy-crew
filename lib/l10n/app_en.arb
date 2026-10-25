@@ -22,7 +22,6 @@
   "yasSoru": "How old are you?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "Which money do you use?",
   "dunyaSoru": "Where should we set up camp?",
   "dunyaAlt": "You can change it any time.",
   "devam": "Continue",
@@ -369,5 +368,6 @@
   "hedefKademe": "{kademe, select, yeni{Starts filling at the first feeding} basladi{Filling up} yarim{Half full} neredeyse{Almost full} hazir{Full!} other{Filling up}}",
   "hedefSayfaBaslik": "What should {karakter} save for?",
   "hedefFiyat": "About how much?",
-  "hedefFiyatNot": "This number only shows here; after that, the item fills up on screen."
+  "hedefFiyatNot": "This number only shows here; after that, the item fills up on screen.",
+  "karsilamaParaNot": "The currency can't be changed after the first money is given to a character."
 }

@@ -22,7 +22,10 @@ final _surumProvider = FutureProvider<String>((_) async {
   return '${p.version} (${p.buildNumber})';
 });
 
-/// Ayarlar: kamp yeri, yaş modu, para birimi, dil; veli köşesi PIN ardında.
+/// Ayarlar: çocuk tarafında yalnız zararsız seçimler (kamp yeri, ses,
+/// titreşim, görünüm). Dil, yaş modu ve para birimi veli köşesinde, PIN
+/// ardında (Ar-Ge 25 Eki): çocuk bir dokunuşla uygulamayı okuyamadığı bir
+/// dile çevirip geri dönemiyordu; "Büyük" yaş modu yüzde gösterir, seçimi veliye ait.
 class AyarlarEkrani extends ConsumerWidget {
   const AyarlarEkrani({super.key});
 
@@ -53,17 +56,6 @@ class AyarlarEkrani extends ConsumerWidget {
                 ref.read(dokunsalProvider).cal(Dokunus.secim);
                 n.guncelle((c) => c.copyWith(dunya: d));
               },
-            ),
-        ]),
-        const SizedBox(height: Bosluk.xl),
-        BolumBasligi(l.ayarlarYas),
-        const SizedBox(height: Bosluk.s),
-        Wrap(spacing: Bosluk.s, children: [
-          for (final y in YasModu.values)
-            SecimCipi(
-              metin: y == YasModu.kucuk ? l.yasKucuk : l.yasBuyuk,
-              secili: cocuk.yas == y,
-              onTap: () => n.guncelle((c) => c.copyWith(yas: y)),
             ),
         ]),
         const SizedBox(height: Bosluk.xl),
@@ -115,20 +107,6 @@ class AyarlarEkrani extends ConsumerWidget {
             ),
         ]),
         const SizedBox(height: Bosluk.xl),
-        BolumBasligi(l.ayarlarDil),
-        const SizedBox(height: Bosluk.s),
-        Wrap(spacing: Bosluk.s, children: [
-          SecimCipi(metin: l.dilCihaz, secili: cocuk.dil == null, onTap: () => n.kaydet(_dilsiz(cocuk))),
-          // Liste desteklenen dillerden üretilir: yeni .arb eklenince seçenek
-          // kendiliğinden gelir.
-          for (final d in AppLocalizations.supportedLocales)
-            SecimCipi(
-              metin: dilAdlari[d.languageCode] ?? d.languageCode,
-              secili: cocuk.dil == d.languageCode,
-              onTap: () => n.guncelle((c) => c.copyWith(dil: d.languageCode)),
-            ),
-        ]),
-        const SizedBox(height: Bosluk.xl),
         BolumBasligi(l.ayarlarPara),
         const SizedBox(height: Bosluk.s),
         Text(cocuk.para.kod, style: context.t.titleMedium),
@@ -163,9 +141,6 @@ class AyarlarEkrani extends ConsumerWidget {
     );
   }
 
-  Cocuk _dilsiz(Cocuk c) => Cocuk(
-        ad: c.ad, yas: c.yas, dunya: c.dunya, pinOzeti: c.pinOzeti, olusturma: c.olusturma, para: c.para, dil: null);
-
   Future<void> _veliKosesi(BuildContext context, WidgetRef ref) async {
     final cocuk = ref.read(cocukProvider)!;
     if (cocuk.veliKilidiVar) {
@@ -176,6 +151,9 @@ class AyarlarEkrani extends ConsumerWidget {
     await altSayfaGoster(context, const _VeliKosesi());
   }
 }
+
+Cocuk _dilsiz(Cocuk c) => Cocuk(
+    ad: c.ad, yas: c.yas, dunya: c.dunya, pinOzeti: c.pinOzeti, olusturma: c.olusturma, para: c.para, dil: null);
 
 /// PIN sorgusu: 4 hane, yanlışta titreme yok (çocuk görebilir), kısa mesaj.
 Future<bool?> pinSor(BuildContext context, String ozet) {
@@ -273,6 +251,35 @@ class _VeliKosesi extends ConsumerWidget {
               secili: cocuk.para == p,
               // Hareket varken birim değişmez: eski tutarlar başka birimde kalırdı.
               onTap: hareketler.isEmpty ? () => ref.read(cocukProvider.notifier).guncelle((c) => c.copyWith(para: p)) : () {},
+            ),
+        ]),
+        if (hareketler.isNotEmpty) ...[
+          const SizedBox(height: Bosluk.xs),
+          Text(l.karsilamaParaNot, style: context.t.bodySmall?.copyWith(color: r.sub)),
+        ],
+        const SizedBox(height: Bosluk.xl),
+        BolumBasligi(l.ayarlarYas),
+        const SizedBox(height: Bosluk.s),
+        Wrap(spacing: Bosluk.s, children: [
+          for (final y in YasModu.values)
+            SecimCipi(
+              metin: y == YasModu.kucuk ? l.yasKucuk : l.yasBuyuk,
+              secili: cocuk.yas == y,
+              onTap: () => ref.read(cocukProvider.notifier).guncelle((c) => c.copyWith(yas: y)),
+            ),
+        ]),
+        const SizedBox(height: Bosluk.xl),
+        BolumBasligi(l.ayarlarDil),
+        const SizedBox(height: Bosluk.s),
+        Wrap(spacing: Bosluk.s, children: [
+          SecimCipi(metin: l.dilCihaz, secili: cocuk.dil == null, onTap: () => ref.read(cocukProvider.notifier).kaydet(_dilsiz(cocuk))),
+          // Liste desteklenen dillerden üretilir: yeni .arb eklenince seçenek
+          // kendiliğinden gelir.
+          for (final d in AppLocalizations.supportedLocales)
+            SecimCipi(
+              metin: dilAdlari[d.languageCode] ?? d.languageCode,
+              secili: cocuk.dil == d.languageCode,
+              onTap: () => ref.read(cocukProvider.notifier).guncelle((c) => c.copyWith(dil: d.languageCode)),
             ),
         ]),
         const SizedBox(height: Bosluk.xl),

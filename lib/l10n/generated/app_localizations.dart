@@ -238,12 +238,6 @@ abstract class AppLocalizations {
   /// **'11–15'**
   String get yasBuyuk;
 
-  /// No description provided for @paraSoru.
-  ///
-  /// In tr, this message translates to:
-  /// **'Paran hangisi?'**
-  String get paraSoru;
-
   /// No description provided for @dunyaSoru.
   ///
   /// In tr, this message translates to:
@@ -1263,6 +1257,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bu sayı yalnız burada görünür; sonra ekranda eşya dolar.'**
   String get hedefFiyatNot;
+
+  /// Karşılamanın veli adımında para birimi çiplerinin altındaki not: birim ilk hareketten sonra kilitlenir.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para birimi, karakterlere ilk kez para verildikten sonra değişmez.'**
+  String get karsilamaParaNot;
 }
 
 class _AppLocalizationsDelegate

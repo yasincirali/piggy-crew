@@ -49,17 +49,26 @@ String fmtMiktar(double v, String birim, ParaBirimi p) {
   return '$s $birim';
 }
 
-/// Çocuğun yazdığı metni sayıya çevirir: "1.250,50", "1,250.50" ve "1250.50".
-/// Hangi işaretin ondalık olduğuna SON ayırıcı karar verir — yerel bağımsız.
+/// Çocuğun yazdığı metni sayıya çevirir: "1.250,50", "1,250.50", "1250.50", "1.500".
+/// İki ayırıcı da varsa SON ayırıcı ondalıktır. Tek tür ayırıcı varsa:
+/// birden çok kez geçiyorsa ya da tek kez geçip ardından tam üç hane geliyorsa
+/// binliktir ("1.500" = bin beş yüz, "1,500" = bin beş yüz); yoksa ondalıktır
+/// ("12,5", "12.50"). Yerel bağımsız. Eskiden virgülsüz nokta hep ondalık
+/// sayılıyordu: Türkiye'de hedefe "1.500" yazan aile 1,5 ₺'lik hedef kuruyordu
+/// ve hedef ilk beslemede kalıcı olarak "ulaşıldı" oluyordu (Ar-Ge 25 Eki).
+/// Bedeli: "0,500" gibi üç haneli ondalık; başı 0 olan grup ondalık kalır.
 double? parseSayi(String s) {
   var t = s.trim().replaceAll(RegExp(r'[^0-9.,]'), '');
   if (t.isEmpty) return null;
-  final sonVirgul = t.lastIndexOf(',');
-  final sonNokta = t.lastIndexOf('.');
-  if (sonVirgul > sonNokta) {
-    t = t.replaceAll('.', '').replaceAll(',', '.');
-  } else {
-    t = t.replaceAll(',', '');
+  final virgul = t.contains(','), nokta = t.contains('.');
+  if (virgul && nokta) {
+    t = t.lastIndexOf(',') > t.lastIndexOf('.') ? t.replaceAll('.', '').replaceAll(',', '.') : t.replaceAll(',', '');
+  } else if (virgul || nokta) {
+    final ayirici = virgul ? ',' : '.';
+    final parcalar = t.split(ayirici);
+    final binlik = parcalar.length > 2 ||
+        (parcalar[1].length == 3 && parcalar[0].isNotEmpty && int.tryParse(parcalar[0]) != 0);
+    t = binlik ? parcalar.join() : parcalar.join('.');
   }
   final v = double.tryParse(t);
   return (v == null || !v.isFinite || v <= 0) ? null : v;

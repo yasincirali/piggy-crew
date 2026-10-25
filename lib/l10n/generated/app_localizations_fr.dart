@@ -80,9 +80,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get yasBuyuk => '11–15';
 
   @override
-  String get paraSoru => 'Quelle monnaie utilises-tu ?';
-
-  @override
   String get dunyaSoru => 'Où installer le camp ?';
 
   @override
@@ -718,4 +715,8 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get hedefFiyatNot =>
       'Ce nombre ne se voit qu’ici ; ensuite, l’objet se remplit à l’écran.';
+
+  @override
+  String get karsilamaParaNot =>
+      'La monnaie ne peut plus être changée une fois qu’on a donné de l’argent à un personnage.';
 }

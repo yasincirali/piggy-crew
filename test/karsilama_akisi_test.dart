@@ -18,7 +18,7 @@ Future<void> bekle(WidgetTester t) async {
   }
 }
 
-/// Duman testi: karşılama → ad → para → kamp yeri → PIN'i geç → kamp ekranı.
+/// Duman testi: karşılama → ad → kamp yeri → PIN'i geç (para birimi orada) → kamp ekranı.
 /// Ağ sahte: truncgil gövdesi sabit; gerçek istek çıkmaz.
 void main() {
   testWidgets('karşılama akışı kamp ekranına ulaşır ve besleme çalışır', (t) async {
@@ -46,8 +46,6 @@ void main() {
     await t.enterText(find.byType(TextField), 'Deniz');
     await bekle(t);
     await t.tap(find.text('Devam'));
-    await bekle(t);
-    await t.tap(find.text('Devam')); // para birimi (varsayılan)
     await bekle(t);
     await t.tap(find.text('Devam')); // kamp yeri (varsayılan)
     await bekle(t);

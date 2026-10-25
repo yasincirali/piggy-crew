@@ -183,7 +183,15 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
                     key: ValueKey(tutar),
                     style: context.t.titleMedium?.copyWith(color: r.acc),
                   )
-                : const SizedBox(height: 24),
+                // Nakitte miktar satırı yok; büyük tutar yine biçimli yankılanır
+                // ki fazladan sıfır ya da "1.500" yanlış okunmuşsa görünsün.
+                : (tutar != null && tutar >= 1000)
+                    ? Text(
+                        fmtPara(tutar, cocuk.para),
+                        key: ValueKey(tutar),
+                        style: context.t.titleMedium?.copyWith(color: r.acc),
+                      )
+                    : const SizedBox(height: 24),
           ),
           const SizedBox(height: Bosluk.l),
           AnaDugme(

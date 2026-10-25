@@ -22,7 +22,6 @@
   "yasSoru": "¿Cuántos años tienes?",
   "yasKucuk": "7–10",
   "yasBuyuk": "11–15",
-  "paraSoru": "¿Qué dinero usas?",
   "dunyaSoru": "¿Dónde ponemos el campamento?",
   "dunyaAlt": "Puedes cambiarlo cuando quieras.",
   "devam": "Seguir",
@@ -192,5 +191,6 @@
   "hedefKademe": "{kademe, select, yeni{Se empieza a llenar al dar de comer} basladi{Se está llenando} yarim{Va por la mitad} neredeyse{Falta poquito} hazir{¡Completo!} other{Se está llenando}}",
   "hedefSayfaBaslik": "¿Para qué ahorra {karakter}?",
   "hedefFiyat": "¿Más o menos cuánto?",
-  "hedefFiyatNot": "Este número solo se ve aquí; luego, en pantalla, el objeto se llena."
+  "hedefFiyatNot": "Este número solo se ve aquí; luego, en pantalla, el objeto se llena.",
+  "karsilamaParaNot": "La moneda no se puede cambiar después de dar dinero por primera vez a un personaje."
 }

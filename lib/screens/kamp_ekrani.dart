@@ -91,6 +91,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState s) {
     if (s == AppLifecycleState.resumed) {
+      ref.read(fiyatProvider.notifier).tazeleGerekirse();
       _donusDenetle();
       setState(_donusOynat);
     } else if (s == AppLifecycleState.paused) {
