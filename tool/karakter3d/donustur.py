@@ -13,7 +13,10 @@ IKI_D = {'altin': (10.75, 11.0, 99.25, 98.0), 'dolar': (20.0, 1.0, 90.0, 101.0),
          'euro': (16.5, 23.0, 93.5, 106.5), 'nakit': (15.0, 23.0, 110.0, 109.0)}
 ATLAS = ['mutlu', 'duz', 'bulutlu', 'mutlu_sol', 'mutlu_sag', 'mutlu_yukari', 'o', 'o_sol', 'o_sag', 'o_yukari',
          'sevinc', 'kirp', 'esne']
-SAHNELER = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans']
+SAHNELER = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans', 'evre']
+# Büyüme sahnesi (evre, 2026-10-26): bitki katmanı geçişin HEDEF evresiyle
+# adlanır (evre_filiz = minik>filiz); gövde katmanı ortak.
+TABLO = f'{REPO}/lib/widgets/karakter_3d_yerlesim.g.dart'
 
 
 def ac(f):
@@ -30,14 +33,43 @@ def kaydet(kareler, yol):
     kutu = kutu or (0, 0, 1, 1)
     kutu = (max(kutu[0] - 2, 0), max(kutu[1] - 2, 0), min(kutu[2] + 2, 360), min(kutu[3] + 2, 480))
     kk = [k.crop(kutu) for k in kareler]
+    # Aynı iki kare (ör. büyümenin başındaki boş bitki kareleri) WebP
+    # kodlayıcısında tek kareye birleşir ve süresi uzar; uygulama kareyi
+    # sırayla seçtiği için zamanlama kayar. Köşedeki görünmez pikselin
+    # alfası tek/çift karede farklı: her kare ayrı kalır.
+    for i, k in enumerate(kk):
+        p = k.getpixel((0, 0))
+        if p[3] <= 3:
+            k.putpixel((0, 0), (0, 0, 0, i % 2 + 1))
     kk[0].save(yol, save_all=True, append_images=kk[1:], duration=33, loop=0, quality=82, method=6,
                lossless=False, minimize_size=False, allow_mixed=False)
     return kutu
 
 
+# Kısmi üretim: KARE'de karesi olmayan atlas/sahne için tablodaki eski satır
+# korunur (ör. yalnız evre sahnesi yeniden render edildiğinde).
+eski = {}
+if os.path.exists(TABLO):
+    for satir in open(TABLO, encoding='utf-8'):
+        if satir.startswith(('  VarlikTuru.', "  '")):
+            eski[satir.split(':')[0]] = satir.rstrip('\n')
 satirlar = []
 for k, tur in TUR.items():
     os.makedirs(f'{OUT}/{tur}', exist_ok=True)
+    if not os.path.exists(f'{B}/uyg/{k}/atlas/minik/mutlu.png'):
+        satirlar.append(eski[f'  VarlikTuru.{tur}'])
+        for e in ['minik', 'filiz', 'cicek', 'yildiz']:
+            satirlar.append(eski[f"  '{tur}/atlas_{e}'"])
+        for s in SAHNELER:
+            for kat in ['beden', 'filiz', 'cicek', 'yildiz']:
+                fs = sorted(glob.glob(f'{B}/uyg/{k}/{s}/{kat}/*.png'))
+                if fs:
+                    kutu = kaydet([ac(f) for f in fs], f'{OUT}/{tur}/{s}_{kat}.webp')
+                    satirlar.append(f"  '{tur}/{s}_{kat}': {kutu},")
+                else:
+                    satirlar.append(eski[f"  '{tur}/{s}_{kat}'"])
+        print('tamam (kısmi)', k)
+        continue
     # Kalibrasyon: minik "mutlu" (bitkisiz) gövdesi 2D gövdesine oturur.
     ref = ac(f'{B}/uyg/{k}/atlas/minik/mutlu.png').getchannel('A').point(lambda a: 255 if a > 20 else 0).getbbox()
     x0, y0, x1, y1 = IKI_D[tur]
@@ -59,7 +91,7 @@ for k, tur in TUR.items():
 
 yerlesim = [s for s in satirlar if s.startswith('  VarlikTuru')]
 kirpim = [s.replace('(', '(').replace(')', ')') for s in satirlar if s.startswith("  '")]
-with open(f'{REPO}/lib/widgets/karakter_3d_yerlesim.g.dart', 'w') as f:
+with open(TABLO, 'w') as f:
     f.write("// ÜRETİLDİ: tool/karakter3d/donustur.py. Elle düzenleme.\n"
             "part of 'karakter.dart';\n\n"
             "/// 3D kaynak pikselinden (360×480 kadraj) 110'luk kutuya: (x kayması, y kayması, ölçek).\n"

@@ -47,7 +47,7 @@ class TitresimAcikNotifier extends Notifier<bool> {
 
 final titresimAcikProvider = NotifierProvider<TitresimAcikNotifier, bool>(TitresimAcikNotifier.new);
 
-/// Karakter görünümü: 3D (deneme) açık mı (veli köşesi).
+/// Karakter görünümü: 3D açık mı (Ayarlar; varsayılan 3D).
 class Karakter3dNotifier extends Notifier<bool> {
   @override
   bool build() => ref.read(depoProvider).karakter3dOku();

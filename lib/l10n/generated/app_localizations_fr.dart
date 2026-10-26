@@ -324,7 +324,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gorunumKlasik => 'Classique';
 
   @override
-  String get gorunum3d => '3D (essai)';
+  String get gorunum3d => '3D';
 
   @override
   String get ayarlarDil => 'Langue';

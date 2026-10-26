@@ -82,8 +82,9 @@ class Depo {
   bool titresimAcikOku() => _sp.getBool(_titresimAcik) ?? true;
   Future<void> titresimAcikYaz(bool v) => _sp.setBool(_titresimAcik, v);
 
-  /// 3D karakterler (deneme) varsayılan kapalı: kapalıyken 2D birebir aynı.
-  bool karakter3dOku() => _sp.getBool(_karakter3d) ?? false;
+  /// 3D karakterler varsayılan açık (yasin 2026-10-26, önceden render 3D).
+  /// Anahtar yoksa 3D; "Klasik" seçmiş olan (false yazılı) 2D'de kalır.
+  bool karakter3dOku() => _sp.getBool(_karakter3d) ?? true;
   Future<void> karakter3dYaz(bool v) => _sp.setBool(_karakter3d, v);
 
   /// Açılış sahnesinin en son tam oynadığı gün (yyyy-aa-gg, yerel saat).

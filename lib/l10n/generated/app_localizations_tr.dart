@@ -329,7 +329,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gorunumKlasik => 'Klasik';
 
   @override
-  String get gorunum3d => '3D (deneme)';
+  String get gorunum3d => '3D';
 
   @override
   String get ayarlarDil => 'Dil';

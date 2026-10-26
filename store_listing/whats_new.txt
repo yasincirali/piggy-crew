@@ -3,3 +3,5 @@ Bu sürümde denenecekler:
 • Öğrettiklerin rafı: Kamp'a dön ve o karaktere dokun (ilk ders için Sincap). Ekranda "Sincap senden öğrendi" kartı ve dersin başlığı görünmeli. Başlığa dokununca ders metni alttan açılmalı. Henüz ders anlatılmamış bir karakterde bu kart hiç görünmemeli.
 • Eski dersler kaybolmasın: güncellemeden önce birkaç ders geçtiysen, o derslerin karakterlerinin ekranında da raf dolu gelmeli.
 • Anne baba köşesi: "Tüm veriyi sil"in hemen üstünde verilerin yalnız telefonda ve telefonun kendi yedeğinde durduğunu söyleyen kısa bir not olmalı. Ayarlar > Gizlilik'te politika "Sürüm 2" yazmalı.
+• Karakterler artık 3D: yeni kurulumda ve görünümü hiç değiştirmemiş olanda Kumbara Takımı 3D gelmeli. Ayarlar > Karakter görünümü'nde "Klasik" seçilince eski çizim gelmeli, uygulamayı kapatıp açınca da öyle kalmalı.
+• 3D büyüme: bir karakter yeni bir evreye geçince (birkaç farklı günde besledikten sonra) başındaki filiz kare kare büyümeli; eskisi gibi bir anda belirmemeli.

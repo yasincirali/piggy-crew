@@ -640,10 +640,10 @@ abstract class AppLocalizations {
   /// **'Klasik'**
   String get gorunumKlasik;
 
-  /// Karakter görünümü: 3D, deneme aşamasında
+  /// Karakter görünümü: 3D (önceden render; varsayılan)
   ///
   /// In tr, this message translates to:
-  /// **'3D (deneme)'**
+  /// **'3D'**
   String get gorunum3d;
 
   /// No description provided for @ayarlarDil.

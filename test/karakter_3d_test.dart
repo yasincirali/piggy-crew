@@ -16,13 +16,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'karsilama_akisi_test.dart' show bekle;
 
-/// 3D karakterler (deneme, 2026-10-17):
+/// 3D karakterler (2026-10-17; varsayılan 2026-10-26):
 /// - her karakter × evre × sahne için kare dosyası var ve yerleşim tablosunda;
 /// - yüz değerleri atlas karışımına doğru düşer (kırpma, esneme, sevinç);
 /// - kapalıyken 2D çizim birebir, açıkken 3D katman çizilir;
-/// - veli köşesindeki seçim kalıcı, varsayılan kapalı.
+/// - Ayarlar'daki seçim kalıcı; varsayılan 3D, "Klasik" seçen 2D'de kalır;
+/// - büyüme (evre) pişmiş sahnesi: bitki geçişin hedef evresiyle adlanır.
 void main() {
-  const sahneler = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans'];
+  const sahneler = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans', 'evre'];
   final tablo = File('lib/widgets/karakter_3d_yerlesim.g.dart').readAsStringSync();
 
   test('her kare dosyası var ve yerleşim tablosunda', () {
@@ -77,7 +78,14 @@ void main() {
     });
   }
 
-  testWidgets('Ayarlar: karakter görünümü 3D seçilince kalıcı, varsayılan klasik', (t) async {
+  test('varsayılan 3D; daha önce Klasik seçen 2D\'de kalır', () async {
+    SharedPreferences.setMockInitialValues({});
+    expect(Depo(await SharedPreferences.getInstance()).karakter3dOku(), isTrue);
+    SharedPreferences.setMockInitialValues({'karakter_3d_v1': false});
+    expect(Depo(await SharedPreferences.getInstance()).karakter3dOku(), isFalse);
+  });
+
+  testWidgets('Ayarlar: Klasik seçilince kalıcı, varsayılan 3D', (t) async {
     t.platformDispatcher.localeTestValue = const Locale('tr', 'TR');
     t.platformDispatcher.localesTestValue = const [Locale('tr', 'TR')];
     t.view.physicalSize = const Size(390 * 3, 844 * 3);
@@ -86,7 +94,7 @@ void main() {
     addTearDown(t.view.reset);
     SharedPreferences.setMockInitialValues({});
     final sp = await SharedPreferences.getInstance();
-    expect(Depo(sp).karakter3dOku(), isFalse);
+    expect(Depo(sp).karakter3dOku(), isTrue);
     final sahteHttp = MockClient((_) async => http.Response('{}', 200, headers: {'content-type': 'application/json; charset=utf-8'}));
     await t.pumpWidget(ProviderScope(
       overrides: [
@@ -106,11 +114,11 @@ void main() {
     }
     await t.tap(find.byIcon(Icons.tune_rounded).first);
     await bekle(t);
-    final secim = find.text('3D (deneme)');
+    final secim = find.text('Klasik');
     await t.ensureVisible(secim);
     await bekle(t);
     await t.tap(secim);
     await bekle(t);
-    expect(sp.getBool('karakter_3d_v1'), isTrue);
+    expect(sp.getBool('karakter_3d_v1'), isFalse);
   });
 }

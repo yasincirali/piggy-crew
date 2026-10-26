@@ -92,11 +92,11 @@ class AyarlarEkrani extends ConsumerWidget {
             ),
         ]),
         const SizedBox(height: Bosluk.xl),
-        // Karakter görünümü: 3D deneme; varsayılan klasik (2D).
+        // Karakter görünümü: varsayılan 3D (2026-10-26); Klasik = 2D çizim.
         BolumBasligi(l.ayarlarGorunum),
         const SizedBox(height: Bosluk.s),
         Wrap(spacing: Bosluk.s, runSpacing: Bosluk.s, children: [
-          for (final v in const [false, true])
+          for (final v in const [true, false])
             SecimCipi(
               metin: v ? l.gorunum3d : l.gorunumKlasik,
               secili: ucBoyut == v,

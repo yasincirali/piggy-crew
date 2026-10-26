@@ -252,9 +252,9 @@
   "@gorunumKlasik": {
     "description": "Karakter görünümü: bugünkü çizim (2D)"
   },
-  "gorunum3d": "3D (deneme)",
+  "gorunum3d": "3D",
   "@gorunum3d": {
-    "description": "Karakter görünümü: 3D, deneme aşamasında"
+    "description": "Karakter görünümü: 3D (önceden render; varsayılan)"
   },
   "ayarlarDil": "Dil",
   "ayarlarVeli": "Anne baba köşesi",
