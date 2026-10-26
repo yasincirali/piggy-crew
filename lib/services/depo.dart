@@ -24,6 +24,7 @@ class Depo {
   static const _hareketler = 'hareketler_v1';
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
+  static const _ogretilen = 'ogretilen_dersler_v1';
   static const _sesAcik = 'ses_acik_v1';
   static const _titresimAcik = 'titresim_acik_v1';
   static const _karakter3d = 'karakter_3d_v1';
@@ -66,6 +67,11 @@ class Depo {
 
   int dersIlerlemeOku() => _sp.getInt(_dersIlerleme) ?? 0;
   Future<void> dersIlerlemeYaz(int n) => _sp.setInt(_dersIlerleme, n);
+
+  /// Çocuğun karakterlere öğrettiği derslerin id'leri. null: hiç yazılmadı
+  /// (bu özellikten önceki kurulum; ilk okuyan ders ilerlemesinden tohumlar).
+  Set<String>? ogretilenOku() => _sp.getStringList(_ogretilen)?.toSet();
+  Future<void> ogretilenYaz(Set<String> s) => _sp.setStringList(_ogretilen, s.toList());
 
   /// Sesler varsayılan açık. Cihaz tercihidir, kişisel veri değil: "veriyi
   /// sil" dokunmaz.
@@ -171,6 +177,7 @@ class Depo {
     await _sp.remove(_hareketler);
     await _sp.remove(_cikartmalar);
     await _sp.remove(_dersIlerleme);
+    await _sp.remove(_ogretilen);
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
     await _sp.remove(_odun);

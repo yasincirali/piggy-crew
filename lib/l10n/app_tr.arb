@@ -216,16 +216,6 @@
       }
     }
   },
-  "ogrenSoru": "Soru",
-  "ogrenDogru": "Doğru! {karakter} seninle gurur duyuyor.",
-  "@ogrenDogru": {
-    "placeholders": {
-      "karakter": {
-        "type": "String"
-      }
-    }
-  },
-  "ogrenYanlis": "Bir daha düşün. İpucu metinde gizli.",
   "ogrenSonraki": "Sonraki ders",
   "ogrenBitti": "Bütün dersleri bitirdin. Yenileri yolda.",
   "ogrenBastan": "Baştan oku",
@@ -284,6 +274,10 @@
   "veliSil": "Tüm veriyi sil",
   "veliSilOnay": "Profil, beslemeler ve çıkartmalar silinir. Geri alınamaz.",
   "veliSilOnayDugme": "Evet, sil",
+  "veliYedekNot": "Veriler yalnız bu telefonda ve açıksa telefonun kendi yedeğinde (iCloud ya da Google) durur. Bu yedeği biz göremeyiz.",
+  "@veliYedekNot": {
+    "description": "Anne baba köşesinde Tüm veriyi sil düğmesinin üstündeki bilgi satırı (gizlilik politikası madde 1 ile aynı bilgi)."
+  },
   "veliPinDegistir": "PIN'i değiştir",
   "veliOzet": "{ad} toplam {n} kez besledi. Kamp ateşi: {toplam}.",
   "@veliOzet": {
@@ -602,5 +596,41 @@
   "karsilamaParaNot": "Para birimi, karakterlere ilk kez para verildikten sonra değişmez.",
   "@karsilamaParaNot": {
     "description": "Karşılamanın veli adımında para birimi çiplerinin altındaki not: birim ilk hareketten sonra kilitlenir."
+  },
+  "ogrenKarakterSoruyor": "{karakter} buna takıldı. Ona anlatır mısın?",
+  "ogrenOgretti": "{karakter}: \"Şimdi anladım, teşekkürler!\"",
+  "ogrenBirlikte": "{karakter}: \"Hmm, ben de karıştırdım. Metne birlikte bir daha bakalım mı?\"",
+  "detayOgrettiklerin": "{karakter} senden öğrendi",
+  "@ogrenKarakterSoruyor": {
+    "description": "Öğren: sorunun üstünde, soruyu karakter sorar (çocuk ona öğretir).",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "@ogrenOgretti": {
+    "description": "Öğren: doğru cevapta karakter öğrenir; övgü çocuğa değil.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "@ogrenBirlikte": {
+    "description": "Öğren: yanlış cevapta karakter de karıştırdığını söyler; suçlama yok.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "@detayOgrettiklerin": {
+    "description": "Karakter ekranı: çocuğun o karaktere öğrettiği derslerin başlıkları (sayı yok).",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
   }
 }

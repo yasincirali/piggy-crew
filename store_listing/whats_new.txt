@@ -1,5 +1,5 @@
 Bu sürümde denenecekler:
-• Hedefte "1.500" artık bin beş yüz: bir karaktere dokun, Hedef'te bir eşya seç ve fiyata "1.500" yaz. Alanın altında "1.500 ₺" görünmeli. Hedefi koyup 250 ₺ ver: hedef dolmaya başlamalı, hemen "Doldu!" dememeli.
-• Daha kısa karşılama: verileri silip baştan başla. "Paran hangisi?" adımı artık yok. Para birimi son adımda (Anne baba köşesi) tek satır olarak duruyor; "Değiştir"e dokununca seçilebilmeli.
-• Dil ve yaş artık Anne baba köşesinde: Ayarlar'da dil ve yaş seçimi görünmemeli, Anne baba köşesinde para biriminin altında olmalı.
-• Taze fiyat: uygulamayı arka plana al, bir saatten fazla sonra geri aç. Fiyat kendiliğinden yenilenmeli; aşağı çekmen gerekmemeli.
+• Karaktere öğret: Öğren sekmesini aç. Sorunun üstünde artık "Sincap buna takıldı. Ona anlatır mısın?" gibi bir cümle olmalı. Önce yanlış bir cevap seç: karakter "ben de karıştırdım, birlikte bakalım" demeli. Sonra doğru cevabı seç: karakter "Şimdi anladım, teşekkürler!" demeli.
+• Öğrettiklerin rafı: Kamp'a dön ve o karaktere dokun (ilk ders için Sincap). Ekranda "Sincap senden öğrendi" kartı ve dersin başlığı görünmeli. Başlığa dokununca ders metni alttan açılmalı. Henüz ders anlatılmamış bir karakterde bu kart hiç görünmemeli.
+• Eski dersler kaybolmasın: güncellemeden önce birkaç ders geçtiysen, o derslerin karakterlerinin ekranında da raf dolu gelmeli.
+• Anne baba köşesi: "Tüm veriyi sil"in hemen üstünde verilerin yalnız telefonda ve telefonun kendi yedeğinde durduğunu söyleyen kısa bir not olmalı. Ayarlar > Gizlilik'te politika "Sürüm 2" yazmalı.

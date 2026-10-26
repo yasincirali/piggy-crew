@@ -212,16 +212,6 @@
       }
     }
   },
-  "ogrenSoru": "Question",
-  "ogrenDogru": "Correct! {karakter} is proud of you.",
-  "@ogrenDogru": {
-    "placeholders": {
-      "karakter": {
-        "type": "String"
-      }
-    }
-  },
-  "ogrenYanlis": "Think again. The hint is in the text.",
   "ogrenSonraki": "Next lesson",
   "ogrenBitti": "You finished every lesson. New ones are coming.",
   "ogrenBastan": "Read again",
@@ -268,6 +258,7 @@
   "veliSil": "Delete all data",
   "veliSilOnay": "Profile, feedings and stickers will be deleted. This can't be undone.",
   "veliSilOnayDugme": "Yes, delete",
+  "veliYedekNot": "Data stays only on this phone and, if turned on, in the phone's own backup (iCloud or Google). We can't see that backup.",
   "veliPinDegistir": "Change PIN",
   "veliOzet": "{ad} fed {n} times in total. Campfire: {toplam}.",
   "@veliOzet": {
@@ -369,5 +360,9 @@
   "hedefSayfaBaslik": "What should {karakter} save for?",
   "hedefFiyat": "About how much?",
   "hedefFiyatNot": "This number only shows here; after that, the item fills up on screen.",
-  "karsilamaParaNot": "The currency can't be changed after the first money is given to a character."
+  "karsilamaParaNot": "The currency can't be changed after the first money is given to a character.",
+  "ogrenKarakterSoruyor": "{karakter} is stuck on this. Can you explain it?",
+  "ogrenOgretti": "{karakter}: \"Now I get it, thanks!\"",
+  "ogrenBirlikte": "{karakter}: \"Hmm, I mixed it up too. Shall we read it again together?\"",
+  "detayOgrettiklerin": "{karakter} learned from you"
 }

@@ -72,9 +72,6 @@
   "sil": "Supprimer",
   "ogrenBaslik": "L'idée du jour",
   "ogrenSayac": "{n} / {toplam}",
-  "ogrenSoru": "Question",
-  "ogrenDogru": "Bravo ! {karakter} te félicite.",
-  "ogrenYanlis": "Réfléchis encore. L'indice est dans le texte.",
   "ogrenSonraki": "Leçon suivante",
   "ogrenBitti": "Tu as fini toutes les leçons. De nouvelles arrivent.",
   "ogrenBastan": "Relire",
@@ -104,6 +101,7 @@
   "veliSil": "Supprimer toutes les données",
   "veliSilOnay": "Le profil, les repas et les autocollants seront supprimés. Impossible de revenir en arrière.",
   "veliSilOnayDugme": "Oui, supprimer",
+  "veliYedekNot": "Les données restent uniquement sur ce téléphone et, si elle est activée, dans sa propre sauvegarde (iCloud ou Google). Nous ne voyons pas cette sauvegarde.",
   "veliPinDegistir": "Changer le code PIN",
   "veliOzet": "{ad} a nourri l'équipe {n} fois au total. Feu de camp : {toplam}.",
   "veliNot": "Les écrans des enfants n'ont ni notification, ni publicité, ni achat. Les données restent uniquement sur cet appareil.",
@@ -192,5 +190,9 @@
   "hedefSayfaBaslik": "Pour quoi {karakter} économise ?",
   "hedefFiyat": "Environ combien ?",
   "hedefFiyatNot": "Ce nombre ne se voit qu’ici ; ensuite, l’objet se remplit à l’écran.",
-  "karsilamaParaNot": "La monnaie ne peut plus être changée une fois qu’on a donné de l’argent à un personnage."
+  "karsilamaParaNot": "La monnaie ne peut plus être changée une fois qu’on a donné de l’argent à un personnage.",
+  "ogrenKarakterSoruyor": "{karakter} bloque là-dessus. Tu peux lui expliquer ?",
+  "ogrenOgretti": "{karakter} : \"Maintenant je comprends, merci !\"",
+  "ogrenBirlikte": "{karakter} : \"Hmm, je me suis trompé aussi. On relit ensemble ?\"",
+  "detayOgrettiklerin": "{karakter} a appris de toi"
 }

@@ -307,6 +307,10 @@ class _VeliKosesi extends ConsumerWidget {
             await altSayfaGoster(context, const _GeriBildirimSayfasi());
           },
         ),
+        const SizedBox(height: Bosluk.l),
+        // Veri nerede durur: gizlilik politikası madde 1 ile aynı bilgi, silme
+        // düğmesinin hemen üstünde (veli "her şey silindi mi?" diye sorar).
+        Text(l.veliYedekNot, style: context.t.bodyMedium?.copyWith(color: r.sub)),
         const SizedBox(height: Bosluk.s),
         Basilabilir(
           onTap: () async {

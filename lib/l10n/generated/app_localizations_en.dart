@@ -267,17 +267,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get ogrenSoru => 'Question';
-
-  @override
-  String ogrenDogru(String karakter) {
-    return 'Correct! $karakter is proud of you.';
-  }
-
-  @override
-  String get ogrenYanlis => 'Think again. The hint is in the text.';
-
-  @override
   String get ogrenSonraki => 'Next lesson';
 
   @override
@@ -369,6 +358,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get veliSilOnayDugme => 'Yes, delete';
+
+  @override
+  String get veliYedekNot =>
+      'Data stays only on this phone and, if turned on, in the phone\'s own backup (iCloud or Google). We can\'t see that backup.';
 
   @override
   String get veliPinDegistir => 'Change PIN';
@@ -712,4 +705,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get karsilamaParaNot =>
       'The currency can\'t be changed after the first money is given to a character.';
+
+  @override
+  String ogrenKarakterSoruyor(String karakter) {
+    return '$karakter is stuck on this. Can you explain it?';
+  }
+
+  @override
+  String ogrenOgretti(String karakter) {
+    return '$karakter: \"Now I get it, thanks!\"';
+  }
+
+  @override
+  String ogrenBirlikte(String karakter) {
+    return '$karakter: \"Hmm, I mixed it up too. Shall we read it again together?\"';
+  }
+
+  @override
+  String detayOgrettiklerin(String karakter) {
+    return '$karakter learned from you';
+  }
 }

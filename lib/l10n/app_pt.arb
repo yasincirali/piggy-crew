@@ -72,9 +72,6 @@
   "sil": "Apagar",
   "ogrenBaslik": "Ideia do dia",
   "ogrenSayac": "{n} / {toplam}",
-  "ogrenSoru": "Pergunta",
-  "ogrenDogru": "Certo! {karakter} tem orgulho de você.",
-  "ogrenYanlis": "Pense de novo. A dica está no texto.",
   "ogrenSonraki": "Próxima lição",
   "ogrenBitti": "Você terminou todas as lições. Novas estão a caminho.",
   "ogrenBastan": "Ler de novo",
@@ -104,6 +101,7 @@
   "veliSil": "Apagar todos os dados",
   "veliSilOnay": "O perfil, as alimentações e as figurinhas serão apagados. Isso não pode ser desfeito.",
   "veliSilOnayDugme": "Sim, apagar",
+  "veliYedekNot": "Os dados ficam só neste celular e, se estiver ativado, no backup do próprio celular (iCloud ou Google). Nós não vemos esse backup.",
   "veliPinDegistir": "Mudar o PIN",
   "veliOzet": "{ad} fez {n} alimentações no total. Fogueira: {toplam}.",
   "veliNot": "As telas das crianças não têm notificações, anúncios nem compras. Os dados ficam só neste aparelho.",
@@ -192,5 +190,9 @@
   "hedefSayfaBaslik": "Para que {karakter} vai juntar?",
   "hedefFiyat": "Mais ou menos quanto?",
   "hedefFiyatNot": "Este número só aparece aqui; depois, o objeto enche na tela.",
-  "karsilamaParaNot": "A moeda não pode ser trocada depois que o primeiro dinheiro for dado a um personagem."
+  "karsilamaParaNot": "A moeda não pode ser trocada depois que o primeiro dinheiro for dado a um personagem.",
+  "ogrenKarakterSoruyor": "{karakter} travou nisso. Você explica?",
+  "ogrenOgretti": "{karakter}: \"Agora entendi, obrigado!\"",
+  "ogrenBirlikte": "{karakter}: \"Hmm, eu também me confundi. Vamos ler de novo juntos?\"",
+  "detayOgrettiklerin": "{karakter} aprendeu com você"
 }
