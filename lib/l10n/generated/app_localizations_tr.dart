@@ -276,17 +276,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get ogrenSoru => 'Soru';
-
-  @override
-  String ogrenDogru(String karakter) {
-    return 'Doğru! $karakter seninle gurur duyuyor.';
-  }
-
-  @override
-  String get ogrenYanlis => 'Bir daha düşün. İpucu metinde gizli.';
-
-  @override
   String get ogrenSonraki => 'Sonraki ders';
 
   @override
@@ -340,7 +329,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gorunumKlasik => 'Klasik';
 
   @override
-  String get gorunum3d => '3D (deneme)';
+  String get gorunum3d => '3D';
 
   @override
   String get ayarlarDil => 'Dil';
@@ -378,6 +367,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get veliSilOnayDugme => 'Evet, sil';
+
+  @override
+  String get veliYedekNot =>
+      'Veriler yalnız bu telefonda ve açıksa telefonun kendi yedeğinde (iCloud ya da Google) durur. Bu yedeği biz göremeyiz.';
 
   @override
   String get veliPinDegistir => 'PIN\'i değiştir';
@@ -719,4 +712,24 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get karsilamaParaNot =>
       'Para birimi, karakterlere ilk kez para verildikten sonra değişmez.';
+
+  @override
+  String ogrenKarakterSoruyor(String karakter) {
+    return '$karakter buna takıldı. Ona anlatır mısın?';
+  }
+
+  @override
+  String ogrenOgretti(String karakter) {
+    return '$karakter: \"Şimdi anladım, teşekkürler!\"';
+  }
+
+  @override
+  String ogrenBirlikte(String karakter) {
+    return '$karakter: \"Hmm, ben de karıştırdım. Metne birlikte bir daha bakalım mı?\"';
+  }
+
+  @override
+  String detayOgrettiklerin(String karakter) {
+    return '$karakter senden öğrendi';
+  }
 }

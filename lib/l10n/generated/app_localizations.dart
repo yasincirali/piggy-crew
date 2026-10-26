@@ -538,24 +538,6 @@ abstract class AppLocalizations {
   /// **'{n} / {toplam}'**
   String ogrenSayac(int n, int toplam);
 
-  /// No description provided for @ogrenSoru.
-  ///
-  /// In tr, this message translates to:
-  /// **'Soru'**
-  String get ogrenSoru;
-
-  /// No description provided for @ogrenDogru.
-  ///
-  /// In tr, this message translates to:
-  /// **'Doğru! {karakter} seninle gurur duyuyor.'**
-  String ogrenDogru(String karakter);
-
-  /// No description provided for @ogrenYanlis.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bir daha düşün. İpucu metinde gizli.'**
-  String get ogrenYanlis;
-
   /// No description provided for @ogrenSonraki.
   ///
   /// In tr, this message translates to:
@@ -658,10 +640,10 @@ abstract class AppLocalizations {
   /// **'Klasik'**
   String get gorunumKlasik;
 
-  /// Karakter görünümü: 3D, deneme aşamasında
+  /// Karakter görünümü: 3D (önceden render; varsayılan)
   ///
   /// In tr, this message translates to:
-  /// **'3D (deneme)'**
+  /// **'3D'**
   String get gorunum3d;
 
   /// No description provided for @ayarlarDil.
@@ -729,6 +711,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Evet, sil'**
   String get veliSilOnayDugme;
+
+  /// Anne baba köşesinde Tüm veriyi sil düğmesinin üstündeki bilgi satırı (gizlilik politikası madde 1 ile aynı bilgi).
+  ///
+  /// In tr, this message translates to:
+  /// **'Veriler yalnız bu telefonda ve açıksa telefonun kendi yedeğinde (iCloud ya da Google) durur. Bu yedeği biz göremeyiz.'**
+  String get veliYedekNot;
 
   /// No description provided for @veliPinDegistir.
   ///
@@ -1263,6 +1251,30 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Para birimi, karakterlere ilk kez para verildikten sonra değişmez.'**
   String get karsilamaParaNot;
+
+  /// Öğren: sorunun üstünde, soruyu karakter sorar (çocuk ona öğretir).
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} buna takıldı. Ona anlatır mısın?'**
+  String ogrenKarakterSoruyor(String karakter);
+
+  /// Öğren: doğru cevapta karakter öğrenir; övgü çocuğa değil.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: \"Şimdi anladım, teşekkürler!\"'**
+  String ogrenOgretti(String karakter);
+
+  /// Öğren: yanlış cevapta karakter de karıştırdığını söyler; suçlama yok.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: \"Hmm, ben de karıştırdım. Metne birlikte bir daha bakalım mı?\"'**
+  String ogrenBirlikte(String karakter);
+
+  /// Karakter ekranı: çocuğun o karaktere öğrettiği derslerin başlıkları (sayı yok).
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} senden öğrendi'**
+  String detayOgrettiklerin(String karakter);
 }
 
 class _AppLocalizationsDelegate

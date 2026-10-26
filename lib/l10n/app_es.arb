@@ -72,9 +72,6 @@
   "sil": "Borrar",
   "ogrenBaslik": "La idea de hoy",
   "ogrenSayac": "{n} / {toplam}",
-  "ogrenSoru": "Pregunta",
-  "ogrenDogru": "¡Correcto! {karakter} te aplaude.",
-  "ogrenYanlis": "Piénsalo otra vez. La pista está en el texto.",
   "ogrenSonraki": "Siguiente lección",
   "ogrenBitti": "Terminaste todas las lecciones. Pronto habrá nuevas.",
   "ogrenBastan": "Leer otra vez",
@@ -92,7 +89,7 @@
   "ayarlarTitresim": "Vibración",
   "ayarlarGorunum": "Aspecto de los personajes",
   "gorunumKlasik": "Clásico",
-  "gorunum3d": "3D (prueba)",
+  "gorunum3d": "3D",
   "ayarlarDil": "Idioma",
   "ayarlarVeli": "Rincón de padres",
   "ayarlarSurum": "Versión {s}",
@@ -104,6 +101,7 @@
   "veliSil": "Borrar todos los datos",
   "veliSilOnay": "Se borrarán el perfil, las comidas y las pegatinas. No se puede deshacer.",
   "veliSilOnayDugme": "Sí, borrar",
+  "veliYedekNot": "Los datos se quedan solo en este teléfono y, si está activada, en su propia copia de seguridad (iCloud o Google). Nosotros no vemos esa copia.",
   "veliPinDegistir": "Cambiar PIN",
   "veliOzet": "{ad} dio de comer {n} veces en total. Fogata: {toplam}.",
   "veliNot": "Las pantallas de los niños no tienen notificaciones, anuncios ni compras. Los datos se quedan solo en este dispositivo.",
@@ -192,5 +190,9 @@
   "hedefSayfaBaslik": "¿Para qué ahorra {karakter}?",
   "hedefFiyat": "¿Más o menos cuánto?",
   "hedefFiyatNot": "Este número solo se ve aquí; luego, en pantalla, el objeto se llena.",
-  "karsilamaParaNot": "La moneda no se puede cambiar después de dar dinero por primera vez a un personaje."
+  "karsilamaParaNot": "La moneda no se puede cambiar después de dar dinero por primera vez a un personaje.",
+  "ogrenKarakterSoruyor": "{karakter} no entiende esto. ¿Se lo explicas?",
+  "ogrenOgretti": "{karakter}: \"¡Ahora lo entiendo, gracias!\"",
+  "ogrenBirlikte": "{karakter}: \"Mmm, yo también me confundí. ¿Lo leemos otra vez juntos?\"",
+  "detayOgrettiklerin": "{karakter} aprendió de ti"
 }

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cocuk.dart';
+import '../models/ders.dart';
 import '../models/evre.dart';
 import '../models/hedef.dart';
 import '../models/odun.dart';
@@ -46,7 +47,7 @@ class TitresimAcikNotifier extends Notifier<bool> {
 
 final titresimAcikProvider = NotifierProvider<TitresimAcikNotifier, bool>(TitresimAcikNotifier.new);
 
-/// Karakter görünümü: 3D (deneme) açık mı (veli köşesi).
+/// Karakter görünümü: 3D açık mı (Ayarlar; varsayılan 3D).
 class Karakter3dNotifier extends Notifier<bool> {
   @override
   bool build() => ref.read(depoProvider).karakter3dOku();
@@ -268,3 +269,33 @@ class DersIlerlemeNotifier extends Notifier<int> {
 }
 
 final dersIlerlemeProvider = NotifierProvider<DersIlerlemeNotifier, int>(DersIlerlemeNotifier.new);
+
+/// Dil → dersler (Öğren ve karakter ekranındaki "öğrettiklerin" rafı).
+final derslerProvider = FutureProvider.family<List<Ders>, String>((_, dil) => Ders.yukle(dil));
+
+/// "Tortu'ya öğret" (Ar-Ge 26 Eki): soruyu karakter sorar, çocuk doğru
+/// anlatınca o ders karaktere "öğretilmiş" olur ve karakter ekranındaki rafa
+/// girer. Ders ilerlemesinden AYRI saklanır: "Baştan oku" ilerlemeyi sıfırlar
+/// ama öğretilen geri alınmaz (açılan geri alınmaz ilkesi). Sayı tutulmaz,
+/// yalnız hangi ders.
+class OgretilenNotifier extends Notifier<Set<String>?> {
+  @override
+  Set<String>? build() => ref.read(depoProvider).ogretilenOku();
+
+  Future<void> ekle(String id) async {
+    final s = state ?? const <String>{};
+    if (s.contains(id)) return;
+    state = {...s, id};
+    await ref.read(depoProvider).ogretilenYaz(state!);
+  }
+
+  /// Bu özellikten önce dersleri geçmiş çocuk: geçtiği dersler (ilerleme
+  /// yalnız doğru cevapla artar) öğretilmiş sayılır. Yalnız hiç yazılmamışsa.
+  Future<void> tohumla(Iterable<String> idler) async {
+    if (state != null) return;
+    state = idler.toSet();
+    await ref.read(depoProvider).ogretilenYaz(state!);
+  }
+}
+
+final ogretilenProvider = NotifierProvider<OgretilenNotifier, Set<String>?>(OgretilenNotifier.new);

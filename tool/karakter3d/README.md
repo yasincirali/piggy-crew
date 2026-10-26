@@ -6,9 +6,11 @@ uygulama kareleri animasyonlu WebP olarak `assets/karakter3d/<tur>/` altında.
 - `kumbara.py`: dört karakterin modeli, iskeleti ve sahneleri. Hareket
   `lib/widgets/karakter.dart` ile aynı zaman çizelgesini izler.
 - `uret.sh`: kareleri üretir (ifade atlası 13 × 4 evre; pişmiş sahneler
-  dokunma, arti, ziplama, keyif, etrafa_bak, dans: gövde + evre bitkisi).
+  dokunma, arti, ziplama, keyif, etrafa_bak, dans: gövde + evre bitkisi;
+  büyüme `evre`: gövde + geçişin hedef evresi adıyla bitki, ör. `evre_cicek` = filiz>cicek).
 - `donustur.py`: PNG → kırpılmış WebP, `lib/widgets/karakter_3d_yerlesim.g.dart`
-  (2D kutuya kalibrasyon + kırpım tablosu).
+  (2D kutuya kalibrasyon + kırpım tablosu). Kısmi çalışır: `KARE`'de karesi
+  olmayan atlas/sahnenin eski WebP'si ve tablo satırı korunur.
 
 Kalibrasyon: 3D "minik/mutlu" gövdesinin sınırları 2D gövdesinin (evresiz
 KarakterPainter) yüksekliğine, ayak tabanına ve ortasına oturtulur. 2D

@@ -37,7 +37,7 @@ void main() {
         final s = File('legal/$ad.md').readAsStringSync();
         final maddeler = RegExp(r'^(\d)\. \*\*', multiLine: true).allMatches(s).map((m) => m[1]).toList();
         expect(maddeler, ['1', '2', '3', '4', '5', '6', '7'], reason: ad);
-        expect(RegExp(r'^\S+ 1 · ', multiLine: true).hasMatch(s), isTrue, reason: '$ad: sürüm 1');
+        expect(RegExp(r'^\S+ 2 · ', multiLine: true).hasMatch(s), isTrue, reason: '$ad: sürüm 2');
         for (final m in RegExp(r'legal/(\w+)\.md\)').allMatches(s)) {
           expect(File('legal/${m[1]}.md').existsSync(), isTrue, reason: '$ad → ${m[1]}');
         }

@@ -10,9 +10,13 @@ import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import '../services/dokunsal.dart';
 
-final _derslerProvider = FutureProvider.family<List<Ders>, String>((_, dil) => Ders.yukle(dil));
-
 /// Öğren: günde bir kavram, tek soru, üç seçenek. Yanlışta ceza yok; ipucu.
+///
+/// Soruyu karakter sorar, çocuk ona öğretir (Ar-Ge 26 Eki, protégé etkisi:
+/// Chase ve diğ. 2009, sanal bir karaktere öğreten çocuk öğrenmeye daha çok
+/// emek verir; sınanan karakter olunca hata utandırmaz). Doğruda övgü çocuğa
+/// değil, karakter "anladım" der ve ders onun rafına girer; yanlışta karakter
+/// de karıştırdığını söyler. Puan, sayaç, ödül eklenmez.
 class OgrenEkrani extends ConsumerStatefulWidget {
   const OgrenEkrani({super.key});
   @override
@@ -28,9 +32,15 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
     final l = context.l10n;
     final r = context.r;
     final cocuk = ref.watch(cocukProvider)!;
-    final dersler = ref.watch(_derslerProvider(Localizations.localeOf(context).languageCode)).valueOrNull;
+    final dersler = ref.watch(derslerProvider(Localizations.localeOf(context).languageCode)).valueOrNull;
     final ilerleme = ref.watch(dersIlerlemeProvider);
     if (dersler == null) return const Center(child: CircularProgressIndicator());
+    // Bu özellikten önce ders geçmiş çocuk: geçtiği dersler (ilerleme yalnız
+    // doğru cevapla artar) öğretilmiş sayılır. Sekmeler uygulama açılışında
+    // kurulduğu için bu bir kez, karakter ekranı açılmadan önce olur.
+    if (ref.watch(ogretilenProvider) == null) {
+      Future.microtask(() => ref.read(ogretilenProvider.notifier).tohumla(dersler.take(ilerleme).map((d) => d.id)));
+    }
 
     if (ilerleme >= dersler.length) {
       return Center(
@@ -41,7 +51,16 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
             const SizedBox(height: Bosluk.l),
             Text(l.ogrenBitti, textAlign: TextAlign.center, style: context.t.titleLarge),
             const SizedBox(height: Bosluk.l),
-            AnaDugme(metin: l.ogrenBastan, ikincil: true, onTap: () => ref.read(dersIlerlemeProvider.notifier).ilerleSifirla()),
+            AnaDugme(
+              metin: l.ogrenBastan,
+              ikincil: true,
+              onTap: () async {
+                // Sıfırlamadan önce: hiç tohumlanmamış eski kurulumda bütün
+                // dersler öğretilmiş sayılır; ilerleme sıfırlanır, raf kalır.
+                await ref.read(ogretilenProvider.notifier).tohumla(dersler.map((d) => d.id));
+                await ref.read(dersIlerlemeProvider.notifier).ilerleSifirla();
+              },
+            ),
           ]),
         ),
       );
@@ -82,7 +101,13 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
           ]),
         ),
         const SizedBox(height: Bosluk.l),
-        BolumBasligi(l.ogrenSoru),
+        Row(children: [
+          Karakter(tur: karakter, ruh: _dogru ? Ruh.mutlu : Ruh.duz, boyut: 44),
+          const SizedBox(width: Bosluk.s),
+          Expanded(
+            child: Text(l.ogrenKarakterSoruyor(l.karakter(karakter)), style: context.t.bodyLarge?.copyWith(color: r.sub)),
+          ),
+        ]),
         const SizedBox(height: Bosluk.s),
         Text(p(ders.soru), style: context.t.titleMedium),
         const SizedBox(height: Bosluk.m),
@@ -105,6 +130,11 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
                         _secim = i;
                         _dogru = dogru;
                       });
+                      if (dogru) {
+                        final n = ref.read(ogretilenProvider.notifier);
+                        // Önceki sürümde geçilen dersler kaybolmasın (ilk yazımda).
+                        n.tohumla(dersler.take(ilerleme).map((d) => d.id)).then((_) => n.ekle(ders.id));
+                      }
                     },
             ),
           ),
@@ -114,7 +144,7 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
           child: _secim == null
               ? const SizedBox(height: 24)
               : Text(
-                  _dogru ? l.ogrenDogru(l.karakter(karakter)) : l.ogrenYanlis,
+                  _dogru ? l.ogrenOgretti(l.karakter(karakter)) : l.ogrenBirlikte(l.karakter(karakter)),
                   key: ValueKey('$_secim$_dogru'),
                   style: context.t.titleMedium?.copyWith(color: _dogru ? r.acc : r.sub),
                 ),

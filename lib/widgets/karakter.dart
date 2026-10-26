@@ -1149,7 +1149,14 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
 
   /// 3D'de hareketi karede pişmiş sahne ve ilerlemesi (yoksa null).
   (String, double)? _pismisSahne() {
-    if (_yeme.isAnimating || _evreC.isAnimating || _donusC.isAnimating || _istekC.value > 0) return null;
+    if (_yeme.isAnimating || _donusC.isAnimating || _istekC.value > 0) return null;
+    if (_evreC.isAnimating) {
+      // Büyüme pişmiş sahnesi (2026-10-26): bitki karesi tek basamaklık
+      // geçişe göre render edildi (evre_cicek = filiz>cicek). Birden çok
+      // basamak atlanırsa atlas karışımına düşülür.
+      final o = _evreOnceki, e = _evreGorunen;
+      return o != null && e != null && e.index == o.index + 1 ? ('evre', _evreC.value) : null;
+    }
     if (_sevincC.isAnimating) return ('arti', _sevincC.value);
     if (_hop.isAnimating) return ('dokunma', _hop.value);
     if (_bostaC.isAnimating) {

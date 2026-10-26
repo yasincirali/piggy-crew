@@ -1,10 +1,11 @@
 part of 'karakter.dart';
 
-// ── 3D görünüm (deneme) ─────────────────────────────────────────────────
+// ── 3D görünüm ──────────────────────────────────────────────────────────
 //
 // Neden (yasin 2026-10-17, "bu kısmı gönder bakalım"): Kumbara Takımı'nın
-// Blender'da modellenen 3D hâli telefonda denensin. Veli köşesinde
-// varsayılanı kapalı bir seçim; kapalıyken bugünkü 2D birebir aynı.
+// Blender'da modellenen 3D hâli telefonda denensin. Önce varsayılanı kapalı
+// bir denemeydi. 2026-10-26 yasin Unity yerine "önceden render 3D"yi seçti:
+// 3D artık varsayılan; Ayarlar'da "Klasik" seçen 2D'yi birebir görür.
 //
 // Kararlar:
 // - Önceden render (canlı 3D değil): Kids uygulamasında 3D motoru ve
@@ -16,13 +17,14 @@ part of 'karakter.dart';
 // - İki tür kare: (1) ifade atlası (13 durağan yüz × evre), yüz değerleri
 //   (Yuz) opaklıkla karıştırılır, gövde hareketini Flutter dönüşümü verir;
 //   (2) hareketi pişmiş sahneler (dokunma, artı, boşta zıplama/keyif/etrafa
-//   bakış/dans): kulak ve bitki fiziği, baş takibi, dönüş karede. Pişmiş
-//   sahnede Flutter yalnız nefesi ekler.
+//   bakış/dans, büyüme): kulak ve bitki fiziği, baş takibi, dönüş karede.
+//   Pişmiş sahnede Flutter yalnız nefesi ekler. Büyümede bitki kare kare
+//   filizlenir (atlas geçişindeki opaklık karışımı yerine).
 // - Bellek: atlas evre başına bir kez çözülür ve paylaşılır; sahne kareleri
 //   sahne başlayınca sırayla çözülür, bitince bırakılır. Kare henüz
 //   çözülmediyse atlas gösterilir (takılma yerine yumuşak düşüş).
 // - Besleme ritüelinin karaktere özgü parçaları (Sincap'ın yanakları,
-//   Baykuş'un kanatları…) bu denemede 3D'de yok: yiyecek 2D çizilir, gövde
+//   Baykuş'un kanatları…) 3D'de yok: yiyecek 2D çizilir, gövde
 //   atlastan ağız açarak yer. Sonraki adım: yeme sahnelerinin 3D'si.
 
 /// 3D görünüm açık mı (uygulama kökünde, ayardan).

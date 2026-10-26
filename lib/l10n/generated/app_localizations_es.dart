@@ -267,17 +267,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get ogrenSoru => 'Pregunta';
-
-  @override
-  String ogrenDogru(String karakter) {
-    return '¡Correcto! $karakter te aplaude.';
-  }
-
-  @override
-  String get ogrenYanlis => 'Piénsalo otra vez. La pista está en el texto.';
-
-  @override
   String get ogrenSonraki => 'Siguiente lección';
 
   @override
@@ -332,7 +321,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gorunumKlasik => 'Clásico';
 
   @override
-  String get gorunum3d => '3D (prueba)';
+  String get gorunum3d => '3D';
 
   @override
   String get ayarlarDil => 'Idioma';
@@ -370,6 +359,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get veliSilOnayDugme => 'Sí, borrar';
+
+  @override
+  String get veliYedekNot =>
+      'Los datos se quedan solo en este teléfono y, si está activada, en su propia copia de seguridad (iCloud o Google). Nosotros no vemos esa copia.';
 
   @override
   String get veliPinDegistir => 'Cambiar PIN';
@@ -716,4 +709,24 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get karsilamaParaNot =>
       'La moneda no se puede cambiar después de dar dinero por primera vez a un personaje.';
+
+  @override
+  String ogrenKarakterSoruyor(String karakter) {
+    return '$karakter no entiende esto. ¿Se lo explicas?';
+  }
+
+  @override
+  String ogrenOgretti(String karakter) {
+    return '$karakter: \"¡Ahora lo entiendo, gracias!\"';
+  }
+
+  @override
+  String ogrenBirlikte(String karakter) {
+    return '$karakter: \"Mmm, yo también me confundí. ¿Lo leemos otra vez juntos?\"';
+  }
+
+  @override
+  String detayOgrettiklerin(String karakter) {
+    return '$karakter aprendió de ti';
+  }
 }

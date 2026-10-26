@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/ders.dart';
 import '../models/hedef.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
@@ -140,6 +141,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                   ),
                   const SizedBox(height: Bosluk.l),
                   _HedefKarti(tur: tur, durum: d),
+                  _OgretilenRaf(tur: tur, ad: ad),
                   if (hareketler.isNotEmpty) ...[
                     const SizedBox(height: Bosluk.xl),
                     BolumBasligi(l.detayBeslemeler),
@@ -156,14 +158,18 @@ class VarlikDetayEkrani extends ConsumerWidget {
                                 color: h.cikis ? r.sub : r.petal),
                             const SizedBox(width: Bosluk.m),
                             Expanded(
+                              flex: 2,
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Text(tarihF.format(h.tarih), style: context.t.titleMedium),
                                 if (h.cikis) Text(l.cikisSatir, style: context.t.bodyMedium),
                                 if (!tur.nakitMi) Text(fmtMiktar(h.miktar.abs(), birim, cocuk.para), style: context.t.bodyMedium),
                               ]),
                             ),
-                            Text(h.cikis ? fmtFark(h.tutarTl, cocuk.para) : fmtPara(h.tutarTl, cocuk.para),
-                                style: context.t.titleMedium),
+                            // Sağa yaslı ayrı sütun: 3,1× yazıda tutar sığmazsa alt satıra iner, taşmaz.
+                            Expanded(
+                              child: Text(h.cikis ? fmtFark(h.tutarTl, cocuk.para) : fmtPara(h.tutarTl, cocuk.para),
+                                  textAlign: TextAlign.end, style: context.t.titleMedium),
+                            ),
                           ]),
                         ),
                       ),
@@ -212,6 +218,75 @@ class VarlikDetayEkrani extends ConsumerWidget {
       ),
     );
     if (onay == true) await ref.read(hareketlerProvider.notifier).sil(h.id);
+  }
+}
+
+/// "Öğrettiklerin" rafı (Ar-Ge 26 Eki, "Tortu'ya öğret"): çocuğun bu
+/// karaktere anlattığı dersler, başlıklarıyla. Sayı, sayaç, eksik listesi
+/// yok; boşsa raf hiç görünmez (yokluk yüze vurulmaz). Dokununca ders
+/// metni bir sayfada yeniden okunur — anlatılanı hatırlamak için.
+class _OgretilenRaf extends ConsumerWidget {
+  const _OgretilenRaf({required this.tur, required this.ad});
+  final VarlikTuru tur;
+  final String ad;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final r = context.r;
+    final cocuk = ref.watch(cocukProvider)!;
+    final dersler = ref.watch(derslerProvider(Localizations.localeOf(context).languageCode)).valueOrNull;
+    final ogretilen = ref.watch(ogretilenProvider);
+    // null: eski kurulum, Öğren sekmesi ilk açılışta tohumlar (orada).
+    if (dersler == null || ogretilen == null) return const SizedBox.shrink();
+    final raf = [
+      for (final d in dersler)
+        if (ogretilen.contains(d.id) && (d.karakter ?? VarlikTuru.euro) == tur) d,
+    ];
+    if (raf.isEmpty) return const SizedBox.shrink();
+    String p(String s) => Ders.paraYerlestir(s, cocuk.para);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: Bosluk.l),
+      child: Kart(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BolumBasligi(l.detayOgrettiklerin(ad)),
+            const SizedBox(height: Bosluk.xs),
+            for (final d in raf)
+              InkWell(
+                borderRadius: BorderRadius.circular(Kose.m),
+                onTap: () => altSayfaGoster<void>(
+                  context,
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.xl, Bosluk.xl, Bosluk.xxl),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(p(d.baslik), style: context.t.titleLarge),
+                        const SizedBox(height: Bosluk.m),
+                        Text(p(d.metin(cocuk.yas)), style: context.t.bodyLarge),
+                      ],
+                    ),
+                  ),
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 44),
+                  child: Row(
+                    children: [
+                      Icon(Icons.menu_book_rounded, color: r.sub, size: 20),
+                      const SizedBox(width: Bosluk.m),
+                      Expanded(child: Text(p(d.baslik), style: context.t.titleMedium)),
+                      Icon(Icons.chevron_right_rounded, color: r.sub),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

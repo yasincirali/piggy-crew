@@ -24,6 +24,7 @@ class Depo {
   static const _hareketler = 'hareketler_v1';
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
+  static const _ogretilen = 'ogretilen_dersler_v1';
   static const _sesAcik = 'ses_acik_v1';
   static const _titresimAcik = 'titresim_acik_v1';
   static const _karakter3d = 'karakter_3d_v1';
@@ -67,6 +68,11 @@ class Depo {
   int dersIlerlemeOku() => _sp.getInt(_dersIlerleme) ?? 0;
   Future<void> dersIlerlemeYaz(int n) => _sp.setInt(_dersIlerleme, n);
 
+  /// Çocuğun karakterlere öğrettiği derslerin id'leri. null: hiç yazılmadı
+  /// (bu özellikten önceki kurulum; ilk okuyan ders ilerlemesinden tohumlar).
+  Set<String>? ogretilenOku() => _sp.getStringList(_ogretilen)?.toSet();
+  Future<void> ogretilenYaz(Set<String> s) => _sp.setStringList(_ogretilen, s.toList());
+
   /// Sesler varsayılan açık. Cihaz tercihidir, kişisel veri değil: "veriyi
   /// sil" dokunmaz.
   bool sesAcikOku() => _sp.getBool(_sesAcik) ?? true;
@@ -76,8 +82,9 @@ class Depo {
   bool titresimAcikOku() => _sp.getBool(_titresimAcik) ?? true;
   Future<void> titresimAcikYaz(bool v) => _sp.setBool(_titresimAcik, v);
 
-  /// 3D karakterler (deneme) varsayılan kapalı: kapalıyken 2D birebir aynı.
-  bool karakter3dOku() => _sp.getBool(_karakter3d) ?? false;
+  /// 3D karakterler varsayılan açık (yasin 2026-10-26, önceden render 3D).
+  /// Anahtar yoksa 3D; "Klasik" seçmiş olan (false yazılı) 2D'de kalır.
+  bool karakter3dOku() => _sp.getBool(_karakter3d) ?? true;
   Future<void> karakter3dYaz(bool v) => _sp.setBool(_karakter3d, v);
 
   /// Açılış sahnesinin en son tam oynadığı gün (yyyy-aa-gg, yerel saat).
@@ -171,6 +178,7 @@ class Depo {
     await _sp.remove(_hareketler);
     await _sp.remove(_cikartmalar);
     await _sp.remove(_dersIlerleme);
+    await _sp.remove(_ogretilen);
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
     await _sp.remove(_odun);

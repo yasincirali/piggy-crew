@@ -72,9 +72,6 @@
   "sil": "Löschen",
   "ogrenBaslik": "Die Idee des Tages",
   "ogrenSayac": "{n} / {toplam}",
-  "ogrenSoru": "Frage",
-  "ogrenDogru": "Richtig! {karakter} ist stolz auf dich.",
-  "ogrenYanlis": "Denk noch mal nach. Der Tipp steht im Text.",
   "ogrenSonraki": "Nächste Lektion",
   "ogrenBitti": "Du hast alle Lektionen geschafft. Neue kommen bald.",
   "ogrenBastan": "Noch mal lesen",
@@ -92,7 +89,7 @@
   "ayarlarTitresim": "Vibration",
   "ayarlarGorunum": "Aussehen der Figuren",
   "gorunumKlasik": "Klassisch",
-  "gorunum3d": "3D (Test)",
+  "gorunum3d": "3D",
   "ayarlarDil": "Sprache",
   "ayarlarVeli": "Elternecke",
   "ayarlarSurum": "Version {s}",
@@ -104,6 +101,7 @@
   "veliSil": "Alle Daten löschen",
   "veliSilOnay": "Profil, Fütterungen und Sticker werden gelöscht. Das kann nicht rückgängig gemacht werden.",
   "veliSilOnayDugme": "Ja, löschen",
+  "veliYedekNot": "Die Daten bleiben nur auf diesem Telefon und, falls eingeschaltet, in der eigenen Sicherung des Telefons (iCloud oder Google). Diese Sicherung sehen wir nicht.",
   "veliPinDegistir": "PIN ändern",
   "veliOzet": "{ad} hat insgesamt {n}-mal gefüttert. Lagerfeuer: {toplam}.",
   "veliNot": "Die Kinderbildschirme haben keine Benachrichtigungen, keine Werbung und keine Käufe. Die Daten bleiben nur auf diesem Gerät.",
@@ -192,5 +190,9 @@
   "hedefSayfaBaslik": "Wofür soll {karakter} sparen?",
   "hedefFiyat": "Ungefähr wie viel?",
   "hedefFiyatNot": "Diese Zahl siehst du nur hier; danach füllt sich der Gegenstand.",
-  "karsilamaParaNot": "Die Währung lässt sich nicht mehr ändern, sobald einer Figur zum ersten Mal Geld gegeben wurde."
+  "karsilamaParaNot": "Die Währung lässt sich nicht mehr ändern, sobald einer Figur zum ersten Mal Geld gegeben wurde.",
+  "ogrenKarakterSoruyor": "{karakter} kommt hier nicht weiter. Kannst du es erklären?",
+  "ogrenOgretti": "{karakter}: \"Jetzt hab ich's verstanden, danke!\"",
+  "ogrenBirlikte": "{karakter}: \"Hm, ich bin auch durcheinander. Lesen wir es noch einmal zusammen?\"",
+  "detayOgrettiklerin": "{karakter} hat von dir gelernt"
 }

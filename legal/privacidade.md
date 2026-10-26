@@ -1,10 +1,10 @@
 # Política de privacidade do Minha Mesada (Harçlıklarım)
 
-Versão 1 · 24 de outubro de 2026 · [Türkçe](https://github.com/yasincirali/piggy-crew/blob/main/legal/gizlilik.md) · [English](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacy.md) · [Deutsch](https://github.com/yasincirali/piggy-crew/blob/main/legal/datenschutz.md) · [Español](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacidad.md) · [Français](https://github.com/yasincirali/piggy-crew/blob/main/legal/confidentialite.md) · [Português](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacidade.md)
+Versão 2 · 26 de outubro de 2026 · [Türkçe](https://github.com/yasincirali/piggy-crew/blob/main/legal/gizlilik.md) · [English](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacy.md) · [Deutsch](https://github.com/yasincirali/piggy-crew/blob/main/legal/datenschutz.md) · [Español](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacidad.md) · [Français](https://github.com/yasincirali/piggy-crew/blob/main/legal/confidentialite.md) · [Português](https://github.com/yasincirali/piggy-crew/blob/main/legal/privacidade.md)
 
 Minha Mesada é um app de cofrinho para crianças de 7 a 15 anos. Não há conta e não temos servidor.
 
-1. **Dados que coletamos:** Nenhum. O nome da criança, a faixa etária, a moeda, os depósitos, as retiradas, as figurinhas e o progresso das lições ficam salvos só no celular. Nada é enviado para nós nem para terceiros.
+1. **Dados que coletamos:** Nenhum. O nome da criança, a faixa etária, a moeda, os depósitos, as retiradas, as figurinhas e o progresso das lições ficam salvos só no celular. Nada é enviado para nós nem para terceiros. Se o backup do próprio celular (iCloud ou Google) estiver ativado, esses dados também entram nele; só você vê esse backup, nós não.
 2. **Bloqueio dos pais (PIN):** O PIN não é guardado em texto simples; só um resumo de mão única fica no celular.
 3. **Preços:** Para mostrar o valor de hoje dos personagens de ouro e moedas, o app pede os preços do dia a um provedor público de dados de mercado. O pedido não leva nenhuma informação sobre a criança ou os pais; como em qualquer conexão de internet, só o endereço de internet do aparelho chega ao provedor.
 4. **Opinião:** "Enviar feedback" no "Cantinho dos pais" só abre depois do PIN dos pais. O texto aparece primeiro na tela e não tem nome nem valores. Os pais enviam com o app que escolherem (por exemplo, e-mail).
