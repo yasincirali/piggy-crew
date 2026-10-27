@@ -1276,7 +1276,7 @@ abstract class AppLocalizations {
   /// **'{karakter} senden öğrendi'**
   String detayOgrettiklerin(String karakter);
 
-  /// Karakter ekranındaki plan kartının ve alt sayfanın başlığı (Ar-Ge 26 Eki, uygulama niyetleri): çocuğun kendi seçtiği 'olunca → yaparım' cümlesi.
+  /// Karakter ekranındaki plan kartının ve alt sayfanın başlığı (Ar-Ge 26 Eki, uygulama niyetleri): çocuğun kendi seçtiği 'olunca, yaparım' cümlesi.
   ///
   /// In tr, this message translates to:
   /// **'Benim planım'**
@@ -1300,7 +1300,7 @@ abstract class AppLocalizations {
   /// **'Bir cümle seç, senin sözün olsun. İstediğin zaman değiştirebilirsin.'**
   String get planSayfaAlt;
 
-  /// Plan şablonu, çocuğun ağzından (birinci tekil). 'olunca → yaparım' biçimi; tutar ve ad yazılmaz. Türkçede karakter adına ek gelmesin diye 'ile' kullanılır.
+  /// Plan şablonu, çocuğun ağzından (birinci tekil). 'olunca, yaparım' biçimi; tutar ve ad yazılmaz. Türkçede karakter adına ek gelmesin diye 'ile' kullanılır.
   ///
   /// In tr, this message translates to:
   /// **'{sablon, select, biriktiririm{Harçlığımı alınca bir kısmını {karakter} ile biriktiririm.} beklerim{Bir şey almadan önce bir gün beklerim.} bakarim{Hafta sonu {karakter} ile kumbarama bakarım.} other{Bir şey almadan önce bir gün beklerim.}}'**
