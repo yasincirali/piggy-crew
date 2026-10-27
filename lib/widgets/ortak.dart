@@ -86,8 +86,11 @@ class AnaDugme extends StatelessWidget {
       child: AnimatedOpacity(
         opacity: aktif ? 1 : .45,
         duration: Devinim.sure(context, Devinim.normal),
+        // En az 56; büyük yazıda (3,1×) uzar. Sabit yükseklik metni kesiyordu
+        // ("Plan seç" yarım görünüyordu; 27 Eki).
         child: Container(
-          height: 56,
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.symmetric(horizontal: Bosluk.l, vertical: Bosluk.s),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: ikincil ? r.card : r.acc,
@@ -96,6 +99,7 @@ class AnaDugme extends StatelessWidget {
           ),
           child: Text(
             metin,
+            textAlign: TextAlign.center,
             style: context.t.titleMedium?.copyWith(color: ikincil ? r.fg : r.accInk),
           ),
         ),
