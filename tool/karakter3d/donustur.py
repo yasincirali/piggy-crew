@@ -41,7 +41,12 @@ def kaydet(kareler, yol):
         p = k.getpixel((0, 0))
         if p[3] <= 3:
             k.putpixel((0, 0), (0, 0, 0, i % 2 + 1))
-    kk[0].save(yol, save_all=True, append_images=kk[1:], duration=33, loop=0, quality=82, method=6,
+    # Kalite 65 (Ar-Ge 26 Eki 20:07 #2; 27 Eki ölçüldü): 82'ye göre 21,3 →
+    # 17,1 MB, 6× büyütmede kontur ve kenar aynı. Alfa kayıpsız kalır
+    # (alpha_quality denendi, animasyonlu kayıtta alfa değişmedi; kenar
+    # halkası riski de yok). PNG'den üretilir; WebP'den yeniden kodlamak
+    # ikinci nesil kayıp ekler.
+    kk[0].save(yol, save_all=True, append_images=kk[1:], duration=33, loop=0, quality=65, method=6,
                lossless=False, minimize_size=False, allow_mixed=False)
     return kutu
 
