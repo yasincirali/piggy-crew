@@ -77,6 +77,16 @@ void main() {
     await bekle(t);
   }
 
+  // Raf, hedef ve plan kartlarının altında; liste tembel kurulur, kaydırılmalı.
+  Future<void> rafaKaydir(WidgetTester t) async {
+    await t.scrollUntilVisible(
+      find.textContaining('senden öğrendi'),
+      300,
+      scrollable: find.descendant(of: find.byType(VarlikDetayEkrani), matching: find.byType(Scrollable)).first,
+    );
+    await bekle(t);
+  }
+
   testWidgets('karakter sorar; yanlışta birlikte bakar, doğruda ders rafa girer', (t) async {
     final kap = await kampa(t);
     await t.tap(find.text('Öğren'));
@@ -98,6 +108,7 @@ void main() {
     await t.tap(find.text('Kamp'));
     await bekle(t);
     await detayAc(t, VarlikTuru.nakit);
+    await rafaKaydir(t);
     expect(find.textContaining('senden öğrendi'), findsOneWidget);
     await t.ensureVisible(find.text('Para neden bekler?'));
     await bekle(t);
@@ -118,6 +129,7 @@ void main() {
     // Öğren sekmesi açılışta kurulur ve tohumlar; karakter ekranı rafı gösterir.
     expect(kap.read(ogretilenProvider), {'birikim', 'enflasyon'});
     await detayAc(t, VarlikTuru.nakit);
+    await rafaKaydir(t);
     expect(find.textContaining('senden öğrendi'), findsOneWidget);
   });
 
