@@ -194,5 +194,11 @@
   "ogrenKarakterSoruyor": "{karakter} no entiende esto. ¿Se lo explicas?",
   "ogrenOgretti": "{karakter}: \"¡Ahora lo entiendo, gracias!\"",
   "ogrenBirlikte": "{karakter}: \"Mmm, yo también me confundí. ¿Lo leemos otra vez juntos?\"",
-  "detayOgrettiklerin": "{karakter} aprendió de ti"
+  "detayOgrettiklerin": "{karakter} aprendió de ti",
+  "planBaslik": "Mi plan",
+  "planYok": "Puedes elegir un pequeño plan para ti. Nadie lo revisa.",
+  "planSec": "Elegir un plan",
+  "planSayfaAlt": "Elige una frase y que sea tu promesa. Puedes cambiarla cuando quieras.",
+  "planCumle": "{sablon, select, biriktiririm{Cuando recibo mi paga, ahorro una parte con {karakter}.} beklerim{Antes de comprar algo, espero un día.} bakarim{El fin de semana miro mi alcancía con {karakter}.} other{Antes de comprar algo, espero un día.}}",
+  "planKaldir": "Quitar el plan"
 }

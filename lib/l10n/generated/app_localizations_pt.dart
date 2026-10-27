@@ -731,4 +731,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String detayOgrettiklerin(String karakter) {
     return '$karakter aprendeu com você';
   }
+
+  @override
+  String get planBaslik => 'Meu plano';
+
+  @override
+  String get planYok =>
+      'Você pode escolher um pequeno plano para você. Ninguém confere.';
+
+  @override
+  String get planSec => 'Escolher um plano';
+
+  @override
+  String get planSayfaAlt =>
+      'Escolha uma frase para ser a sua promessa. Você pode mudar quando quiser.';
+
+  @override
+  String planCumle(String sablon, String karakter) {
+    String _temp0 = intl.Intl.selectLogic(sablon, {
+      'biriktiririm':
+          'Quando recebo minha mesada, guardo uma parte com $karakter.',
+      'beklerim': 'Antes de comprar algo, eu espero um dia.',
+      'bakarim': 'No fim de semana, olho meu cofrinho com $karakter.',
+      'other': 'Antes de comprar algo, eu espero um dia.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get planKaldir => 'Remover o plano';
 }

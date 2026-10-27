@@ -194,5 +194,11 @@
   "ogrenKarakterSoruyor": "{karakter} kommt hier nicht weiter. Kannst du es erklären?",
   "ogrenOgretti": "{karakter}: \"Jetzt hab ich's verstanden, danke!\"",
   "ogrenBirlikte": "{karakter}: \"Hm, ich bin auch durcheinander. Lesen wir es noch einmal zusammen?\"",
-  "detayOgrettiklerin": "{karakter} hat von dir gelernt"
+  "detayOgrettiklerin": "{karakter} hat von dir gelernt",
+  "planBaslik": "Mein Plan",
+  "planYok": "Du kannst dir einen kleinen Plan aussuchen. Niemand kontrolliert ihn.",
+  "planSec": "Plan aussuchen",
+  "planSayfaAlt": "Such dir einen Satz aus, er ist dein Versprechen. Du kannst ihn jederzeit ändern.",
+  "planCumle": "{sablon, select, biriktiririm{Wenn ich mein Taschengeld bekomme, spare ich einen Teil mit {karakter}.} beklerim{Bevor ich etwas kaufe, warte ich einen Tag.} bakarim{Am Wochenende schaue ich mit {karakter} in meine Spardose.} other{Bevor ich etwas kaufe, warte ich einen Tag.}}",
+  "planKaldir": "Plan entfernen"
 }

@@ -8,6 +8,7 @@ import '../models/ders.dart';
 import '../models/evre.dart';
 import '../models/hedef.dart';
 import '../models/odun.dart';
+import '../models/plan.dart';
 import '../models/varlik.dart';
 import '../services/depo.dart';
 import '../services/dokunsal.dart';
@@ -93,6 +94,9 @@ class CocukNotifier extends Notifier<Cocuk?> {
     ref.invalidate(hareketlerProvider);
     ref.invalidate(cikartmalarProvider);
     ref.invalidate(hedeflerProvider);
+    ref.invalidate(planlarProvider);
+    // Öğretilenler de: yoksa silinen çocuğun rafı yeni çocukta görünürdü.
+    ref.invalidate(ogretilenProvider);
     state = null;
   }
 }
@@ -177,6 +181,24 @@ class HedeflerNotifier extends Notifier<Map<VarlikTuru, Hedef>> {
 }
 
 final hedeflerProvider = NotifierProvider<HedeflerNotifier, Map<VarlikTuru, Hedef>>(HedeflerNotifier.new);
+
+/// "Benim planım": karakter başına çocuğun seçtiği cümle (bkz. [PlanSablon]).
+class PlanlarNotifier extends Notifier<Map<VarlikTuru, PlanSablon>> {
+  @override
+  Map<VarlikTuru, PlanSablon> build() => ref.read(depoProvider).planlariOku();
+
+  Future<void> koy(VarlikTuru t, PlanSablon p) async {
+    state = {...state, t: p};
+    await ref.read(depoProvider).planlariYaz(state);
+  }
+
+  Future<void> kaldir(VarlikTuru t) async {
+    state = {...state}..remove(t);
+    await ref.read(depoProvider).planlariYaz(state);
+  }
+}
+
+final planlarProvider = NotifierProvider<PlanlarNotifier, Map<VarlikTuru, PlanSablon>>(PlanlarNotifier.new);
 
 /// Karakter durumları — hesap burada, build() içinde değil.
 final karakterlerProvider = Provider<Map<VarlikTuru, KarakterDurumu>>((ref) {
