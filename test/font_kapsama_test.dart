@@ -16,13 +16,14 @@ void main() {
   // Kontrol karakterleri (satır sonu vb.) çizilmez.
   final gerekli = {for (final m in metinler) ...m.runes.where((r) => r >= 0x20)};
 
-  for (final w in [600, 700, 800]) {
-    test('Baloo2-$w metinlerdeki her karakteri çizer', () {
-      final kapsanan = _cmap(File('assets/fonts/Baloo2-$w.ttf').readAsBytesSync());
+  // Nunito da 27 Eki'de aynı alt kümeye indi (gövde metni, daha çok metin çizer).
+  for (final ad in ['Baloo2-600', 'Baloo2-700', 'Baloo2-800', 'Nunito-400', 'Nunito-600', 'Nunito-700']) {
+    test('$ad metinlerdeki her karakteri çizer', () {
+      final kapsanan = _cmap(File('assets/fonts/$ad.ttf').readAsBytesSync());
       final eksik = gerekli.where((r) => !kapsanan.contains(r)).map((r) => 'U+${r.toRadixString(16).toUpperCase()} ${String.fromCharCode(r)}');
       expect(eksik, isEmpty, reason: 'fontta olmayan karakter; tool/font/altkume.sh aralığını genişlet');
-      // Alt küme gerçekten küçük kalsın (Devanagari geri gelmesin).
-      expect(File('assets/fonts/Baloo2-$w.ttf').lengthSync(), lessThan(150 * 1024));
+      // Alt küme gerçekten küçük kalsın (Devanagari/Kiril geri gelmesin).
+      expect(File('assets/fonts/$ad.ttf').lengthSync(), lessThan(150 * 1024));
     });
   }
 }

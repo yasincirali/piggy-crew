@@ -11,16 +11,20 @@
 # karakter fontta olmalı. Yeni dil (ör. Rusça) eklenirse aralığı genişlet ve
 # özgün fontları https://github.com/EkType/Baloo2 'den yeniden indir (alt
 # küme yeniden genişletilemez). Lisans OFL 1.1: alt küme serbest, Baloo 2'de
-# Reserved Font Name yok. Nunito zaten küçük, dokunulmaz.
+# Reserved Font Name yok.
+#
+# Nunito (gövde) de aynı aralığa indirildi (Ar-Ge 26 Eki 20:07 #2, boyut işi):
+# Kiril ve Vietnam glifleri 6 dilde kullanılmıyor. Özgün dosyalar
+# https://github.com/googlefonts/nunito (OFL 1.1, Reserved Font Name yok).
+# 800 ağırlığı pubspec'te değil (pakete girmez), yalnız ekran görüntüsü testleri için durur.
 #
 # Kullanım: pip install fonttools && bash tool/font/altkume.sh
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 ARALIK="U+0000-024F,U+2000-206F,U+20A0-20CF"
-for w in 600 700 800; do
-  f="assets/fonts/Baloo2-$w.ttf"
+for f in assets/fonts/Baloo2-{600,700,800}.ttf assets/fonts/Nunito-{400,600,700,800}.ttf; do
   pyftsubset "$f" --unicodes="$ARALIK" --layout-features='*' --name-IDs='*' \
     --name-languages='*' --notdef-outline --output-file="$f.tmp"
   mv "$f.tmp" "$f"
 done
-ls -la assets/fonts/Baloo2-*.ttf
+ls -la assets/fonts/*.ttf

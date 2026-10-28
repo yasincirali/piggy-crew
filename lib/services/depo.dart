@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/cocuk.dart';
 import '../models/evre.dart';
 import '../models/hedef.dart';
+import '../models/plan.dart';
 import '../models/varlik.dart';
 
 /// Yerel kalıcılık — tek dosya, tek sürüm anahtarı.
@@ -36,6 +37,7 @@ class Depo {
   static const _odun = 'odun_v1';
   static const _ikilem = 'ikilem_gosterildi_v1';
   static const _hedefler = 'hedefler_v1';
+  static const _planlar = 'planlar_v1';
 
   Cocuk? cocukOku() {
     final s = _sp.getString(_cocuk);
@@ -167,6 +169,25 @@ class Depo {
   Future<void> hedefleriYaz(Map<VarlikTuru, Hedef> m) =>
       _sp.setString(_hedefler, jsonEncode({for (final e in m.entries) e.key.name: e.value.toJson()}));
 
+  /// Karakter başına bir plan (bkz. [PlanSablon]). Bilinmeyen kayıt atlanır.
+  Map<VarlikTuru, PlanSablon> planlariOku() {
+    final s = _sp.getString(_planlar);
+    if (s == null) return const {};
+    try {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return {
+        for (final e in m.entries)
+          if (VarlikTuru.values.any((t) => t.name == e.key) && PlanSablon.values.any((p) => p.name == e.value))
+            VarlikTuru.values.byName(e.key): PlanSablon.values.byName(e.value as String),
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<void> planlariYaz(Map<VarlikTuru, PlanSablon> m) =>
+      _sp.setString(_planlar, jsonEncode({for (final e in m.entries) e.key.name: e.value.name}));
+
   DateTime? _anOku(String anahtar) {
     final v = _sp.get(anahtar);
     return v is int ? DateTime.fromMillisecondsSinceEpoch(v) : null;
@@ -184,6 +205,7 @@ class Depo {
     await _sp.remove(_odun);
     await _sp.remove(_ikilem);
     await _sp.remove(_hedefler);
+    await _sp.remove(_planlar);
     // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
     await _sp.remove(_sonGorulme);
     await _sp.remove(_sonDonus);

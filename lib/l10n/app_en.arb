@@ -364,5 +364,11 @@
   "ogrenKarakterSoruyor": "{karakter} is stuck on this. Can you explain it?",
   "ogrenOgretti": "{karakter}: \"Now I get it, thanks!\"",
   "ogrenBirlikte": "{karakter}: \"Hmm, I mixed it up too. Shall we read it again together?\"",
-  "detayOgrettiklerin": "{karakter} learned from you"
+  "detayOgrettiklerin": "{karakter} learned from you",
+  "planBaslik": "My plan",
+  "planYok": "You can pick a small plan for yourself. Nobody checks it.",
+  "planSec": "Pick a plan",
+  "planSayfaAlt": "Pick a sentence and make it your promise. You can change it any time.",
+  "planCumle": "{sablon, select, biriktiririm{When I get my pocket money, I save some of it with {karakter}.} beklerim{Before I buy something, I wait one day.} bakarim{At the weekend, I check my piggy bank with {karakter}.} other{Before I buy something, I wait one day.}}",
+  "planKaldir": "Remove plan"
 }

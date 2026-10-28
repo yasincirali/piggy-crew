@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../l10n/l10n.dart';
 import '../models/ders.dart';
 import '../models/hedef.dart';
+import '../models/plan.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/dokunsal.dart';
@@ -19,6 +20,7 @@ import 'besle_sayfasi.dart';
 import 'hedef_sayfasi.dart';
 import 'ikilem_sayfasi.dart';
 import 'kumbaradan_al_sayfasi.dart';
+import 'plan_sayfasi.dart';
 
 /// Tekil karakter: büyük karakter, bugünkü değer, iki çubuk (Verdin / Bugün),
 /// "neden" kartı (karakter konuşur), hedef eşyası, besleme listesi. Grafik yok.
@@ -141,6 +143,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                   ),
                   const SizedBox(height: Bosluk.l),
                   _HedefKarti(tur: tur, durum: d),
+                  _PlanKarti(tur: tur, ad: ad),
                   _OgretilenRaf(tur: tur, ad: ad),
                   if (hareketler.isNotEmpty) ...[
                     const SizedBox(height: Bosluk.xl),
@@ -285,6 +288,47 @@ class _OgretilenRaf extends ConsumerWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// "Benim planım" (bkz. [PlanSablon]): hedefin hemen altında, çünkü plan
+/// hedefe giden yolu söyler. Kampa kart eklenmedi (inceleme 26 Eki 20:07):
+/// kamp bir sahne, kart onu kalabalıklaştırır. Sayı yok, denetim yok.
+class _PlanKarti extends ConsumerWidget {
+  const _PlanKarti({required this.tur, required this.ad});
+  final VarlikTuru tur;
+  final String ad;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final r = context.r;
+    final PlanSablon? p = ref.watch(planlarProvider)[tur];
+    return Padding(
+      padding: const EdgeInsets.only(top: Bosluk.l),
+      child: Kart(
+        onTap: p == null ? null : () => planGoster(context, tur),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Wrap(alignment: WrapAlignment.spaceBetween, crossAxisAlignment: WrapCrossAlignment.center, children: [
+            BolumBasligi(l.planBaslik),
+            if (p != null)
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.edit_rounded, size: 18, color: r.sub),
+                const SizedBox(width: Bosluk.xs),
+                Flexible(child: Text(l.hedefDegistir, style: context.t.labelLarge?.copyWith(color: r.sub))),
+              ]),
+          ]),
+          const SizedBox(height: Bosluk.s),
+          if (p != null)
+            Text(l.planCumle(p.name, ad), style: context.t.titleMedium)
+          else ...[
+            Text(l.planYok, style: context.t.bodyLarge),
+            const SizedBox(height: Bosluk.m),
+            AnaDugme(metin: l.planSec, ikincil: true, onTap: () => planGoster(context, tur)),
+          ],
+        ]),
       ),
     );
   }

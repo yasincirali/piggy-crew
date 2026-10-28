@@ -1275,6 +1275,42 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'{karakter} senden öğrendi'**
   String detayOgrettiklerin(String karakter);
+
+  /// Karakter ekranındaki plan kartının ve alt sayfanın başlığı (Ar-Ge 26 Eki, uygulama niyetleri): çocuğun kendi seçtiği 'olunca, yaparım' cümlesi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Benim planım'**
+  String get planBaslik;
+
+  /// Plan seçilmemişken kartta. Davet, talep değil; denetim olmadığını söyler.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kendine küçük bir plan seçebilirsin. Kimse kontrol etmez.'**
+  String get planYok;
+
+  /// Plan alt sayfasını açan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Plan seç'**
+  String get planSec;
+
+  /// Plan alt sayfasının açıklaması.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir cümle seç, senin sözün olsun. İstediğin zaman değiştirebilirsin.'**
+  String get planSayfaAlt;
+
+  /// Plan şablonu, çocuğun ağzından (birinci tekil). 'olunca, yaparım' biçimi; tutar ve ad yazılmaz. Türkçede karakter adına ek gelmesin diye 'ile' kullanılır.
+  ///
+  /// In tr, this message translates to:
+  /// **'{sablon, select, biriktiririm{Harçlığımı alınca bir kısmını {karakter} ile biriktiririm.} beklerim{Bir şey almadan önce bir gün beklerim.} bakarim{Hafta sonu {karakter} ile kumbarama bakarım.} other{Bir şey almadan önce bir gün beklerim.}}'**
+  String planCumle(String sablon, String karakter);
+
+  /// Plan alt sayfasında, plan varken.
+  ///
+  /// In tr, this message translates to:
+  /// **'Planı kaldır'**
+  String get planKaldir;
 }
 
 class _AppLocalizationsDelegate
