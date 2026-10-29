@@ -1,7 +1,6 @@
 Bu sürümde denenecekler:
-• Benim planım: Kamp'ta bir karaktere dokun ve aşağı kaydır. Hedef kartının altında "Benim planım" kartı olmalı. "Plan seç"e dokun: üç cümle gelmeli (örneğin "Bir şey almadan önce bir gün beklerim."). Birini seç: sayfa kapanmalı ve seçtiğin cümle kartta yazmalı.
-• Planı değiştir ya da kaldır: karttaki cümleye dokun, başka bir cümle seç; kartta yeni cümle görünmeli. Tekrar aç ve "Planı kaldır"a bas: kart "Plan seç" hâline dönmeli.
-• Plan her karakterde ayrı: başka bir karakterin ekranında senin seçtiğin plan görünmemeli, orada ayrı seçebilmelisin. Uygulamayı kapatıp açınca planlar yerinde kalmalı.
-• Hiçbir yerde puan, sayaç ya da "planına uydun mu" sorusu olmamalı.
-• Karakterler daha hafif: uygulama yaklaşık 5 MB küçüldü. 3D karakterler, büyüme anı ve dokununca oynayan hareketler eskisi gibi net görünmeli; kenarlarda tırtık ya da gölge halkası olmamalı.
-• Tüm veriyi sil: Anne baba köşesinden sildikten sonra yeni profilde eski planlar ve "öğrettiklerin" rafı görünmemeli.
+• Hedefini kendin çiz: Kamp'ta bir karaktere dokun, aşağı kaydır ve "Hedef seç"e bas. Listenin sonunda "Kendin çiz" olmalı. Dokun: beyaz bir çizim kâğıdı açılmalı. Parmağınla bir şey çiz, alttaki renklerden birini seçip devam et.
+• "Geri al" son çizgiyi, "Temizle" hepsini silmeli. "Vazgeç" çizimi almadan kapatmalı.
+• "Bitti"ye bas: çizimin hedef sayfasında görünmeli. Bir fiyat yaz ve "Hedefi koy"a bas. Kartta senin çizimin durmalı ve "… senin çizdiğin şey için biriktiriyor" yazmalı. Besledikçe çizim alttan renklenmeli.
+• Uygulamayı kapatıp açınca çizim yerinde kalmalı. Anne baba köşesinden tüm veriyi silince çizim de gitmeli.
+• Kampta hareketler daha akıcı: karakterler boşta dururken aynı anda yalnız biri büyük bir hareket yapmalı, ekran takılmamalı.

@@ -1,0 +1,166 @@
+name: Android — Play kapalı test
+
+# Her main push'ta (iOS TestFlight ile aynı tetik): imzalı AAB → Play
+# kapalı test (alpha). Sandık `android-release.yml`'den türetildi; Firebase,
+# Supabase define'ları ve RevenueCat bu uygulamada yok (v1 yerel-önce, Kids).
+#
+# Üç kapı:
+# - Yükleme anahtarı secret'ları yoksa main'de iş atlanır ve yeşil biter
+#   (iOS'taki "Apple secret'ları yok" kapısı gibi); YAPMAN_GEREKENLER "Android".
+# - PR'da (yalnız android/ ya da bu dosya değişince) geçici bir anahtarla
+#   derlenir, hiçbir yere yüklenmez: Gradle imza düzeni birleşmeden önce
+#   denenmiş olur.
+# - Play servis hesabı secret'ı yoksa AAB yalnız artefakt olarak iner; ilk
+#   AAB zaten elle yüklenmeli (Play API yeni uygulamada ilk yüklemeyi kabul
+#   etmiyor; sandık 2026-09-27'de böyle yaşadı).
+#
+# ⚠️ Artefakt 30 gün sonra silinir. Dart karartması açık: yayınlanan her
+# sürümün `symbols/` klasörünü indirip sakla, yoksa o sürümün çökme kaydı
+# okunmaz.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'store_listing/**'
+      - '**/*.md'
+  pull_request:
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-release.yml'
+  workflow_dispatch:
+    inputs:
+      play_durumu:
+        description: "Play'e yükleme durumu: completed = incelemeye gider, draft = Console'da elle gönderilir"
+        type: choice
+        options: [completed, draft]
+        default: completed
+
+# Koşan derleme iptal edilmez (sandık 2026-10-10: arka arkaya birleşmelerde
+# Android hiç bitemiyordu); bekleyen tek koşu en güncel main'i alır.
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PR: ${{ github.event_name == 'pull_request' && '1' || '' }}
+      ANAHTAR_VAR: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && '1' || '' }}
+      PLAY_YUKLE: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' && '1' || '' }}
+    steps:
+      - name: Kapı
+        id: kapi
+        run: |
+          if [ -n "$PR" ] || [ -n "$ANAHTAR_VAR" ]; then
+            echo "devam=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "devam=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Android yükleme anahtarı secret'ları yok, Play adımı atlandı (YAPMAN_GEREKENLER.md \"Android\")."
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.kapi.outputs.devam == 'true'
+
+      - name: Set up Java
+        if: steps.kapi.outputs.devam == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        if: steps.kapi.outputs.devam == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          # Sürüm sabit (sandık kararı): stable ilerleyince analyze kendiliğinden kırılmasın.
+          flutter-version: 3.47.2
+          cache: true
+
+      - name: Flutter dependencies
+        if: steps.kapi.outputs.devam == 'true'
+        run: flutter pub get
+
+      # PR'da geçici anahtar: imza düzenini dener, ürünü değil. Bu AAB hiçbir
+      # yere yüklenmez ve Play onu zaten tanımaz.
+      - name: Keystore (secret ya da PR için geçici)
+        if: steps.kapi.outputs.devam == 'true'
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          if [ -n "$PR" ]; then
+            SIFRE="$(openssl rand -hex 16)"
+            echo "::add-mask::$SIFRE"
+            keytool -genkeypair -keystore android/app/upload-keystore.jks -alias gecici \
+              -keyalg RSA -keysize 2048 -validity 1 -storepass "$SIFRE" -keypass "$SIFRE" \
+              -dname "CN=PR derlemesi" -noprompt >/dev/null
+            ANDROID_KEY_ALIAS=gecici ANDROID_KEY_PASSWORD="$SIFRE" ANDROID_STORE_PASSWORD="$SIFRE"
+          else
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          fi
+          cat > android/key.properties <<EOF
+          storePassword=$ANDROID_STORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=upload-keystore.jks
+          EOF
+
+      # Analiz ve test ci.yml'de (PR ve main) koşar; burada tekrarlanmaz.
+      # versionCode her koşuda artar (100 + koşu no): Play aynı kodu reddeder.
+      - name: Build AAB
+        if: steps.kapi.outputs.devam == 'true'
+        run: |
+          flutter build appbundle --release \
+            --build-number=$((100 + GITHUB_RUN_NUMBER)) \
+            --obfuscate --split-debug-info=build/symbols
+
+      - name: Upload artifacts
+        if: steps.kapi.outputs.devam == 'true' && env.PR != '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            build/app/outputs/bundle/release/*.aab
+            build/symbols/**
+
+      # Kapalı test (alpha): TestFlight'ın Android karşılığı. Yönetilen
+      # yayınlama açıkken onaydan sonra Console'da "Yayınla"ya sen basarsın.
+      - name: Play Console — Kapalı test (alpha)
+        if: steps.kapi.outputs.devam == 'true' && env.PR != '1' && env.PLAY_YUKLE == '1'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.sandik.harcliklarim
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: alpha
+          status: ${{ github.event.inputs.play_durumu || 'completed' }}
+          whatsNewDirectory: store_listing/play_whatsnew
+
+      - name: Boyut özeti
+        if: steps.kapi.outputs.devam == 'true'
+        run: |
+          {
+            echo "### Android çıktısı"
+            echo ""
+            find build/app/outputs -name '*.aab' | while read -r f; do
+              printf -- "- %s: %s\n" "$(basename "$f")" "$(du -h "$f" | cut -f1)"
+            done
+            echo ""
+            echo "AAB teslim edilen boyut değildir: Play cihaz başına ayırır."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keystore temizle
+        if: always()
+        run: rm -f android/app/upload-keystore.jks android/key.properties

@@ -644,6 +644,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'kaykay': 'Monopatín',
       'oyun': 'Juego',
       'hediye': 'Regalo',
+      'cizim': 'Dibújalo',
       'other': 'Regalo',
     });
     return '$_temp0';
@@ -660,6 +661,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'kaykay': 'un monopatín',
       'oyun': 'un juego',
       'hediye': 'un regalo',
+      'cizim': 'lo que dibujaste',
       'other': 'un regalo',
     });
     return '$karakter ahorra para $_temp0';
@@ -676,6 +678,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'kaykay': '¡El monopatín está listo!',
       'oyun': '¡El juego está listo!',
       'hediye': '¡El regalo está listo!',
+      'cizim': '¡Lo que dibujaste está listo!',
       'other': '¡La meta está lista!',
     });
     return '$_temp0 $karakter está muy feliz.';
@@ -757,4 +760,44 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get planKaldir => 'Quitar el plan';
+
+  @override
+  String get cizimBaslik => 'Dibuja tu meta';
+
+  @override
+  String get cizimAlt => 'Dibuja aquí con el dedo eso para lo que ahorras.';
+
+  @override
+  String get cizimAlani => 'Zona de dibujo. Dibuja con el dedo.';
+
+  @override
+  String get cizimGeriAl => 'Deshacer';
+
+  @override
+  String get cizimTemizle => 'Borrar';
+
+  @override
+  String get cizimBitti => 'Listo';
+
+  @override
+  String get cizimVazgec => 'Cancelar';
+
+  @override
+  String get cizimYeniden => 'Dibujar otra vez';
+
+  @override
+  String get cizimEtiket => 'Tu dibujo';
+
+  @override
+  String cizimRenk(String renk) {
+    String _temp0 = intl.Intl.selectLogic(renk, {
+      'r0': 'Negro',
+      'r1': 'Rojo',
+      'r2': 'Amarillo',
+      'r3': 'Verde',
+      'r4': 'Azul',
+      'other': 'Negro',
+    });
+    return '$_temp0';
+  }
 }

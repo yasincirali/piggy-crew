@@ -385,7 +385,7 @@ class _HedefKartiState extends ConsumerState<_HedefKarti> {
 
     final v = h.doluluk(widget.durum);
     final hazir = h.ulasildi != null;
-    final esya = HedefEsyasi(esya: h.esya, doluluk: v);
+    final esya = HedefEsyasi(esya: h.esya, doluluk: v, cizim: h.cizim);
     final metin = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(hazir ? l.hedefHazir(ad, h.esya.name) : l.hedefCumle(ad, h.esya.name), style: context.t.titleMedium),
       const SizedBox(height: Bosluk.xs),

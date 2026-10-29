@@ -647,6 +647,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'kaykay': 'Skateboard',
       'oyun': 'Spiel',
       'hediye': 'Geschenk',
+      'cizim': 'Selbst malen',
       'other': 'Geschenk',
     });
     return '$_temp0';
@@ -663,6 +664,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'kaykay': 'ein Skateboard',
       'oyun': 'ein Spiel',
       'hediye': 'ein Geschenk',
+      'cizim': 'das, was du gemalt hast',
       'other': 'ein Geschenk',
     });
     return '$karakter spart für $_temp0';
@@ -679,6 +681,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'kaykay': 'Das Skateboard ist bereit!',
       'oyun': 'Das Spiel ist bereit!',
       'hediye': 'Das Geschenk ist bereit!',
+      'cizim': 'Dein gemaltes Ziel ist bereit!',
       'other': 'Das Ziel ist erreicht!',
     });
     return '$_temp0 $karakter freut sich sehr.';
@@ -761,4 +764,44 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get planKaldir => 'Plan entfernen';
+
+  @override
+  String get cizimBaslik => 'Mal dein Ziel';
+
+  @override
+  String get cizimAlt => 'Mal hier mit dem Finger, wofür du sparst.';
+
+  @override
+  String get cizimAlani => 'Malfläche. Mal mit dem Finger.';
+
+  @override
+  String get cizimGeriAl => 'Rückgängig';
+
+  @override
+  String get cizimTemizle => 'Leeren';
+
+  @override
+  String get cizimBitti => 'Fertig';
+
+  @override
+  String get cizimVazgec => 'Abbrechen';
+
+  @override
+  String get cizimYeniden => 'Neu malen';
+
+  @override
+  String get cizimEtiket => 'Dein Bild';
+
+  @override
+  String cizimRenk(String renk) {
+    String _temp0 = intl.Intl.selectLogic(renk, {
+      'r0': 'Schwarz',
+      'r1': 'Rot',
+      'r2': 'Gelb',
+      'r3': 'Grün',
+      'r4': 'Blau',
+      'other': 'Schwarz',
+    });
+    return '$_temp0';
+  }
 }

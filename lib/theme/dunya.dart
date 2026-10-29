@@ -61,6 +61,21 @@ class DunyaRenkleri extends ThemeExtension<DunyaRenkleri> {
   /// Mürekkep konturu — tüm karakterlerde sabit, tema değişse de aynı.
   static const Color murekkep = Color(0xFF2A1B14);
 
+  /// Çizim boya kutusu ("Hedefini kendin çiz"): temadan bağımsız, çocuğun
+  /// seçtiği renk her dünyada aynı kalır. Çizim hep [kagit] üstünde durur ki
+  /// koyu temada da mürekkep görünsün. Sıra kayıtta saklanır: yalnız sona ekle.
+  static const List<Color> boyalar = [
+    murekkep,
+    Color(0xFFE63946), // kırmızı
+    Color(0xFFF4A300), // sarı (kâğıtta okunur koyulukta)
+    Color(0xFF2A9D5C), // yeşil
+    Color(0xFF2F6FED), // mavi
+  ];
+  static const Color kagit = Color(0xFFFFFBF2);
+
+  /// Kâğıt üstünde, henüz dolmamış çizginin soluk izi.
+  static const Color kagitIz = Color(0xFFDDD5C6);
+
   static const _bahce = DunyaRenkleri(
     bg1: Color(0xFF0E2A22), bg2: Color(0xFF15382C), bg3: Color(0xFF1B4A36),
     fg: Color(0xFFF2F7EE), sub: Color(0xFFA9C9A2),

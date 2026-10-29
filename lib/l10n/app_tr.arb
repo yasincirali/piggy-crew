@@ -535,7 +535,7 @@
       }
     }
   },
-  "hedefEsyaAdi": "{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} other{Hediye}}",
+  "hedefEsyaAdi": "{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} cizim{Kendin çiz} other{Hediye}}",
   "@hedefEsyaAdi": {
     "description": "Hedef seçimindeki eşya adı (büyük harfle başlar).",
     "placeholders": {
@@ -544,7 +544,7 @@
       }
     }
   },
-  "hedefCumle": "{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} other{hediye}} için biriktiriyor",
+  "hedefCumle": "{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} cizim{senin çizdiğin şey} other{hediye}} için biriktiriyor",
   "@hedefCumle": {
     "description": "Hedef kartı: \"Zıpzıp bisiklet için biriktiriyor\". Sayı yok.",
     "placeholders": {
@@ -556,7 +556,7 @@
       }
     }
   },
-  "hedefHazir": "{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} other{Hedef hazır!}} {karakter} çok sevindi.",
+  "hedefHazir": "{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} cizim{Çizdiğin şey hazır!} other{Hedef hazır!}} {karakter} çok sevindi.",
   "@hedefHazir": {
     "description": "Hedefe ilk ulaşıldığında bir kez gösterilir.",
     "placeholders": {
@@ -664,5 +664,50 @@
   "planKaldir": "Planı kaldır",
   "@planKaldir": {
     "description": "Plan alt sayfasında, plan varken."
+  },
+  "cizimBaslik": "Hedefini çiz",
+  "@cizimBaslik": {
+    "description": "\"Hedefini kendin çiz\" sayfasının başlığı."
+  },
+  "cizimAlt": "Ne için biriktiriyorsan parmağınla buraya çiz.",
+  "@cizimAlt": {
+    "description": "Çizim sayfası alt yazısı. Çizim değerlendirilmez; talep değil, davet."
+  },
+  "cizimAlani": "Çizim alanı. Parmağınla çiz.",
+  "@cizimAlani": {
+    "description": "Ekran okuyucunun çizim alanı için okuduğu etiket."
+  },
+  "cizimGeriAl": "Geri al",
+  "@cizimGeriAl": {
+    "description": "Son çizgiyi geri alan düğme."
+  },
+  "cizimTemizle": "Temizle",
+  "@cizimTemizle": {
+    "description": "Tüm çizimi silen düğme."
+  },
+  "cizimBitti": "Bitti",
+  "@cizimBitti": {
+    "description": "Çizimi hedef olarak alan düğme."
+  },
+  "cizimVazgec": "Vazgeç",
+  "@cizimVazgec": {
+    "description": "Çizim sayfasını değiştirmeden kapatan düğme."
+  },
+  "cizimYeniden": "Yeniden çiz",
+  "@cizimYeniden": {
+    "description": "Hedef sayfasında çizimi yeniden açan düğme."
+  },
+  "cizimEtiket": "Senin çizimin",
+  "@cizimEtiket": {
+    "description": "Hedef kartındaki çizimin ekran okuyucu etiketi."
+  },
+  "cizimRenk": "{renk, select, r0{Siyah} r1{Kırmızı} r2{Sarı} r3{Yeşil} r4{Mavi} other{Siyah}}",
+  "@cizimRenk": {
+    "description": "Boya düğmesinin ekran okuyucu adı. r0..r4 boya kutusu sırası.",
+    "placeholders": {
+      "renk": {
+        "type": "String"
+      }
+    }
   }
 }

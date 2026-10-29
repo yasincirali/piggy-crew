@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/cizim.dart';
 import '../models/hedef.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/dokunsal.dart';
 import '../theme/dunya.dart';
 import '../utils/bicim.dart';
+import 'cizim_sayfasi.dart';
+import '../widgets/hedef_esyasi.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 
@@ -17,6 +20,10 @@ import '../widgets/ortak.dart';
 /// görünür; kartta eşya dolar (bkz. [Hedef]). Var olan hedef açılırsa
 /// değiştirilir ya da kaldırılır. Fiyat değişirse "ulaşıldı" sıfırlanır ki
 /// yeni hedef yeniden sevinsin; aynı kalırsa korunur.
+///
+/// "Kendin çiz" çipi çizim sayfasını açar; çizim bitince çip seçilir ve
+/// çizim burada önizlenir ("Yeniden çiz" ile değişir). Çizim de değişirse
+/// hedef yeni sayılır.
 Future<void> hedefGoster(BuildContext context, VarlikTuru tur) => altSayfaGoster<void>(context, _HedefSayfasi(tur: tur));
 
 class _HedefSayfasi extends ConsumerStatefulWidget {
@@ -29,6 +36,7 @@ class _HedefSayfasi extends ConsumerStatefulWidget {
 class _HedefState extends ConsumerState<_HedefSayfasi> {
   final _fiyat = TextEditingController();
   HedefEsya? _esya;
+  Cizim? _cizim;
   Hedef? _eski;
 
   @override
@@ -38,6 +46,7 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
     // Ulaşılmış hedef "Yeni hedef" ile açılır: boş başlar.
     if (_eski != null && _eski!.ulasildi == null) {
       _esya = _eski!.esya;
+      _cizim = _eski!.cizim;
       _fiyat.text = NumberFormat('0.##', ref.read(cocukProvider)!.para.yerel).format(_eski!.fiyatTl);
     }
   }
@@ -51,10 +60,20 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
   Future<void> _kaydet(double fiyat) async {
     final esya = _esya!;
     final eski = _eski;
-    final ayni = eski != null && eski.esya == esya && eski.fiyatTl == fiyat;
-    await ref.read(hedeflerProvider.notifier).koy(widget.tur, ayni ? eski : Hedef(esya: esya, fiyatTl: fiyat));
+    final cizim = esya == HedefEsya.cizim ? _cizim : null;
+    final ayni = eski != null && eski.esya == esya && eski.fiyatTl == fiyat && eski.cizim == cizim;
+    await ref.read(hedeflerProvider.notifier).koy(widget.tur, ayni ? eski : Hedef(esya: esya, fiyatTl: fiyat, cizim: cizim));
     ref.read(dokunsalProvider).cal(Dokunus.onay);
     if (mounted) Navigator.of(context).pop();
+  }
+
+  Future<void> _ciz() async {
+    final c = await cizimGoster(context, eski: _cizim);
+    if (c == null || c.bos || !mounted) return;
+    setState(() {
+      _cizim = c;
+      _esya = HedefEsya.cizim;
+    });
   }
 
   Future<void> _kaldir() async {
@@ -68,7 +87,7 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
     final r = context.r;
     final cocuk = ref.watch(cocukProvider)!;
     final fiyat = parseSayi(_fiyat.text);
-    final gecerli = _esya != null && fiyat != null;
+    final gecerli = _esya != null && fiyat != null && (_esya != HedefEsya.cizim || _cizim != null);
 
     // Kaydırılır: büyük yazıda (3,1×) klavyeyle birlikte sığmaz.
     return SingleChildScrollView(
@@ -97,9 +116,18 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
                 metin: l.hedefEsyaAdi(e.name),
                 secili: _esya == e,
                 onIkon: _esya == e ? null : Icon(e.ikon, size: 20, color: r.fg),
-                onTap: () => setState(() => _esya = e),
+                onTap: e == HedefEsya.cizim
+                    // Çizim varsa çip yalnız seçer; yoksa çizim sayfası açılır.
+                    ? (_cizim == null ? _ciz : () => setState(() => _esya = e))
+                    : () => setState(() => _esya = e),
               ),
           ]),
+          if (_esya == HedefEsya.cizim && _cizim != null) ...[
+            const SizedBox(height: Bosluk.l),
+            Center(child: HedefEsyasi(esya: HedefEsya.cizim, doluluk: 1, boyut: 120, cizim: _cizim, onizleme: true)),
+            const SizedBox(height: Bosluk.s),
+            AnaDugme(metin: l.cizimYeniden, ikincil: true, onTap: _ciz),
+          ],
           const SizedBox(height: Bosluk.xl),
           Text(l.hedefFiyat, style: context.t.titleMedium),
           const SizedBox(height: Bosluk.s),
