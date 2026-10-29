@@ -1112,6 +1112,11 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   bool _evreSevincCalindi = false;
   _Bosta _bostaTur = _Bosta.kipir;
   final _rnd = math.Random();
+
+  static const _pismisBosta = {_Bosta.ziplama, _Bosta.keyif, _Bosta.etrafaBak, _Bosta.dans};
+
+  /// Şu an pişmiş boşta sahneyi oynatan karakter (bkz. [_bostaPlanla]).
+  static _KarakterState? _sahnedeki;
   // Zamanlayıcılar alanda tutulur ve dispose'da iptal edilir; aksi hâlde
   // widget ağacı kalktıktan sonra sarkan timer kalır (testler yakalar).
   Timer? _bobGecikme;
@@ -1129,14 +1134,14 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
   void _sahneHazirla(String? ad, Evre? evre) {
     final anahtar = ad == null ? null : '$ad/${evre?.name}';
     if (anahtar == _sahneAd) return;
-    _sahneBeden?.birak();
-    _sahneBitki?.birak();
+    if (_sahneBeden case final f?) _sahneBirak(f);
+    if (_sahneBitki case final f?) _sahneBirak(f);
     _sahneBeden = _sahneBitki = null;
     _sahneAd = anahtar;
     if (ad == null) return;
     final t = widget.tur.name;
-    _sahneBeden = _Film('$t/${ad}_beden');
-    if (evre != null && evre != Evre.minik) _sahneBitki = _Film('$t/${ad}_${evre.name}');
+    _sahneBeden = _sahneAl('$t/${ad}_beden');
+    if (evre != null && evre != Evre.minik) _sahneBitki = _sahneAl('$t/${ad}_${evre.name}');
   }
 
   _Film? _bekledigimAtlas;
@@ -1298,7 +1303,19 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       final mesgul =
           _hop.isAnimating || _yeme.isAnimating || _kipir.isAnimating || _sevincC.isAnimating || _evreC.isAnimating || _donusC.isAnimating || widget.avuc?.value != null;
       if (!_hareketsiz && !mesgul) {
-        _bostaTur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
+        var tur = _Bosta.values[_rnd.nextInt(_Bosta.values.length)];
+        // Aynı anda yalnız bir karakter pişmiş 3D boşta sahne oynar (Ar-Ge
+        // 29 Eki #1): dördü birden dans edince kimin yaptığı görünmüyordu ve
+        // her sahne ayrı film çözüyordu. Sırası olmayan atlasla kıpırdar.
+        if (_pismisBosta.contains(tur) && UcBoyut.of(context)) {
+          final o = _sahnedeki;
+          if (o != null && o != this && o.mounted && o._bostaC.isAnimating) {
+            tur = _rnd.nextBool() ? _Bosta.kipir : _Bosta.gerinme;
+          } else {
+            _sahnedeki = this;
+          }
+        }
+        _bostaTur = tur;
         _bostaC.forward(from: 0);
       }
       _bostaPlanla();
@@ -1453,6 +1470,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
     _gulusC.dispose();
     _yeme.dispose();
     _sahneHazirla(null, null);
+    if (_sahnedeki == this) _sahnedeki = null;
     _bekledigimAtlas?.hazir.removeListener(_atlasHazir);
     _evreC.dispose();
     super.dispose();

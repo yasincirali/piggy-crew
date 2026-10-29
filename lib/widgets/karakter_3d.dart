@@ -89,6 +89,9 @@ class _Film {
   /// [i]. kare; henüz çözülmediyse en son çözülen, hiç yoksa null.
   ui.Image? kare(int i) => kareler.isEmpty ? null : kareler[math.min(i, kareler.length - 1)];
 
+  /// Çözülmüş karelerin bellekteki boyutu (RGBA).
+  int get bayt => kareler.fold(0, (t, k) => t + k.width * k.height * 4);
+
   void birak() {
     _birakildi = true;
     for (final k in kareler) {
@@ -106,6 +109,57 @@ _Film _atlas(VarlikTuru t, Evre? e) {
   final a = '${t.name}/atlas_${(e ?? Evre.minik).name}';
   return _atlaslar.putIfAbsent(a, () => _Film(a));
 }
+
+/// Pişmiş sahne filmleri (Ar-Ge 29 Eki #1): eskiden her oynayışta asset
+/// baştan yüklenip bütün kareleri çözülüyordu; kampta dört karakterin boşta
+/// hareketleriyle ~3,5 sn'de bir film çözülüyordu. Artık son kullanılanlar
+/// bellekte kalır. Bütçe çözülmüş kare baytıdır; aşılınca en eski ve şu an
+/// kimsenin oynatmadığı film bırakılır. Oynayan film (sayaç > 0) bırakılmaz.
+const sahneOnbellekBayt = 25 * 1024 * 1024;
+
+/// Ekleme sırası = kullanım sırası (en eski başta).
+final _sahneler = <String, _Film>{};
+final _sahneSayac = <String, int>{};
+
+_Film _sahneAl(String a) {
+  final f = _sahneler.remove(a) ?? _Film(a);
+  _sahneler[a] = f;
+  _sahneSayac[a] = (_sahneSayac[a] ?? 0) + 1;
+  _sahneBuda();
+  return f;
+}
+
+void _sahneBirak(_Film f) {
+  final a = f.anahtar;
+  final n = (_sahneSayac[a] ?? 1) - 1;
+  if (n > 0) {
+    _sahneSayac[a] = n;
+    return;
+  }
+  _sahneSayac.remove(a);
+  // Çözülemeyen film saklanmaz: bir sonraki denemede yeniden okunsun.
+  if (f.hata && _sahneler[a] == f) _sahneler.remove(a)!.birak();
+  _sahneBuda();
+}
+
+void _sahneBuda() {
+  var toplam = _sahneler.values.fold(0, (t, f) => t + f.bayt);
+  for (final a in [..._sahneler.keys]) {
+    if (toplam <= sahneOnbellekBayt) break;
+    if (_sahneSayac.containsKey(a)) continue;
+    final f = _sahneler.remove(a)!;
+    toplam -= f.bayt;
+    f.birak();
+  }
+}
+
+/// Test için: önbellekteki filmler ve toplam bayt.
+@visibleForTesting
+({int film, int bayt, int oynayan}) sahneOnbellekDurumu() => (
+      film: _sahneler.length,
+      bayt: _sahneler.values.fold(0, (t, f) => t + f.bayt),
+      oynayan: _sahneSayac.length,
+    );
 
 /// Bir katman: film, kare ve opaklık.
 typedef _Katman = ({_Film film, int kare, double opak});
