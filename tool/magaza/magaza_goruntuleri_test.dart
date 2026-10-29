@@ -4,7 +4,11 @@
 // test/ altında DEĞİL: CI'da koşmaz (her PR'da 24 PNG üretmek boşa), elle:
 //   flutter test tool/magaza/magaza_goruntuleri_test.dart --update-goldens \
 //     --dart-define=CIKTI=/mutlak/klasor
-// Boyut App Store 6,9" (1320×2868). Metin görüntüye gömülmez; mağaza başlığı
+// Boyut App Store 6,9" (1320×2868). `--dart-define=PLAY=true` Google Play
+// boyutunu üretir (1080×2160): Play uzun kenarın kısa kenarın iki katını
+// aşmasını kabul etmiyor, 1320×2868 (2,17) reddedilir (Ar-Ge 29 Eki 20:07 #1).
+// PLAY'de ayrıca 1024×500 özellik görseli (`ozellik.png`, dil bağımsız,
+// metinsiz: Play onu bazen yazının arkasında kırpar). Metin görüntüye gömülmez; mağaza başlığı
 // ASC'deki metinden gelir (Ar-Ge 23 Eki 20:07: Sincap'ın ikilemi gibi bir kez
 // görülen anlar vitrine konmaz, "her açılışta soru soruyor" sanılır).
 import 'dart:convert';
@@ -27,6 +31,7 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const cikti = String.fromEnvironment('CIKTI', defaultValue: 'build/magaza');
+const play = bool.fromEnvironment('PLAY');
 
 /// Dil → demo çocuk adı ve para birimi (o dilin mağazasındaki tipik veli).
 const demolar = {
@@ -71,8 +76,8 @@ void main() {
       t.platformDispatcher.localeTestValue = Locale(dil);
       t.platformDispatcher.localesTestValue = [Locale(dil)];
       t.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
-      t.view.physicalSize = const Size(1320, 2868);
-      t.view.devicePixelRatio = 3;
+      t.view.physicalSize = play ? const Size(1080, 2160) : const Size(1320, 2868);
+      t.view.devicePixelRatio = play ? 2.5 : 3;
       addTearDown(t.platformDispatcher.clearAllTestValues);
       addTearDown(t.view.reset);
 
