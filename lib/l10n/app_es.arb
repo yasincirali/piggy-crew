@@ -210,5 +210,7 @@
   "cizimVazgec": "Cerrar",
   "cizimYeniden": "Dibujar otra vez",
   "cizimEtiket": "Tu dibujo",
-  "cizimRenk": "{renk, select, r0{Negro} r1{Rojo} r2{Amarillo} r3{Verde} r4{Azul} other{Negro}}"
+  "cizimRenk": "{renk, select, r0{Negro} r1{Rojo} r2{Amarillo} r3{Verde} r4{Azul} other{Negro}}",
+  "ulastiklarimBaslik": "Metas que lograste",
+  "ulasilanCumle": "Lo lograste: {ay}"
 }

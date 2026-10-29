@@ -143,6 +143,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                   ),
                   const SizedBox(height: Bosluk.l),
                   _HedefKarti(tur: tur, durum: d),
+                  _Ulastiklarim(tur: tur),
                   _PlanKarti(tur: tur, ad: ad),
                   _OgretilenRaf(tur: tur, ad: ad),
                   if (hareketler.isNotEmpty) ...[
@@ -288,6 +289,62 @@ class _OgretilenRaf extends ConsumerWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// "Ulaştıklarım" (Ar-Ge 29 Eki 20:07 #3): dolmuş eski hedefler, en yenisi
+/// solda. Ustalık deneyimini hatırlatır (Bandura), ödül değildir: sayı,
+/// rozet, "hepsini topla" yok; boşken görünmez. Hücre altında yalnız ay.
+class _Ulastiklarim extends ConsumerWidget {
+  const _Ulastiklarim({required this.tur});
+  final VarlikTuru tur;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final r = context.r;
+    final liste = ref.watch(ulasilanlarProvider)[tur];
+    if (liste == null || liste.isEmpty) return const SizedBox.shrink();
+    final yerel = Localizations.localeOf(context).toString();
+    String ad(Hedef h) => h.esya == HedefEsya.cizim ? l.cizimEtiket : l.hedefEsyaAdi(h.esya.name);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: Bosluk.l),
+      child: Kart(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          BolumBasligi(l.ulastiklarimBaslik),
+          const SizedBox(height: Bosluk.m),
+          Wrap(spacing: Bosluk.m, runSpacing: Bosluk.m, children: [
+            for (final h in liste.reversed)
+              Basilabilir(
+                semantik: '${ad(h)}, ${DateFormat.yMMMM(yerel).format(h.ulasildi!)}',
+                onTap: () => altSayfaGoster<void>(
+                  context,
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.xl, Bosluk.xl, Bosluk.xxl),
+                    child: Column(children: [
+                      HedefEsyasi(esya: h.esya, doluluk: 1, boyut: 120, cizim: h.cizim),
+                      const SizedBox(height: Bosluk.l),
+                      Text(
+                        l.ulasilanCumle(DateFormat.yMMMM(yerel).format(h.ulasildi!)),
+                        style: context.t.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                    ]),
+                  ),
+                ),
+                child: ExcludeSemantics(
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    HedefEsyasi(esya: h.esya, doluluk: 1, boyut: 40, cizim: h.cizim),
+                    const SizedBox(height: Bosluk.xs),
+                    Text(DateFormat.MMMM(yerel).format(h.ulasildi!), style: context.t.labelMedium?.copyWith(color: r.sub)),
+                  ]),
+                ),
+              ),
+          ]),
+        ]),
       ),
     );
   }

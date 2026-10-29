@@ -804,4 +804,12 @@ class AppLocalizationsDe extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get ulastiklarimBaslik => 'Erreichte Ziele';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'Geschafft: $ay';
+  }
 }

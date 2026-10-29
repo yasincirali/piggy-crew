@@ -709,5 +709,18 @@
         "type": "String"
       }
     }
+  },
+  "ulastiklarimBaslik": "Ulaştıklarım",
+  "ulasilanCumle": "Ulaştın: {ay}",
+  "@ulastiklarimBaslik": {
+    "description": "Karakter ekranında dolmuş eski hedeflerin şeridi. Sayı yok."
+  },
+  "@ulasilanCumle": {
+    "description": "Ulaşılan eski hedefe dokununca; ay = \"Ekim 2026\" gibi ay ve yıl.",
+    "placeholders": {
+      "ay": {
+        "type": "String"
+      }
+    }
   }
 }

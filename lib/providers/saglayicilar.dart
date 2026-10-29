@@ -94,6 +94,7 @@ class CocukNotifier extends Notifier<Cocuk?> {
     ref.invalidate(hareketlerProvider);
     ref.invalidate(cikartmalarProvider);
     ref.invalidate(hedeflerProvider);
+    ref.invalidate(ulasilanlarProvider);
     ref.invalidate(planlarProvider);
     // Öğretilenler de: yoksa silinen çocuğun rafı yeni çocukta görünürdü.
     ref.invalidate(ogretilenProvider);
@@ -161,12 +162,23 @@ class HedeflerNotifier extends Notifier<Map<VarlikTuru, Hedef>> {
   @override
   Map<VarlikTuru, Hedef> build() => ref.read(depoProvider).hedefleriOku();
 
+  /// Dolmuş hedefin yerine yenisi konunca (ya da kaldırılınca) eskisi
+  /// silinmez, "Ulaştıklarım"a geçer: çocuğun ilk biriktirip aldığı şey
+  /// uygulamadan gitmesin (Ar-Ge 29 Eki 20:07 #3).
+  Future<void> _eskiyiSakla(VarlikTuru t, Hedef? yeni) async {
+    final eski = state[t];
+    if (eski == null || eski.ulasildi == null || eski == yeni) return;
+    await ref.read(ulasilanlarProvider.notifier).ekle(t, eski);
+  }
+
   Future<void> koy(VarlikTuru t, Hedef h) async {
+    await _eskiyiSakla(t, h);
     state = {...state, t: h};
     await ref.read(depoProvider).hedefleriYaz(state);
   }
 
   Future<void> kaldir(VarlikTuru t) async {
+    await _eskiyiSakla(t, null);
     state = {...state}..remove(t);
     await ref.read(depoProvider).hedefleriYaz(state);
   }
@@ -181,6 +193,23 @@ class HedeflerNotifier extends Notifier<Map<VarlikTuru, Hedef>> {
 }
 
 final hedeflerProvider = NotifierProvider<HedeflerNotifier, Map<VarlikTuru, Hedef>>(HedeflerNotifier.new);
+
+/// "Ulaştıklarım": karakter başına dolmuş eski hedefler. Sayı gösterilmez;
+/// en eskisi [enFazla]'yı aşınca düşer (kayıt küçük kalsın, çizimler dahil).
+class UlasilanlarNotifier extends Notifier<Map<VarlikTuru, List<Hedef>>> {
+  static const enFazla = 24;
+
+  @override
+  Map<VarlikTuru, List<Hedef>> build() => ref.read(depoProvider).ulasilanlariOku();
+
+  Future<void> ekle(VarlikTuru t, Hedef h) async {
+    final liste = [...?state[t], h];
+    state = {...state, t: liste.length > enFazla ? liste.sublist(liste.length - enFazla) : liste};
+    await ref.read(depoProvider).ulasilanlariYaz(state);
+  }
+}
+
+final ulasilanlarProvider = NotifierProvider<UlasilanlarNotifier, Map<VarlikTuru, List<Hedef>>>(UlasilanlarNotifier.new);
 
 /// "Benim planım": karakter başına çocuğun seçtiği cümle (bkz. [PlanSablon]).
 class PlanlarNotifier extends Notifier<Map<VarlikTuru, PlanSablon>> {

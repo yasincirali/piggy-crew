@@ -805,4 +805,12 @@ class AppLocalizationsFr extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get ulastiklarimBaslik => 'Objectifs atteints';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'Objectif atteint : $ay';
+  }
 }

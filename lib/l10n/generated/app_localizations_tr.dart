@@ -804,4 +804,12 @@ class AppLocalizationsTr extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get ulastiklarimBaslik => 'Ulaştıklarım';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'Ulaştın: $ay';
+  }
 }
