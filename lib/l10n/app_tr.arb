@@ -689,9 +689,9 @@
   "@cizimBitti": {
     "description": "Çizimi hedef olarak alan düğme."
   },
-  "cizimVazgec": "Vazgeç",
+  "cizimVazgec": "Kapat",
   "@cizimVazgec": {
-    "description": "Çizim sayfasını değiştirmeden kapatan düğme."
+    "description": "Çizim sayfasını kapatan düğme; yarım çizim taslak olarak kalır."
   },
   "cizimYeniden": "Yeniden çiz",
   "@cizimYeniden": {

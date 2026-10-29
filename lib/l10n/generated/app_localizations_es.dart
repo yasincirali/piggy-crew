@@ -780,7 +780,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cizimBitti => 'Listo';
 
   @override
-  String get cizimVazgec => 'Cancelar';
+  String get cizimVazgec => 'Cerrar';
 
   @override
   String get cizimYeniden => 'Dibujar otra vez';

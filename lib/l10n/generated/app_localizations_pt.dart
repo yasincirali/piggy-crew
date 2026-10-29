@@ -784,7 +784,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cizimBitti => 'Pronto';
 
   @override
-  String get cizimVazgec => 'Cancelar';
+  String get cizimVazgec => 'Fechar';
 
   @override
   String get cizimYeniden => 'Desenhar de novo';

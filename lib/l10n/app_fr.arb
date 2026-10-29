@@ -207,7 +207,7 @@
   "cizimGeriAl": "Annuler",
   "cizimTemizle": "Effacer",
   "cizimBitti": "Fini",
-  "cizimVazgec": "Retour",
+  "cizimVazgec": "Fermer",
   "cizimYeniden": "Redessiner",
   "cizimEtiket": "Ton dessin",
   "cizimRenk": "{renk, select, r0{Noir} r1{Rouge} r2{Jaune} r3{Vert} r4{Bleu} other{Noir}}"

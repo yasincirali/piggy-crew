@@ -11,17 +11,25 @@ import '../widgets/cizim_boyaci.dart';
 import '../widgets/ortak.dart';
 
 /// "Hedefini kendin çiz" (2026-10-29): listede olmayan hedefi çocuk çizer.
-/// Bitti → çizim döner; Vazgeç ya da aşağı kaydırma → null (önceki çizim
-/// korunur, hedef sayfası değişmez).
+/// Bitti → çizim döner; Kapat, dışına dokunma, aşağı çekme ya da geri tuşu
+/// → null (hedef değişmez).
+///
+/// Yarım çizim kaybolmaz (Ar-Ge 29 Eki 20:07 #2): her değişiklik
+/// [onDegisti] ile çağırana gider, çağıran onu taslak olarak tutar ve bir
+/// sonraki açılışta [eski] olarak geri verir. Yanlış bir dokunuşla bir
+/// dakikalık emek gitmesin; yalnız "Temizle" siler. Taslak kalıcı kayda
+/// yazılmaz (hedef sayfası kapanınca gider).
 ///
 /// Bilerek az araç: beş boya, tek kalınlık, geri al, temizle. Silgi, kalınlık,
 /// şekil yok: 7 yaşın bir dakikada bitireceği bir şey; araç kutusu çizimin
 /// önüne geçmesin. Çizim değerlendirilmez ("güzel olmuş" yok).
-Future<Cizim?> cizimGoster(BuildContext context, {Cizim? eski}) => altSayfaGoster<Cizim>(context, _CizimSayfasi(eski: eski));
+Future<Cizim?> cizimGoster(BuildContext context, {Cizim? eski, ValueChanged<Cizim>? onDegisti}) =>
+    altSayfaGoster<Cizim>(context, _CizimSayfasi(eski: eski, onDegisti: onDegisti));
 
 class _CizimSayfasi extends ConsumerStatefulWidget {
-  const _CizimSayfasi({this.eski});
+  const _CizimSayfasi({this.eski, this.onDegisti});
   final Cizim? eski;
+  final ValueChanged<Cizim>? onDegisti;
   @override
   ConsumerState<_CizimSayfasi> createState() => _CizimState();
 }
@@ -54,18 +62,26 @@ class _CizimState extends ConsumerState<_CizimSayfasi> {
         if (c.noktalar.length >= Cizim.enFazlaNokta || (q - c.noktalar.last).distance < Cizim.enKisaAdim) return;
         setState(() => _cizgiler[i] = c.ekle(q));
       },
-      bitir: () => _parmak = null,
+      bitir: () {
+        _parmak = null;
+        _bildir();
+      },
     );
   }
+
+  /// Çizgi bitince (her nokta değil): taslak çağıranda güncel kalsın.
+  void _bildir() => widget.onDegisti?.call(_cizim);
 
   void _geriAl() {
     if (_cizgiler.isEmpty) return;
     setState(() => _cizgiler.removeLast());
+    _bildir();
   }
 
   void _temizle() {
     if (_cizgiler.isEmpty) return;
     setState(() => _cizgiler = []);
+    _bildir();
   }
 
   @override

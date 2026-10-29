@@ -1348,10 +1348,10 @@ abstract class AppLocalizations {
   /// **'Bitti'**
   String get cizimBitti;
 
-  /// Çizim sayfasını değiştirmeden kapatan düğme.
+  /// Çizim sayfasını kapatan düğme; yarım çizim taslak olarak kalır.
   ///
   /// In tr, this message translates to:
-  /// **'Vazgeç'**
+  /// **'Kapat'**
   String get cizimVazgec;
 
   /// Hedef sayfasında çizimi yeniden açan düğme.

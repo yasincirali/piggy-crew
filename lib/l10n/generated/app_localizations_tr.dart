@@ -784,7 +784,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cizimBitti => 'Bitti';
 
   @override
-  String get cizimVazgec => 'Vazgeç';
+  String get cizimVazgec => 'Kapat';
 
   @override
   String get cizimYeniden => 'Yeniden çiz';

@@ -785,7 +785,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cizimBitti => 'Fini';
 
   @override
-  String get cizimVazgec => 'Retour';
+  String get cizimVazgec => 'Fermer';
 
   @override
   String get cizimYeniden => 'Redessiner';

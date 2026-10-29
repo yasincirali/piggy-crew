@@ -784,7 +784,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cizimBitti => 'Fertig';
 
   @override
-  String get cizimVazgec => 'Abbrechen';
+  String get cizimVazgec => 'Schließen';
 
   @override
   String get cizimYeniden => 'Neu malen';

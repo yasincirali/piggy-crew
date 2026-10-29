@@ -13,6 +13,7 @@ import 'package:harcliklarim/screens/kamp_ekrani.dart';
 import 'package:harcliklarim/screens/varlik_detay_ekrani.dart';
 import 'package:harcliklarim/services/depo.dart';
 import 'package:harcliklarim/services/fiyat_servisi.dart';
+import 'package:harcliklarim/widgets/cizim_boyaci.dart';
 import 'package:harcliklarim/widgets/hedef_esyasi.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -110,33 +111,46 @@ void main() {
         await t.tap(find.text('Hedef seç'));
         await bekle(t);
 
-        // Vazgeç: hiçbir şey seçilmez.
-        await t.ensureVisible(find.text('Kendin çiz'));
-        await t.tap(find.text('Kendin çiz'));
-        await bekle(t);
+        // Yarım çizim kaybolmaz: "Kapat" ve dışına dokunma taslağı bırakır,
+        // hedef seçilmez.
+        Cizim? cizimde() => t.widgetList<CustomPaint>(find.descendant(of: find.byKey(const ValueKey('cizim-alani')), matching: find.byType(CustomPaint)))
+            .map((p) => p.painter).whereType<CizimBoyaci>().first.cizim;
+        Future<void> cizimiAc() async {
+          await t.ensureVisible(find.text('Kendin çiz'));
+          await t.tap(find.text('Kendin çiz'));
+          await bekle(t);
+        }
+
+        await cizimiAc();
         expect(find.text('Hedefini çiz'), findsOneWidget);
         expect(find.bySemanticsLabel('Çizim alanı. Parmağınla çiz.'), findsOneWidget);
-        await t.ensureVisible(find.text('Vazgeç'));
-        await t.tap(find.text('Vazgeç'));
-        await bekle(t);
-        expect(find.text('Hedefini çiz'), findsNothing);
-        expect(find.text('Yeniden çiz'), findsNothing);
-
-        await t.ensureVisible(find.text('Kendin çiz'));
-        await t.tap(find.text('Kendin çiz'));
-        await bekle(t);
         final alan = find.byKey(const ValueKey('cizim-alani'));
         await t.ensureVisible(alan);
         await bekle(t);
         // Dikey çizgi: sayfa kaydırması ya da alt sayfanın aşağı çekilmesi yutmamalı.
         await t.timedDragFrom(t.getTopLeft(alan) + const Offset(40, 40), const Offset(0, 150), const Duration(milliseconds: 300));
         await bekle(t);
+        await t.ensureVisible(find.text('Kapat'));
+        await t.tap(find.text('Kapat'));
+        await bekle(t);
+        expect(find.text('Hedefini çiz'), findsNothing);
+        expect(find.text('Yeniden çiz'), findsNothing, reason: 'Bitti denmeden hedef seçilmez');
+
+        await cizimiAc();
+        expect(cizimde()!.cizgiler.length, 1, reason: 'Kapat taslağı bıraktı');
         await t.ensureVisible(find.bySemanticsLabel('Kırmızı'));
         await t.tap(find.bySemanticsLabel('Kırmızı'));
         await bekle(t);
         await t.ensureVisible(alan);
         await t.dragFrom(t.getTopLeft(alan) + const Offset(60, 60), const Offset(120, 30));
         await bekle(t);
+        // Geri tuşu (dışına dokunma ve aşağı çekmeyle aynı yol: sonuçsuz kapanış) da taslağı bırakır.
+        await t.binding.handlePopRoute();
+        await bekle(t);
+        expect(find.text('Hedefini çiz'), findsNothing);
+        await cizimiAc();
+        expect(cizimde()!.cizgiler.map((c) => c.renk), [0, 1], reason: 'geri tuşu taslağı bıraktı');
+        await t.ensureVisible(alan);
         await t.dragFrom(t.getTopLeft(alan) + const Offset(30, 200), const Offset(90, 0));
         await bekle(t);
         await t.ensureVisible(find.text('Geri al'));

@@ -37,6 +37,9 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
   final _fiyat = TextEditingController();
   HedefEsya? _esya;
   Cizim? _cizim;
+
+  /// Yarım çizim: çizim sayfası "Bitti"siz kapansa da burada bekler.
+  Cizim? _taslak;
   Hedef? _eski;
 
   @override
@@ -68,10 +71,11 @@ class _HedefState extends ConsumerState<_HedefSayfasi> {
   }
 
   Future<void> _ciz() async {
-    final c = await cizimGoster(context, eski: _cizim);
+    final c = await cizimGoster(context, eski: _taslak ?? _cizim, onDegisti: (t) => _taslak = t);
     if (c == null || c.bos || !mounted) return;
     setState(() {
       _cizim = c;
+      _taslak = c;
       _esya = HedefEsya.cizim;
     });
   }

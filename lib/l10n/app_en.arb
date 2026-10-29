@@ -377,7 +377,7 @@
   "cizimGeriAl": "Undo",
   "cizimTemizle": "Clear",
   "cizimBitti": "Done",
-  "cizimVazgec": "Cancel",
+  "cizimVazgec": "Close",
   "cizimYeniden": "Draw again",
   "cizimEtiket": "Your drawing",
   "cizimRenk": "{renk, select, r0{Black} r1{Red} r2{Yellow} r3{Green} r4{Blue} other{Black}}"
