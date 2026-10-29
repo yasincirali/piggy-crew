@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show IconData, Icons;
 
+import 'cizim.dart';
 import 'varlik.dart';
 
 /// Hedef = karakterin taşıdığı eşya (yol haritası 2.1; araştırma Rapor 1 #2,
@@ -25,7 +26,11 @@ enum HedefEsya {
   oyuncak(Icons.toys_rounded),
   kaykay(Icons.skateboarding_rounded),
   oyun(Icons.sports_esports_rounded),
-  hediye(Icons.card_giftcard_rounded);
+  hediye(Icons.card_giftcard_rounded),
+
+  /// Listede olmayan hedef: çocuk çizer ([Hedef.cizim]). Sonda: seçicide
+  /// hazır eşyalardan sonra gelir.
+  cizim(Icons.brush_rounded);
 
   const HedefEsya(this.ikon);
   final IconData ikon;
@@ -33,9 +38,12 @@ enum HedefEsya {
 
 @immutable
 class Hedef {
-  const Hedef({required this.esya, required this.fiyatTl, this.ulasildi});
+  const Hedef({required this.esya, required this.fiyatTl, this.ulasildi, this.cizim});
 
   final HedefEsya esya;
+
+  /// Yalnız [HedefEsya.cizim] için; diğer eşyalarda null.
+  final Cizim? cizim;
 
   /// Ev para biriminde (adı sandık geleneği: `tutarTl` gibi).
   final double fiyatTl;
@@ -54,12 +62,13 @@ class Hedef {
   /// Kuruş yuvarlaması "dolmadı" saydırmasın.
   bool simdiDoldu(KarakterDurumu d) => ulasildi == null && d.maliyetTl + 0.005 >= fiyatTl;
 
-  Hedef ulas(DateTime t) => Hedef(esya: esya, fiyatTl: fiyatTl, ulasildi: t);
+  Hedef ulas(DateTime t) => Hedef(esya: esya, fiyatTl: fiyatTl, ulasildi: t, cizim: cizim);
 
   Map<String, dynamic> toJson() => {
         'esya': esya.name,
         'fiyatTl': fiyatTl,
         if (ulasildi != null) 'ulasildi': ulasildi!.toIso8601String(),
+        if (cizim != null) 'cizim': cizim!.toJson(),
       };
 
   /// Bozuk ya da bilinmeyen eşya → null (o hedef yok sayılır, uygulama düşmez).
@@ -68,18 +77,24 @@ class Hedef {
     final f = j['fiyatTl'];
     if (e is! String || !HedefEsya.values.any((v) => v.name == e) || f is! num || f <= 0) return null;
     final u = j['ulasildi'];
+    var esya = HedefEsya.values.byName(e);
+    final cizim = esya == HedefEsya.cizim ? Cizim.fromJson(j['cizim']) : null;
+    // Çizimi okunamayan hedef silinmez, hediyeye döner: fiyat ve doluluk
+    // çocuğun emeği, bozuk bir çizgi yüzünden kaybolmasın.
+    if (esya == HedefEsya.cizim && cizim == null) esya = HedefEsya.hediye;
     return Hedef(
-      esya: HedefEsya.values.byName(e),
+      esya: esya,
       fiyatTl: f.toDouble(),
       ulasildi: u is String ? DateTime.tryParse(u) : null,
+      cizim: cizim,
     );
   }
 
   @override
   bool operator ==(Object other) =>
-      other is Hedef && other.esya == esya && other.fiyatTl == fiyatTl && other.ulasildi == ulasildi;
+      other is Hedef && other.esya == esya && other.fiyatTl == fiyatTl && other.ulasildi == ulasildi && other.cizim == cizim;
   @override
-  int get hashCode => Object.hash(esya, fiyatTl, ulasildi);
+  int get hashCode => Object.hash(esya, fiyatTl, ulasildi, cizim);
 }
 
 /// Söz dizimi için doluluk kademesi: ekranda sayı yerine kelime

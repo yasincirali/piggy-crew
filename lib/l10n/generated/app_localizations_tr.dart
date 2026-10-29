@@ -647,6 +647,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'kaykay': 'Kaykay',
       'oyun': 'Oyun',
       'hediye': 'Hediye',
+      'cizim': 'Kendin çiz',
       'other': 'Hediye',
     });
     return '$_temp0';
@@ -663,6 +664,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'kaykay': 'kaykay',
       'oyun': 'oyun',
       'hediye': 'hediye',
+      'cizim': 'senin çizdiğin şey',
       'other': 'hediye',
     });
     return '$karakter $_temp0 için biriktiriyor';
@@ -679,6 +681,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'kaykay': 'Kaykay hazır!',
       'oyun': 'Oyun hazır!',
       'hediye': 'Hediye hazır!',
+      'cizim': 'Çizdiğin şey hazır!',
       'other': 'Hedef hazır!',
     });
     return '$_temp0 $karakter çok sevindi.';
@@ -761,4 +764,44 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get planKaldir => 'Planı kaldır';
+
+  @override
+  String get cizimBaslik => 'Hedefini çiz';
+
+  @override
+  String get cizimAlt => 'Ne için biriktiriyorsan parmağınla buraya çiz.';
+
+  @override
+  String get cizimAlani => 'Çizim alanı. Parmağınla çiz.';
+
+  @override
+  String get cizimGeriAl => 'Geri al';
+
+  @override
+  String get cizimTemizle => 'Temizle';
+
+  @override
+  String get cizimBitti => 'Bitti';
+
+  @override
+  String get cizimVazgec => 'Vazgeç';
+
+  @override
+  String get cizimYeniden => 'Yeniden çiz';
+
+  @override
+  String get cizimEtiket => 'Senin çizimin';
+
+  @override
+  String cizimRenk(String renk) {
+    String _temp0 = intl.Intl.selectLogic(renk, {
+      'r0': 'Siyah',
+      'r1': 'Kırmızı',
+      'r2': 'Sarı',
+      'r3': 'Yeşil',
+      'r4': 'Mavi',
+      'other': 'Siyah',
+    });
+    return '$_temp0';
+  }
 }

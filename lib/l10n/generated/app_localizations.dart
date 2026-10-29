@@ -1207,19 +1207,19 @@ abstract class AppLocalizations {
   /// Hedef seçimindeki eşya adı (büyük harfle başlar).
   ///
   /// In tr, this message translates to:
-  /// **'{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} other{Hediye}}'**
+  /// **'{esya, select, bisiklet{Bisiklet} top{Top} kitap{Kitap} kulaklik{Kulaklık} oyuncak{Oyuncak} kaykay{Kaykay} oyun{Oyun} hediye{Hediye} cizim{Kendin çiz} other{Hediye}}'**
   String hedefEsyaAdi(String esya);
 
   /// Hedef kartı: "Zıpzıp bisiklet için biriktiriyor". Sayı yok.
   ///
   /// In tr, this message translates to:
-  /// **'{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} other{hediye}} için biriktiriyor'**
+  /// **'{karakter} {esya, select, bisiklet{bisiklet} top{top} kitap{kitap} kulaklik{kulaklık} oyuncak{oyuncak} kaykay{kaykay} oyun{oyun} hediye{hediye} cizim{senin çizdiğin şey} other{hediye}} için biriktiriyor'**
   String hedefCumle(String karakter, String esya);
 
   /// Hedefe ilk ulaşıldığında bir kez gösterilir.
   ///
   /// In tr, this message translates to:
-  /// **'{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} other{Hedef hazır!}} {karakter} çok sevindi.'**
+  /// **'{esya, select, bisiklet{Bisiklet hazır!} top{Top hazır!} kitap{Kitap hazır!} kulaklik{Kulaklık hazır!} oyuncak{Oyuncak hazır!} kaykay{Kaykay hazır!} oyun{Oyun hazır!} hediye{Hediye hazır!} cizim{Çizdiğin şey hazır!} other{Hedef hazır!}} {karakter} çok sevindi.'**
   String hedefHazir(String karakter, String esya);
 
   /// Doluluk sayı yerine kelimeyle (yeni/basladi/yarim/neredeyse/hazir).
@@ -1311,6 +1311,66 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Planı kaldır'**
   String get planKaldir;
+
+  /// "Hedefini kendin çiz" sayfasının başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hedefini çiz'**
+  String get cizimBaslik;
+
+  /// Çizim sayfası alt yazısı. Çizim değerlendirilmez; talep değil, davet.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ne için biriktiriyorsan parmağınla buraya çiz.'**
+  String get cizimAlt;
+
+  /// Ekran okuyucunun çizim alanı için okuduğu etiket.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çizim alanı. Parmağınla çiz.'**
+  String get cizimAlani;
+
+  /// Son çizgiyi geri alan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geri al'**
+  String get cizimGeriAl;
+
+  /// Tüm çizimi silen düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Temizle'**
+  String get cizimTemizle;
+
+  /// Çizimi hedef olarak alan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitti'**
+  String get cizimBitti;
+
+  /// Çizim sayfasını değiştirmeden kapatan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Vazgeç'**
+  String get cizimVazgec;
+
+  /// Hedef sayfasında çizimi yeniden açan düğme.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeniden çiz'**
+  String get cizimYeniden;
+
+  /// Hedef kartındaki çizimin ekran okuyucu etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Senin çizimin'**
+  String get cizimEtiket;
+
+  /// Boya düğmesinin ekran okuyucu adı. r0..r4 boya kutusu sırası.
+  ///
+  /// In tr, this message translates to:
+  /// **'{renk, select, r0{Siyah} r1{Kırmızı} r2{Sarı} r3{Yeşil} r4{Mavi} other{Siyah}}'**
+  String cizimRenk(String renk);
 }
 
 class _AppLocalizationsDelegate
