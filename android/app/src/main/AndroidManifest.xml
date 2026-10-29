@@ -1,4 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Fiyatlar (fiyat_servisi.dart) internetten gelir. Flutter şablonu bu
+         izni yalnız debug/profile manifestine koyar; release'te yoksa
+         Android'de kurlar hiç yüklenmez. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Aileler politikası (Kids): reklam kimliği istenmez. Hiçbir paketimiz
+         eklemiyor; ileride bir bağımlılık eklerse birleştirmede silinsin. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"

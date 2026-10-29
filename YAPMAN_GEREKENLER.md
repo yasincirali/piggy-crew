@@ -19,6 +19,36 @@ Yalnız yasin'in yapabileceği adımlar. Sıra önemlidir.
 6. `main`'e ilk birleşme → "iOS — TestFlight" build'i yükler. TestFlight'ta dahili
    gruba kendini ekle.
 
+## Android (Play kapalı test)
+
+İş akışı hazır (`android-release.yml`): secret'lar girilene kadar main'de
+atlanır ve yeşil biter. Sıra:
+
+1. **Play Console › Uygulama oluştur**: ad "Harçlıklarım" (TR) / "Pocket Money"
+   (EN), uygulama, ücretsiz. Paket adı ilk yüklemede `com.sandik.harcliklarim`
+   olarak sabitlenir.
+2. **Hedef kitle ve içerik**: yaş grubu 5–8 ve 9–12 (13+ işaretleme), yani
+   **Aileler politikası** geçerli. Reklam yok, veri güvenliği formu: "veri
+   toplanmıyor, paylaşılmıyor" (her şey cihazda; fiyat isteği kişisel veri
+   taşımıyor). Gizlilik politikası URL'si zorunlu (aşağıdaki yasal metin).
+   Uygulama erişimi: giriş yok. İçerik derecelendirmesi anketi.
+3. **Yükleme anahtarı** (bir kez, kendi bilgisayarında; değeri kimseyle paylaşma):
+   `keytool -genkeypair -v -keystore harcliklarim-upload.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000`
+   Dosyayı ve şifreleri parola yöneticine koy. Play App Signing açık kalsın
+   (anahtar kaybolursa Play'den sıfırlanabilir).
+4. **GitHub secrets** (bu depoya): `ANDROID_KEYSTORE_BASE64` (`base64 -w0 harcliklarim-upload.jks`),
+   `ANDROID_KEY_ALIAS` (`upload`), `ANDROID_KEY_PASSWORD`, `ANDROID_STORE_PASSWORD`.
+5. **İlk AAB elle**: Actions › "Android — Play kapalı test" › Run workflow →
+   artefakttan `app-release.aab`'yi indir → Play Console › Test › Kapalı test
+   (alpha) › yeni sürüm › yükle. Play API yeni uygulamanın ilk yüklemesini
+   kabul etmiyor.
+6. **Otomatik yükleme**: sandık'taki servis hesabına bu uygulamada da yetki ver
+   (Play Console › Kullanıcılar ve izinler › uygulama: "Sürümleri test
+   kanallarına yayınla"), JSON'u bu depoya `PLAY_SERVICE_ACCOUNT_JSON` olarak
+   ekle. Sonra her main birleşmesi kapalı teste gider; yönetilen yayınlamada
+   "Yayınla"ya sen basarsın.
+7. Kapalı test listesine testçileri ekle (sandık'taki Google grubu olabilir).
+
 ## Sonra (2. kapı öncesi karar)
 
 - Supabase: **ayrı ücretsiz proje** (öneri; sandık Tokyo 351/500 MB). Yalnız anonim
