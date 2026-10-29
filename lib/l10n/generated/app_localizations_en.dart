@@ -778,7 +778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cizimBitti => 'Done';
 
   @override
-  String get cizimVazgec => 'Cancel';
+  String get cizimVazgec => 'Close';
 
   @override
   String get cizimYeniden => 'Draw again';
@@ -797,5 +797,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'other': 'Black',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get ulastiklarimBaslik => 'Goals you reached';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'You got there: $ay';
   }
 }

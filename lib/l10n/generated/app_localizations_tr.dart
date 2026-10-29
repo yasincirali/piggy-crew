@@ -784,7 +784,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cizimBitti => 'Bitti';
 
   @override
-  String get cizimVazgec => 'Vazgeç';
+  String get cizimVazgec => 'Kapat';
 
   @override
   String get cizimYeniden => 'Yeniden çiz';
@@ -803,5 +803,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'other': 'Siyah',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get ulastiklarimBaslik => 'Ulaştıklarım';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'Ulaştın: $ay';
   }
 }

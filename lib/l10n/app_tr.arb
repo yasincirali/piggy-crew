@@ -689,9 +689,9 @@
   "@cizimBitti": {
     "description": "Çizimi hedef olarak alan düğme."
   },
-  "cizimVazgec": "Vazgeç",
+  "cizimVazgec": "Kapat",
   "@cizimVazgec": {
-    "description": "Çizim sayfasını değiştirmeden kapatan düğme."
+    "description": "Çizim sayfasını kapatan düğme; yarım çizim taslak olarak kalır."
   },
   "cizimYeniden": "Yeniden çiz",
   "@cizimYeniden": {
@@ -706,6 +706,19 @@
     "description": "Boya düğmesinin ekran okuyucu adı. r0..r4 boya kutusu sırası.",
     "placeholders": {
       "renk": {
+        "type": "String"
+      }
+    }
+  },
+  "ulastiklarimBaslik": "Ulaştıklarım",
+  "ulasilanCumle": "Ulaştın: {ay}",
+  "@ulastiklarimBaslik": {
+    "description": "Karakter ekranında dolmuş eski hedeflerin şeridi. Sayı yok."
+  },
+  "@ulasilanCumle": {
+    "description": "Ulaşılan eski hedefe dokununca; ay = \"Ekim 2026\" gibi ay ve yıl.",
+    "placeholders": {
+      "ay": {
         "type": "String"
       }
     }

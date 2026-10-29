@@ -27,11 +27,11 @@ atlanır ve yeşil biter. Sıra:
 1. **Play Console › Uygulama oluştur**: ad "Harçlıklarım" (TR) / "Pocket Money"
    (EN), uygulama, ücretsiz. Paket adı ilk yüklemede `com.sandik.harcliklarim`
    olarak sabitlenir.
-2. **Hedef kitle ve içerik**: yaş grubu 5–8 ve 9–12 (13+ işaretleme), yani
-   **Aileler politikası** geçerli. Reklam yok, veri güvenliği formu: "veri
-   toplanmıyor, paylaşılmıyor" (her şey cihazda; fiyat isteği kişisel veri
-   taşımıyor). Gizlilik politikası URL'si zorunlu (aşağıdaki yasal metin).
-   Uygulama erişimi: giriş yok. İçerik derecelendirmesi anketi.
+2. **Mağaza girişi ve formlar**: her şey hazır, kopyala-yapıştır:
+   `/mnt/project-files/harcliklarim/magaza-metinleri/google-play-6-dil.md` (ad, 80 karakterlik kısa
+   açıklama, 6 dil; hedef kitle 5–8 + 9–12 → Aileler politikası; veri güvenliği "veri toplanmıyor";
+   reklam yok; içerik derecelendirmesi). Görseller `magaza-goruntuleri/play/` (özellik görseli
+   1024×500 + dil başına 4 ekran, 2:1). Gizlilik politikası URL'si App Store'dakiyle aynı.
 3. **Yükleme anahtarı** (bir kez, kendi bilgisayarında; değeri kimseyle paylaşma):
    `keytool -genkeypair -v -keystore harcliklarim-upload.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000`
    Dosyayı ve şifreleri parola yöneticine koy. Play App Signing açık kalsın

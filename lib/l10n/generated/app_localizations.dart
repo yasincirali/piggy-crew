@@ -1348,10 +1348,10 @@ abstract class AppLocalizations {
   /// **'Bitti'**
   String get cizimBitti;
 
-  /// Çizim sayfasını değiştirmeden kapatan düğme.
+  /// Çizim sayfasını kapatan düğme; yarım çizim taslak olarak kalır.
   ///
   /// In tr, this message translates to:
-  /// **'Vazgeç'**
+  /// **'Kapat'**
   String get cizimVazgec;
 
   /// Hedef sayfasında çizimi yeniden açan düğme.
@@ -1371,6 +1371,18 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'{renk, select, r0{Siyah} r1{Kırmızı} r2{Sarı} r3{Yeşil} r4{Mavi} other{Siyah}}'**
   String cizimRenk(String renk);
+
+  /// Karakter ekranında dolmuş eski hedeflerin şeridi. Sayı yok.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ulaştıklarım'**
+  String get ulastiklarimBaslik;
+
+  /// Ulaşılan eski hedefe dokununca; ay = "Ekim 2026" gibi ay ve yıl.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ulaştın: {ay}'**
+  String ulasilanCumle(String ay);
 }
 
 class _AppLocalizationsDelegate

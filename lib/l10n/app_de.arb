@@ -207,8 +207,10 @@
   "cizimGeriAl": "Rückgängig",
   "cizimTemizle": "Leeren",
   "cizimBitti": "Fertig",
-  "cizimVazgec": "Abbrechen",
+  "cizimVazgec": "Schließen",
   "cizimYeniden": "Neu malen",
   "cizimEtiket": "Dein Bild",
-  "cizimRenk": "{renk, select, r0{Schwarz} r1{Rot} r2{Gelb} r3{Grün} r4{Blau} other{Schwarz}}"
+  "cizimRenk": "{renk, select, r0{Schwarz} r1{Rot} r2{Gelb} r3{Grün} r4{Blau} other{Schwarz}}",
+  "ulastiklarimBaslik": "Erreichte Ziele",
+  "ulasilanCumle": "Geschafft: {ay}"
 }

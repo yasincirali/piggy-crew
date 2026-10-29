@@ -1,6 +1,5 @@
 Bu sürümde denenecekler:
-• Hedefini kendin çiz: Kamp'ta bir karaktere dokun, aşağı kaydır ve "Hedef seç"e bas. Listenin sonunda "Kendin çiz" olmalı. Dokun: beyaz bir çizim kâğıdı açılmalı. Parmağınla bir şey çiz, alttaki renklerden birini seçip devam et.
-• "Geri al" son çizgiyi, "Temizle" hepsini silmeli. "Vazgeç" çizimi almadan kapatmalı.
-• "Bitti"ye bas: çizimin hedef sayfasında görünmeli. Bir fiyat yaz ve "Hedefi koy"a bas. Kartta senin çizimin durmalı ve "… senin çizdiğin şey için biriktiriyor" yazmalı. Besledikçe çizim alttan renklenmeli.
-• Uygulamayı kapatıp açınca çizim yerinde kalmalı. Anne baba köşesinden tüm veriyi silince çizim de gitmeli.
-• Kampta hareketler daha akıcı: karakterler boşta dururken aynı anda yalnız biri büyük bir hareket yapmalı, ekran takılmamalı.
+• Yarım çizim kaybolmaz: "Hedef seç" > "Kendin çiz"e dokun, bir şey çizmeye başla. Sonra "Kapat"a bas ya da sayfanın dışına dokun. Tekrar "Kendin çiz"e dokununca çizimin kaldığı yerden açılmalı. Yalnız "Temizle" silmeli.
+• Ulaştıklarım: bir hedefi doldur (küçük bir fiyat yazıp besle). Sonra "Yeni hedef"e bas ve başka bir hedef koy. Karakter ekranında hedef kartının altında "Ulaştıklarım" kartı çıkmalı: eski hedefin resmi ve altında ay adı. Dokununca büyük hâli ve "Ulaştın: Ekim 2026" gibi bir yazı açılmalı.
+• Ulaştıklarım kartında sayı, rozet ya da "kaç tane" yazısı olmamalı. Hiç hedefe ulaşmamış karakterde kart görünmemeli.
+• Anne baba köşesinden tüm veriyi silince Ulaştıklarım da gitmeli.

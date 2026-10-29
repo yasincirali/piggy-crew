@@ -207,8 +207,10 @@
   "cizimGeriAl": "Desfazer",
   "cizimTemizle": "Limpar",
   "cizimBitti": "Pronto",
-  "cizimVazgec": "Cancelar",
+  "cizimVazgec": "Fechar",
   "cizimYeniden": "Desenhar de novo",
   "cizimEtiket": "Seu desenho",
-  "cizimRenk": "{renk, select, r0{Preto} r1{Vermelho} r2{Amarelo} r3{Verde} r4{Azul} other{Preto}}"
+  "cizimRenk": "{renk, select, r0{Preto} r1{Vermelho} r2{Amarelo} r3{Verde} r4{Azul} other{Preto}}",
+  "ulastiklarimBaslik": "Metas alcançadas",
+  "ulasilanCumle": "Você conseguiu: {ay}"
 }

@@ -780,7 +780,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cizimBitti => 'Listo';
 
   @override
-  String get cizimVazgec => 'Cancelar';
+  String get cizimVazgec => 'Cerrar';
 
   @override
   String get cizimYeniden => 'Dibujar otra vez';
@@ -799,5 +799,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'other': 'Negro',
     });
     return '$_temp0';
+  }
+
+  @override
+  String get ulastiklarimBaslik => 'Metas que lograste';
+
+  @override
+  String ulasilanCumle(String ay) {
+    return 'Lo lograste: $ay';
   }
 }

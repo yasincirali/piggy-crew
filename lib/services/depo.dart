@@ -37,6 +37,7 @@ class Depo {
   static const _odun = 'odun_v1';
   static const _ikilem = 'ikilem_gosterildi_v1';
   static const _hedefler = 'hedefler_v1';
+  static const _ulasilanlar = 'ulasilan_hedefler_v1';
   static const _planlar = 'planlar_v1';
 
   Cocuk? cocukOku() {
@@ -169,6 +170,32 @@ class Depo {
   Future<void> hedefleriYaz(Map<VarlikTuru, Hedef> m) =>
       _sp.setString(_hedefler, jsonEncode({for (final e in m.entries) e.key.name: e.value.toJson()}));
 
+  /// "Ulaştıklarım": karakter başına dolmuş eski hedefler, eskiden yeniye.
+  /// Bozuk kayıt ve dolmamış hedef atlanır (yalnız ulaşılan saklanır).
+  Map<VarlikTuru, List<Hedef>> ulasilanlariOku() {
+    final s = _sp.getString(_ulasilanlar);
+    if (s == null) return const {};
+    try {
+      final m = jsonDecode(s) as Map<String, dynamic>;
+      return {
+        for (final e in m.entries)
+          if (VarlikTuru.values.any((t) => t.name == e.key) && e.value is List)
+            VarlikTuru.values.byName(e.key): [
+              for (final h in e.value as List)
+                if (h is Map<String, dynamic>)
+                  if (Hedef.fromJson(h) case final x? when x.ulasildi != null) x,
+            ],
+      };
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<void> ulasilanlariYaz(Map<VarlikTuru, List<Hedef>> m) => _sp.setString(
+        _ulasilanlar,
+        jsonEncode({for (final e in m.entries) e.key.name: [for (final h in e.value) h.toJson()]}),
+      );
+
   /// Karakter başına bir plan (bkz. [PlanSablon]). Bilinmeyen kayıt atlanır.
   Map<VarlikTuru, PlanSablon> planlariOku() {
     final s = _sp.getString(_planlar);
@@ -205,6 +232,7 @@ class Depo {
     await _sp.remove(_odun);
     await _sp.remove(_ikilem);
     await _sp.remove(_hedefler);
+    await _sp.remove(_ulasilanlar);
     await _sp.remove(_planlar);
     // Yeni çocuk "geri dönmüş" sayılmasın: kullanım anları da gider.
     await _sp.remove(_sonGorulme);
