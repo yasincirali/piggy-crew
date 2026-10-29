@@ -324,8 +324,9 @@ class _Ulastiklarim extends ConsumerWidget {
                   context,
                   SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.xl, Bosluk.xl, Bosluk.xxl),
-                    child: Column(children: [
-                      HedefEsyasi(esya: h.esya, doluluk: 1, boyut: 120, cizim: h.cizim),
+                    // stretch: alt sayfa içerik kadar daralmasın, tam genişlik açılsın.
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      Center(child: HedefEsyasi(esya: h.esya, doluluk: 1, boyut: 120, cizim: h.cizim)),
                       const SizedBox(height: Bosluk.l),
                       Text(
                         l.ulasilanCumle(DateFormat.yMMMM(yerel).format(h.ulasildi!)),
