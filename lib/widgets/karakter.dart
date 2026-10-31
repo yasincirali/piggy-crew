@@ -34,6 +34,7 @@ class KarakterPainter extends CustomPainter {
     required this.ruh,
     this.pulSayisi = 0,
     this.parlak = false,
+    this.kostum = false,
     this.gozKapali = false,
     this.agizAcik = false,
     this.bakis = Offset.zero,
@@ -96,6 +97,11 @@ class KarakterPainter extends CustomPainter {
 
   /// Tortu 1.500 ₺ eşiğini geçince yıldızlar açılır.
   final bool parlak;
+
+  /// Karakterin çıkartma kostümü (Tortu şapka, Zıpzıp atkı, Baykuş gözlük,
+  /// Sincap fular) açıldıysa üstünde görünür (Ar-Ge 30 Eki 20:07 #1a).
+  /// Çıkartma "rozet değil, KOSTÜM" diyordu ama hiçbir karakter giymiyordu.
+  final bool kostum;
   final bool gozKapali;
 
   static const _murekkep = DunyaRenkleri.murekkep;
@@ -530,6 +536,7 @@ class KarakterPainter extends CustomPainter {
     cv.drawPath(bas, _cizgi(2));
     cv.drawPath(_p('M44 16q11-8 22 0'), _cizgi(2));
     _parilti(cv, const Offset(45, 21), 9, 5);
+    if (kostum) _sapka(cv);
     cv.restore();
     _yuzBasla(cv);
     _goz(cv, 47, 32, 7);
@@ -574,6 +581,7 @@ class KarakterPainter extends CustomPainter {
     _sekil(cv, _p('M51 73l4 4 4-4z'), const Color(0xFFF28C8C), kontur: 1.2);
     _agiz(cv, 0, 36);
     _yuzBitir(cv);
+    if (kostum) _atki(cv);
     cv.drawPath(_p('M40 86l-4 8M70 86l4 8'), _cizgi(2));
   }
 
@@ -611,6 +619,7 @@ class KarakterPainter extends CustomPainter {
     }
     _yanak(cv, 35, 68);
     _yanak(cv, 75, 68);
+    if (kostum) _gozluk(cv);
     _sekil(cv, _p('M50 67l5 8 5-8z'), const Color(0xFFF5B82E));
     _agiz(cv, 0, 38);
     _yuzBitir(cv);
@@ -655,6 +664,7 @@ class KarakterPainter extends CustomPainter {
     cv.drawPath(_p('M43 71l3 4 3-4z'), _dolgu(_murekkep));
     _agiz(cv, -9, 34);
     _yuzBitir(cv);
+    if (kostum) _fular(cv);
     final para = Path()..addOval(Rect.fromCircle(center: const Offset(46, 98), radius: 10));
     cv.drawPath(para, _dolgu(const Color(0xFFF7D774)));
     _isik(cv, para);
@@ -669,9 +679,67 @@ class KarakterPainter extends CustomPainter {
     tp.paint(cv, Offset(46 - tp.width / 2, 98 - tp.height / 2));
   }
 
+  // ── Kostümler (3D'deki `tool/karakter3d/kumbara.py` kostüm katmanıyla aynı
+  // yer ve renk; 2D "Klasik" görünümde ve 3D kareler çözülene kadar). ──────
+  void _sapka(Canvas cv) {
+    cv.save();
+    cv.translate(55, 14);
+    cv.rotate(-.14);
+    final tepe = RRect.fromRectAndCorners(const Rect.fromLTWH(-10, -12, 20, 13), topLeft: const Radius.circular(5), topRight: const Radius.circular(5));
+    _sekil(cv, Path()..addRRect(tepe), const Color(0xFFD94B3D));
+    cv.drawRect(const Rect.fromLTWH(-10, -4, 20, 3.5), _dolgu(const Color(0xFFF7C948)));
+    cv.drawRRect(tepe, _cizgi(2));
+    _sekil(cv, Path()..addOval(Rect.fromCenter(center: Offset.zero, width: 38, height: 7)), const Color(0xFFD94B3D));
+    cv.restore();
+  }
+
+  void _atki(Canvas cv) {
+    const kirmizi = Color(0xFFE63946);
+    for (final (x, y, a) in [(76.0, 90.0, -.5), (82.0, 88.0, -.8)]) {
+      cv.save();
+      cv.translate(x, y);
+      cv.rotate(a);
+      _sekil(cv, Path()..addRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(-3.5, -2, 7, 14), const Radius.circular(3))), kirmizi, kontur: 1.5);
+      cv.restore();
+    }
+    final bant = _p('M25 80q30 8 60 0v7q-30 8-60 0z');
+    cv.drawPath(bant, _dolgu(kirmizi));
+    cv.save();
+    cv.clipPath(bant);
+    final cizgi = _cizgi(2.4, const Color(0xFFFFF4E0));
+    for (var x = 27.0; x < 86; x += 6) {
+      cv.drawLine(Offset(x, 76), Offset(x, 98), cizgi);
+    }
+    cv.restore();
+    cv.drawPath(bant, _cizgi(1.8));
+  }
+
+  void _gozluk(Canvas cv) {
+    const altin = Color(0xFFE8A317);
+    final cerceve = Path()
+      ..addOval(Rect.fromCircle(center: const Offset(42, 56), radius: 13))
+      ..addOval(Rect.fromCircle(center: const Offset(68, 56), radius: 13))
+      ..addPath(_p('M53 50q2-3 4 0'), Offset.zero);
+    cv.drawPath(cerceve, _cizgi(4.2));
+    cv.drawPath(cerceve, _cizgi(2.4, altin));
+  }
+
+  void _fular(Canvas cv) {
+    const yesil = Color(0xFF2A9D8F);
+    _sekil(cv, _p('M20 78q26 8 52 0v7q-26 8-52 0z'), yesil, kontur: 1.8);
+    for (final (x, y, a) in [(18.0, 89.0, .5), (24.0, 91.0, .2)]) {
+      cv.save();
+      cv.translate(x, y);
+      cv.rotate(a);
+      _sekil(cv, Path()..addOval(Rect.fromCenter(center: Offset.zero, width: 6, height: 12)), yesil, kontur: 1.5);
+      cv.restore();
+    }
+    _sekil(cv, Path()..addOval(Rect.fromCircle(center: const Offset(21, 83), radius: 4)), yesil, kontur: 1.5);
+  }
+
   @override
   bool shouldRepaint(KarakterPainter o) =>
-      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol ||
+      o.tur != tur || o.ruh != ruh || o.pulSayisi != pulSayisi || o.parlak != parlak || o.kostum != kostum || o.gozKapali != gozKapali || o.agizAcik != agizAcik || o.bakis != bakis || o.yuz != yuz || o.sembol != sembol ||
       o.evre != evre || o.evreOnceki != evreOnceki || o.evreGecis != evreGecis || o.derinlik != derinlik || o.golgeCiz != golgeCiz || o.yeme != yeme || o.yalnizYemek != yalnizYemek;
 }
 
@@ -991,6 +1059,7 @@ class Karakter extends StatefulWidget {
     this.boyut = 110,
     this.pulSayisi = 0,
     this.parlak = false,
+    this.kostum = false,
     this.gecikme = Duration.zero,
     this.tepkiTetik = 0,
     this.yemeTetik = 0,
@@ -1036,6 +1105,10 @@ class Karakter extends StatefulWidget {
   final double boyut;
   final int pulSayisi;
   final bool parlak;
+
+  /// Açılmış kostümü giyer (bkz. [KarakterPainter.kostum]). 3D'de ayrı
+  /// kostüm katmanı (`atlas_kostum`, `<sahne>_kostum`) gövdeyle aynı karede.
+  final bool kostum;
   final Duration gecikme;
 
   /// Her artışta dokunma tepkisi oynar (üst widget sayaç artırır).
@@ -1129,18 +1202,20 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
 
   // 3D görünüm: oynayan pişmiş sahnenin kareleri (gövde + evre bitkisi).
   String? _sahneAd;
-  _Film? _sahneBeden, _sahneBitki;
+  _Film? _sahneBeden, _sahneBitki, _sahneKostum;
 
   void _sahneHazirla(String? ad, Evre? evre) {
-    final anahtar = ad == null ? null : '$ad/${evre?.name}';
+    final anahtar = ad == null ? null : '$ad/${evre?.name}/${widget.kostum}';
     if (anahtar == _sahneAd) return;
     if (_sahneBeden case final f?) _sahneBirak(f);
     if (_sahneBitki case final f?) _sahneBirak(f);
-    _sahneBeden = _sahneBitki = null;
+    if (_sahneKostum case final f?) _sahneBirak(f);
+    _sahneBeden = _sahneBitki = _sahneKostum = null;
     _sahneAd = anahtar;
     if (ad == null) return;
     final t = widget.tur.name;
     _sahneBeden = _sahneAl('$t/${ad}_beden');
+    if (widget.kostum) _sahneKostum = _sahneAl('$t/${ad}_kostum');
     if (evre != null && evre != Evre.minik) _sahneBitki = _sahneAl('$t/${ad}_${evre.name}');
   }
 
@@ -1182,12 +1257,19 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       required (String, double)? pismis, YemeAni? yemeAni}) {
     final evre = _evreCizilen;
     final atlas = _atlas(widget.tur, evre);
+    // Kostüm atlası gövdeyle birlikte yüklenmeye başlasın (gövde hazır olunca
+    // ayrıca beklenmesin).
+    final kostumAtlas = widget.kostum ? _kostumAtlas(widget.tur) : null;
     if (atlas.hata) return null;
     final katmanlar = <_Katman>[];
+    Listenable? kostumHazir;
     final beden = _sahneBeden;
     if (pismis != null && beden != null && beden.kareler.isNotEmpty) {
       final i = beden.sira(pismis.$2);
       katmanlar.add((film: beden, kare: i, opak: 1));
+      // Kostüm gövdeyle aynı karede, bitkinin altında (bitki baştan çıkar).
+      final kostum = _sahneKostum;
+      if (kostum != null) katmanlar.add((film: kostum, kare: kostum.sira(pismis.$2), opak: 1));
       final bitki = _sahneBitki;
       if (bitki != null) katmanlar.add((film: bitki, kare: bitki.sira(pismis.$2), opak: 1));
     } else {
@@ -1214,10 +1296,17 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
       } else {
         ekle(atlas, 1);
       }
+      // Kostüm atlası evreden bağımsız; aynı yüz karışımıyla (baş dönüşü).
+      // Gövdeden sonra çözülebilir: çözülünce de yeniden çizilsin (hareketi
+      // azalt açıkken başka bir şey çizimi tetiklemez).
+      if (kostumAtlas != null) {
+        ekle(kostumAtlas, 1);
+        kostumHazir = kostumAtlas.hazir;
+      }
     }
     return CustomPaint(
       size: Size.square(widget.boyut),
-      painter: _UcBoyutPainter(tur: widget.tur, katmanlar: katmanlar, olcek: _evreOlcegi(evreGecis), repaint: atlas.hazir),
+      painter: _UcBoyutPainter(tur: widget.tur, katmanlar: katmanlar, olcek: _evreOlcegi(evreGecis), repaint: kostumHazir == null ? atlas.hazir : Listenable.merge([atlas.hazir, kostumHazir])),
       foregroundPainter: yemeAni?.yemek == null
           ? null
           : KarakterPainter(
@@ -1651,6 +1740,7 @@ class _KarakterState extends State<Karakter> with TickerProviderStateMixin {
                   ruh: widget.ruh,
                   pulSayisi: widget.pulSayisi,
                   parlak: widget.parlak,
+                  kostum: widget.kostum,
                   bakis: bakis,
                   yuz: yuz,
                   sembol: ParaSembolu.of(context),

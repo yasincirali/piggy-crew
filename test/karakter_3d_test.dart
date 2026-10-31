@@ -21,7 +21,8 @@ import 'karsilama_akisi_test.dart' show bekle;
 /// - yüz değerleri atlas karışımına doğru düşer (kırpma, esneme, sevinç);
 /// - kapalıyken 2D çizim birebir, açıkken 3D katman çizilir;
 /// - Ayarlar'daki seçim kalıcı; varsayılan 3D, "Klasik" seçen 2D'de kalır;
-/// - büyüme (evre) pişmiş sahnesi: bitki geçişin hedef evresiyle adlanır.
+/// - büyüme (evre) pişmiş sahnesi: bitki geçişin hedef evresiyle adlanır;
+/// - kostüm katmanı (atlas + her sahne) var.
 void main() {
   const sahneler = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans', 'evre'];
   final tablo = File('lib/widgets/karakter_3d_yerlesim.g.dart').readAsStringSync();
@@ -31,7 +32,8 @@ void main() {
       expect(tablo.contains('VarlikTuru.${t.name}:'), isTrue, reason: '${t.name} kalibrasyonu yok');
       final anahtarlar = [
         for (final e in Evre.values) '${t.name}/atlas_${e.name}',
-        for (final s in sahneler) for (final k in ['beden', 'filiz', 'cicek', 'yildiz']) '${t.name}/${s}_$k',
+        '${t.name}/atlas_kostum',
+        for (final s in sahneler) for (final k in ['beden', 'filiz', 'cicek', 'yildiz', 'kostum']) '${t.name}/${s}_$k',
       ];
       for (final a in anahtarlar) {
         expect(File('assets/karakter3d/$a.webp').existsSync(), isTrue, reason: '$a.webp yok');

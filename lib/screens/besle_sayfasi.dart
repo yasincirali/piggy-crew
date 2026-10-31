@@ -145,7 +145,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
           ),
           const SizedBox(height: Bosluk.l),
           Row(children: [
-            Karakter(tur: widget.tur, ruh: Ruh.mutlu, boyut: 64),
+            Karakter(tur: widget.tur, ruh: Ruh.mutlu, boyut: 64, kostum: ref.watch(cikartmalarProvider).contains(Cikartma.kostum(widget.tur))),
             const SizedBox(width: Bosluk.m),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

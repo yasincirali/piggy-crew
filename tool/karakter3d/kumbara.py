@@ -630,6 +630,80 @@ bitki.rotation_euler = (0, BITKI_EGIM, 0)
 BITKI_NESNELERI = {o.name for o in bitki.children_recursive} | {'bitki'}
 PARA_NESNELERI = ({o.name for o in el_parasi.children_recursive} | {'el_parasi'}) if el_parasi else set()
 
+# ── Kostüm (çıkartma, 2026-10-31) ──────────────────────────────────────────
+# Çıkartma "rozet değil, karakterin KOSTÜMÜ" (cikartma.dart): açılan kostüm
+# karakterin üstünde görünür. Ayrı katman olarak render edilir (`--katman
+# kostum`): gövde holdout (önündeki gövde örtsün), bitki ve paralar gizli;
+# diğer katmanlarda kostüm hiç yok, var olan kareler değişmez. Baş ya da
+# gövdeye bağlı: başla döner, zıplamayla ezilir. Evreden bağımsız (tek set).
+def simit(ad, konum, r, kalinlik, m, ebeveyn, dondur=(0, 0, 0), olcek=(1, 1, 1), cizgi=0.012):
+    bpy.ops.mesh.primitive_torus_add(major_radius=r, minor_radius=kalinlik, major_segments=64, minor_segments=16,
+                                     location=konum, rotation=[math.radians(a) for a in dondur])
+    o = bpy.context.active_object
+    o.name = ad
+    o.scale = olcek
+    o.data.materials.append(m)
+    bpy.ops.object.shade_smooth()
+    if cizgi > 0:
+        kontur_ekle(o, cizgi / max(kalinlik * 6, 0.05))
+    bagla(o, ebeveyn)
+    return o
+
+
+def silindir(ad, konum, r, boy, m, ebeveyn, dondur=(0, 0, 0), olcek=(1, 1, 1), cizgi=0.012, pah=0.02):
+    bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=r, depth=boy, location=konum,
+                                        rotation=[math.radians(a) for a in dondur])
+    o = bpy.context.active_object
+    o.name = ad
+    o.scale = olcek
+    o.data.materials.append(m)
+    bpy.ops.object.shade_smooth()
+    bev = o.modifiers.new('pah', 'BEVEL'); bev.width = pah; bev.segments = 4
+    if cizgi > 0:
+        kontur_ekle(o, cizgi)
+    bagla(o, ebeveyn)
+    return o
+
+
+kostum = bos('kostum', (0, 0, 0), ezme)
+if KARAKTER == 'tortu':
+    # Şapka: kafanın üstünde, hafif yana yatık; kırmızı, sarı bant.
+    sk = bos('sapka_kok', (0, -0.66, 1.52), bas)
+    sm, bm_ = malzeme('sapka', '#D94B3D'), malzeme('sapka_bant', '#F7C948')
+    silindir('sapka_kenar', (0, -0.66, 1.52), 0.36, 0.04, sm, sk, olcek=(1, 0.92, 1), pah=0.015)
+    silindir('sapka_tepe', (0, -0.66, 1.64), 0.21, 0.22, sm, sk, pah=0.05)
+    silindir('sapka_bant', (0, -0.66, 1.575), 0.214, 0.06, bm_, sk, cizgi=0, pah=0.01)
+    sk.rotation_euler = (math.radians(-8), math.radians(-12), 0)
+elif KARAKTER == 'zipzip':
+    # Atkı: gövdenin boyun hizasında dolanır, ucu önden sarkar.
+    def atki_desen(n, l, a, p):
+        aci = _m(n, l, 'MULTIPLY', _m(n, l, 'ARCTAN2', a.outputs['X'], a.outputs['Y']), 3.5)
+        cizgi = _adim(n, l, _m(n, l, 'ABSOLUTE', _m(n, l, 'SUBTRACT', _m(n, l, 'FRACT', aci), 0.5)), 0.2, 0.24)
+        l.new(_karis(n, l, cizgi, renk('#FFF4E0'), renk('#E63946')), p.inputs['Base Color'])
+    am = desen('atki', '#E63946', atki_desen)
+    simit('atki', (0, 0, 0.47), 1.0, 0.1, am, kostum, olcek=(0.70, 0.635, 0.72))
+    # Uçlar yanda (önde sarkan tek uç dil gibi okunuyordu).
+    kure('atki_uc0', (0.5, -0.42, 0.3), (0.11, 0.05, 0.2), am, kostum, dondur=(0, -24, -40), cizgi=0.014)
+    kure('atki_uc1', (0.6, -0.3, 0.33), (0.1, 0.05, 0.18), am, kostum, dondur=(0, -40, -50), cizgi=0.014)
+elif KARAKTER == 'baykus':
+    # Gözlük: nazar halkalarının çevresinde iki yuvarlak çerçeve ve köprü.
+    gm_ = malzeme('gozluk', '#E8A317', puruz=0.4)
+    gz = Z(56) - 0.02
+    for i, x in enumerate((X(42), X(68))):
+        simit(f'gozluk{i}', (x, yuzey_y(x, gz) - 0.03, gz), 0.262, 0.028, gm_, bas, dondur=(90, 0, 0), cizgi=0.01)
+    egri('gozluk_kopru', [(u * 0.03, yuzey_y(0, gz + 0.1) - 0.06, gz + 0.1 + 0.03 * (1 - u * u)) for u in bul(7)], 0.022, gm_, bas)
+elif KARAKTER == 'sincap':
+    # Fular: boyun hizasında bant + önden aşağı üçgen.
+    fm = malzeme('fular', '#2A9D8F')
+    cx_ = X(46)
+    simit('fular', (cx_, 0, 0.52), 1.0, 0.1, fm, kostum, olcek=(0.6, 0.57, 0.7))
+    # Düğüm yanda: önü para ve patilerle dolu, önden sarkan üçgen görünmüyordu.
+    kure('fular_dugum', (cx_ - 0.42, -0.38, 0.52), (0.09, 0.07, 0.08), fm, kostum, cizgi=0.012)
+    kure('fular_uc0', (cx_ - 0.5, -0.36, 0.4), (0.07, 0.04, 0.14), fm, kostum, dondur=(0, 25, 30), cizgi=0.012)
+    kure('fular_uc1', (cx_ - 0.36, -0.44, 0.38), (0.07, 0.04, 0.14), fm, kostum, dondur=(0, -10, 20), cizgi=0.012)
+KOSTUM_NESNELERI = {o.name for o in sc.objects if o.parent is not None and (
+    o.name.startswith(('sapka', 'atki', 'gozluk', 'fular')))}
+
 # ── Paralar (yeme sahnesi) ────────────────────────────────────────────────
 paralar = []
 for i in range(3):
@@ -807,7 +881,13 @@ def poz_uygula(p, katman='hepsi'):
             o.hide_render = True
         if katman == 'beden' and bitkide:
             o.hide_render = True
-        o.is_holdout = (katman == 'bitki' and not bitkide) or (katman == 'para' and not parada)
+        kostumde = o.name in KOSTUM_NESNELERI
+        if kostumde and katman != 'kostum':
+            o.hide_render = True
+        if katman == 'kostum' and (bitkide or parada):
+            o.hide_render = True
+        o.is_holdout = (katman == 'bitki' and not bitkide) or (katman == 'para' and not parada) or (
+            katman == 'kostum' and not kostumde)
 
 
 # ── Zaman çizelgeleri (karakter.dart ile aynı) ────────────────────────────

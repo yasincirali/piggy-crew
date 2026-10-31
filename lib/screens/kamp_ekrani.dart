@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/cikartma.dart';
 import '../models/donus.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
@@ -314,6 +315,7 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
             dokun: ref.read(dokunsalProvider).cal,
             pulSayisi: t == VarlikTuru.altin ? (d.verilenTl / 250).floor().clamp(0, 3) : 0,
             parlak: t == VarlikTuru.altin && cik.contains('tortu_parlak'),
+            kostum: cik.contains(Cikartma.kostum(t)),
             evre: ref.watch(evrelerProvider)[t],
             evreKutla: true,
             donusTetik: _donus,

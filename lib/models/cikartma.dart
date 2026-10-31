@@ -35,6 +35,15 @@ class Cikartma {
 
   static Cikartma? bul(String id) => hepsi.where((c) => c.id == id).firstOrNull;
 
+  /// Karakterin giyilebilir kostümü (çıkartma id'si). Açılınca karakter onu
+  /// her yerde giyer (kamp, detay, çıkartma kartı); geri alınmaz.
+  static String kostum(VarlikTuru t) => switch (t) {
+        VarlikTuru.altin => 'tortu_sapka',
+        VarlikTuru.dolar => 'zipzip_atki',
+        VarlikTuru.euro => 'baykus_gozluk',
+        VarlikTuru.nakit => 'sincap_fular',
+      };
+
   /// Düzenlilik eşikleri (farklı hafta sayısı).
   static const atesHafta = 4, senlikHafta = 12, tortuHafta = 5;
 

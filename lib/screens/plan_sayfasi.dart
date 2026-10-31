@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/l10n.dart';
 import '../models/plan.dart';
+import '../models/cikartma.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/dokunsal.dart';
@@ -46,7 +47,7 @@ class _PlanSayfasi extends ConsumerWidget {
           ),
           const SizedBox(height: Bosluk.l),
           Row(children: [
-            Karakter(tur: tur, ruh: Ruh.mutlu, boyut: 64),
+            Karakter(tur: tur, ruh: Ruh.mutlu, boyut: 64, kostum: ref.watch(cikartmalarProvider).contains(Cikartma.kostum(tur))),
             const SizedBox(width: Bosluk.m),
             Expanded(child: Text(l.planBaslik, style: context.t.titleLarge)),
           ]),

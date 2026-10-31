@@ -110,6 +110,12 @@ _Film _atlas(VarlikTuru t, Evre? e) {
   return _atlaslar.putIfAbsent(a, () => _Film(a));
 }
 
+/// Kostüm atlası (2026-10-31): 13 ifadenin baş pozlarıyla, evreden bağımsız.
+_Film _kostumAtlas(VarlikTuru t) {
+  final a = '${t.name}/atlas_kostum';
+  return _atlaslar.putIfAbsent(a, () => _Film(a));
+}
+
 /// Pişmiş sahne filmleri (Ar-Ge 29 Eki #1): eskiden her oynayışta asset
 /// baştan yüklenip bütün kareleri çözülüyordu; kampta dört karakterin boşta
 /// hareketleriyle ~3,5 sn'de bir film çözülüyordu. Artık son kullanılanlar
