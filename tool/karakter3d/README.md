@@ -12,6 +12,14 @@ uygulama kareleri animasyonlu WebP olarak `assets/karakter3d/<tur>/` altında.
   (2D kutuya kalibrasyon + kırpım tablosu). Kısmi çalışır: `KARE`'de karesi
   olmayan atlas/sahnenin eski WebP'si ve tablo satırı korunur.
 
+Kostüm (2026-10-31): çıkartmayla açılan şapka/atkı/gözlük/fular ayrı
+`kostum` katmanıdır (`--katman kostum`: gövde holdout, bitki ve paralar
+gizli; diğer katmanlarda kostüm hiç render edilmez, var olan kareler
+değişmez). Atlas 13 ifadenin baş pozlarıyla tek set (`atlas_kostum`),
+her sahnede `<sahne>_kostum`; evreden bağımsız. Uygulama gövdeyle aynı
+kareyi, bitkinin altında çizer. 2D karşılığı `KarakterPainter._sapka/_atki/
+_gozluk/_fular`.
+
 Kalibrasyon: 3D "minik/mutlu" gövdesinin sınırları 2D gövdesinin (evresiz
 KarakterPainter) yüksekliğine, ayak tabanına ve ortasına oturtulur. 2D
 çizim değişirse `donustur.py`'deki `IKI_D` yeniden ölçülmeli.

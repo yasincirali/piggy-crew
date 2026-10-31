@@ -16,6 +16,9 @@ ATLAS = ['mutlu', 'duz', 'bulutlu', 'mutlu_sol', 'mutlu_sag', 'mutlu_yukari', 'o
 SAHNELER = ['dokunma', 'arti', 'ziplama', 'keyif', 'etrafa_bak', 'dans', 'evre']
 # Büyüme sahnesi (evre, 2026-10-26): bitki katmanı geçişin HEDEF evresiyle
 # adlanır (evre_filiz = minik>filiz); gövde katmanı ortak.
+# Kostüm (2026-10-31): çıkartmayla açılan kostüm ayrı katman; gövdeyle aynı
+# pozlar, evreden bağımsız (atlas_kostum + <sahne>_kostum).
+KATLAR = ['beden', 'filiz', 'cicek', 'yildiz', 'kostum']
 TABLO = f'{REPO}/lib/widgets/karakter_3d_yerlesim.g.dart'
 
 
@@ -65,13 +68,18 @@ for k, tur in TUR.items():
         satirlar.append(eski[f'  VarlikTuru.{tur}'])
         for e in ['minik', 'filiz', 'cicek', 'yildiz']:
             satirlar.append(eski[f"  '{tur}/atlas_{e}'"])
+        if os.path.exists(f'{B}/uyg/{k}/atlas/kostum/mutlu.png'):
+            kutu = kaydet([ac(f'{B}/uyg/{k}/atlas/kostum/{a}.png') for a in ATLAS], f'{OUT}/{tur}/atlas_kostum.webp')
+            satirlar.append(f"  '{tur}/atlas_kostum': {kutu},")
+        elif f"  '{tur}/atlas_kostum'" in eski:
+            satirlar.append(eski[f"  '{tur}/atlas_kostum'"])
         for s in SAHNELER:
-            for kat in ['beden', 'filiz', 'cicek', 'yildiz']:
+            for kat in KATLAR:
                 fs = sorted(glob.glob(f'{B}/uyg/{k}/{s}/{kat}/*.png'))
                 if fs:
                     kutu = kaydet([ac(f) for f in fs], f'{OUT}/{tur}/{s}_{kat}.webp')
                     satirlar.append(f"  '{tur}/{s}_{kat}': {kutu},")
-                else:
+                elif f"  '{tur}/{s}_{kat}'" in eski:
                     satirlar.append(eski[f"  '{tur}/{s}_{kat}'"])
         print('tamam (kısmi)', k)
         continue
@@ -87,8 +95,10 @@ for k, tur in TUR.items():
     for e in ['minik', 'filiz', 'cicek', 'yildiz']:
         kutu = kaydet([ac(f'{B}/uyg/{k}/atlas/{e}/{a}.png') for a in ATLAS], f'{OUT}/{tur}/atlas_{e}.webp')
         satirlar.append(f"  '{tur}/atlas_{e}': {kutu},")
+    kutu = kaydet([ac(f'{B}/uyg/{k}/atlas/kostum/{a}.png') for a in ATLAS], f'{OUT}/{tur}/atlas_kostum.webp')
+    satirlar.append(f"  '{tur}/atlas_kostum': {kutu},")
     for s in SAHNELER:
-        for kat in ['beden', 'filiz', 'cicek', 'yildiz']:
+        for kat in KATLAR:
             fs = sorted(glob.glob(f'{B}/uyg/{k}/{s}/{kat}/*.png'))
             kutu = kaydet([ac(f) for f in fs], f'{OUT}/{tur}/{s}_{kat}.webp')
             satirlar.append(f"  '{tur}/{s}_{kat}': {kutu},")

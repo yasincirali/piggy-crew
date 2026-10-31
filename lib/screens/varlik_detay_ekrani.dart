@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/cikartma.dart';
 import '../models/ders.dart';
 import '../models/hedef.dart';
 import '../models/plan.dart';
@@ -90,6 +91,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                       boyut: 170,
                       pulSayisi: tur == VarlikTuru.altin ? (d.verilenTl / 250).floor().clamp(0, 3) : 0,
                       parlak: tur == VarlikTuru.altin && ref.watch(cikartmalarProvider).contains('tortu_parlak'),
+                      kostum: ref.watch(cikartmalarProvider).contains(Cikartma.kostum(tur)),
                       // Buradan beslenip evre atlarsa büyüme sahnesi burada oynar.
                       evre: ref.watch(evrelerProvider)[tur],
                       evreKutla: true,

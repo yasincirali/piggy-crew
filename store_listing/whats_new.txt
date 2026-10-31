@@ -1,6 +1,5 @@
 Bu sürümde denenecekler:
-• Kamp ekranı: "Besle" artık her karakterin altında; alttaki liste kalktı. Karakterin adının altında hangi para olduğu yazıyor (Altın, Dolar…). Bir karakterin "Besle"sine bas, besleme sayfası açılmalı. Fiyat saati sahnenin altında.
-• Telefonda yazı boyutunu en büyüğe çek: sahnedeki düğmeler kaybolmalı, yerine eski satır listesi gelmeli.
-• Besle sayfası: tutarı elindeki paralara dokunarak kur. 100, 20, 20, 5'e bas: alanda 145 yazmalı. "Geri al" son parayı çıkarır. Klavye artık kendiliğinden açılmıyor; yazmak için alana dokun.
-• Öğren: başlık "Yeni kavram" oldu, "3 / 10" sayacı kalktı. Bütün dersleri bitirince "Hatırlıyor musun?" kartı gelir: bir karakter eski bir dersi yeni bir soruyla sorar. Yanlış seçince dersin metni ipucu olarak açılmalı; doğruyu bulunca karakter "hatırladım" der. Uygulamayı kapatıp açınca sıradaki soru gelir.
-• Çıkartmalar: "5 / 12 açıldı" sayacı kalktı.
+• Kostümler artık karakterin üstünde: açılan kostüm karakterde görünür. Tortu'nun şapkası (Tortu'yu 3 kez besle), Zıpzıp'ın atkısı, Baykuş'un gözlüğü, Sincap'ın fuları. Kostümü açtıktan sonra Kamp'a dön: karakter kostümüyle durmalı, zıplarken ve dans ederken kostüm onunla birlikte hareket etmeli.
+• Karaktere dokunup detayına gir: kostüm orada da görünmeli. Besle sayfasının üstündeki küçük karakterde de.
+• Çıkartmalar sayfası: açtığın kostümün kartında karakter o kostümü giymeli; açılmamış kostüm görünmemeli.
+• Ayarlar'da karakter görünümünü "Klasik"e al: kostümler çizim hâlinde de görünmeli.

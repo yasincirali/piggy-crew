@@ -115,7 +115,8 @@ void main() {
           'dil': dil,
         }),
         'hareketler_v1': jsonEncode(hareketler),
-        'cikartmalar_v1': ['ilk_besleme', 'sabir_30'],
+        // Kostümler mağaza görüntüsünde görünsün (açılmış, karakterin üstünde).
+        'cikartmalar_v1': ['ilk_besleme', 'sabir_30', 'tortu_sapka', 'zipzip_atki', 'baykus_gozluk', 'sincap_fular'],
         // "Geri döndün" karşılaması vitrine girmez (açılış sahnesi testte zaten oynamaz).
         'son_gorulme_v1': bugun.millisecondsSinceEpoch,
       });

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/l10n.dart';
+import '../models/cikartma.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../services/dokunsal.dart';
@@ -90,7 +91,7 @@ class _AlState extends ConsumerState<_AlSayfasi> {
           ),
           const SizedBox(height: Bosluk.l),
           Row(children: [
-            Karakter(tur: widget.tur, ruh: Ruh.mutlu, boyut: 64),
+            Karakter(tur: widget.tur, ruh: Ruh.mutlu, boyut: 64, kostum: ref.watch(cikartmalarProvider).contains(Cikartma.kostum(widget.tur))),
             const SizedBox(width: Bosluk.m),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -64,7 +64,8 @@ class CikartmalarEkrani extends ConsumerWidget {
                   opacity: var_ ? 1 : .45,
                   child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                     if (c.tur != null)
-                      Karakter(tur: c.tur!, ruh: var_ ? Ruh.mutlu : Ruh.duz, boyut: 64)
+                      // Kostüm çıkartmasının kartında karakter o kostümü giyer (açıldıysa).
+                      Karakter(tur: c.tur!, ruh: var_ ? Ruh.mutlu : Ruh.duz, boyut: 64, kostum: var_ && c.id == Cikartma.kostum(c.tur!))
                     else
                       Icon(var_ ? Icons.local_fire_department_rounded : Icons.lock_rounded, size: 48, color: var_ ? r.petal : r.sub),
                     const SizedBox(height: Bosluk.s),
