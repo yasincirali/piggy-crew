@@ -97,6 +97,9 @@
     }
   },
   "besleTutar": "How much?",
+  "kupurIpucu": "Tap the money in your hand, or type it.",
+  "kupurEkle": "Add {tutar}",
+  "kupurGeriAl": "Undo",
   "besleBugunFiyat": "Today 1 {birim} = {fiyat}",
   "@besleBugunFiyat": {
     "placeholders": {
@@ -200,35 +203,16 @@
   "detaySilOnay": "Delete this feeding?",
   "iptal": "Cancel",
   "sil": "Delete",
-  "ogrenBaslik": "Today's idea",
-  "ogrenSayac": "{n} / {toplam}",
-  "@ogrenSayac": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "toplam": {
-        "type": "int"
-      }
-    }
-  },
+  "ogrenBaslik": "A new idea",
   "ogrenSonraki": "Next lesson",
   "ogrenBitti": "You finished every lesson. New ones are coming.",
   "ogrenBastan": "Read again",
+  "hatirlaBaslik": "Do you remember?",
+  "hatirlaSoruyor": "{karakter} is trying to remember the {kavram} lesson. Can you help?",
+  "hatirlaDogru": "{karakter}: \"Yes, now I remember!\"",
   "cikartmaBaslik": "My stickers",
   "cikartmaAlt": "Earned for what you do, not for luck.",
   "cikartmaKilitli": "Locked",
-  "cikartmaSayac": "{n} / {toplam} unlocked",
-  "@cikartmaSayac": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "toplam": {
-        "type": "int"
-      }
-    }
-  },
   "ayarlarBaslik": "Settings",
   "ayarlarDunya": "Camp site",
   "ayarlarYas": "Age mode",

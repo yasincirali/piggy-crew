@@ -179,6 +179,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get besleTutar => 'Ne kadar?';
 
   @override
+  String get kupurIpucu => 'Elindeki paralara dokun ya da yaz.';
+
+  @override
+  String kupurEkle(String tutar) {
+    return '$tutar ekle';
+  }
+
+  @override
+  String get kupurGeriAl => 'Geri al';
+
+  @override
   String besleBugunFiyat(String birim, String fiyat) {
     return 'Bugün 1 $birim = $fiyat';
   }
@@ -268,12 +279,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sil => 'Sil';
 
   @override
-  String get ogrenBaslik => 'Bugünün kavramı';
-
-  @override
-  String ogrenSayac(int n, int toplam) {
-    return '$n / $toplam';
-  }
+  String get ogrenBaslik => 'Yeni kavram';
 
   @override
   String get ogrenSonraki => 'Sonraki ders';
@@ -285,6 +291,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ogrenBastan => 'Baştan oku';
 
   @override
+  String get hatirlaBaslik => 'Hatırlıyor musun?';
+
+  @override
+  String hatirlaSoruyor(String karakter, String kavram) {
+    return '$karakter $kavram dersini hatırlamaya çalışıyor. Yardım eder misin?';
+  }
+
+  @override
+  String hatirlaDogru(String karakter) {
+    return '$karakter: \"Evet, şimdi hatırladım!\"';
+  }
+
+  @override
   String get cikartmaBaslik => 'Çıkartmalarım';
 
   @override
@@ -292,11 +311,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get cikartmaKilitli => 'Kilitli';
-
-  @override
-  String cikartmaSayac(int n, int toplam) {
-    return '$n / $toplam açıldı';
-  }
 
   @override
   String get ayarlarBaslik => 'Ayarlar';

@@ -101,6 +101,23 @@
     }
   },
   "besleTutar": "Ne kadar?",
+  "kupurIpucu": "Elindeki paralara dokun ya da yaz.",
+  "@kupurIpucu": {
+    "description": "Besle sayfası: tutar başlığının altındaki ipucu (kupür çipleri)."
+  },
+  "kupurEkle": "{tutar} ekle",
+  "@kupurEkle": {
+    "description": "Kupür çipinin ekran okuyucu etiketi.",
+    "placeholders": {
+      "tutar": {
+        "type": "String"
+      }
+    }
+  },
+  "kupurGeriAl": "Geri al",
+  "@kupurGeriAl": {
+    "description": "Son eklenen kupürü geri alır."
+  },
   "besleBugunFiyat": "Bugün 1 {birim} = {fiyat}",
   "@besleBugunFiyat": {
     "placeholders": {
@@ -204,35 +221,38 @@
   "detaySilOnay": "Bu besleme silinsin mi?",
   "iptal": "Vazgeç",
   "sil": "Sil",
-  "ogrenBaslik": "Bugünün kavramı",
-  "ogrenSayac": "{n} / {toplam}",
-  "@ogrenSayac": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "toplam": {
-        "type": "int"
-      }
-    }
-  },
+  "ogrenBaslik": "Yeni kavram",
   "ogrenSonraki": "Sonraki ders",
   "ogrenBitti": "Bütün dersleri bitirdin. Yenileri yolda.",
   "ogrenBastan": "Baştan oku",
-  "cikartmaBaslik": "Çıkartmalarım",
-  "cikartmaAlt": "Davranışın için verilir, şans için değil.",
-  "cikartmaKilitli": "Kilitli",
-  "cikartmaSayac": "{n} / {toplam} açıldı",
-  "@cikartmaSayac": {
+  "hatirlaBaslik": "Hatırlıyor musun?",
+  "@hatirlaBaslik": {
+    "description": "Öğren: dersler bitince geri getirme sorusunun başlığı."
+  },
+  "hatirlaSoruyor": "{karakter} {kavram} dersini hatırlamaya çalışıyor. Yardım eder misin?",
+  "@hatirlaSoruyor": {
+    "description": "Öğren: karakter eski bir dersi hatırlamaya çalışıyor; kavram ders adı.",
     "placeholders": {
-      "n": {
-        "type": "int"
+      "karakter": {
+        "type": "String"
       },
-      "toplam": {
-        "type": "int"
+      "kavram": {
+        "type": "String"
       }
     }
   },
+  "hatirlaDogru": "{karakter}: \"Evet, şimdi hatırladım!\"",
+  "@hatirlaDogru": {
+    "description": "Öğren: geri getirme sorusu doğru cevaplanınca karakterin cümlesi.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "cikartmaBaslik": "Çıkartmalarım",
+  "cikartmaAlt": "Davranışın için verilir, şans için değil.",
+  "cikartmaKilitli": "Kilitli",
   "ayarlarBaslik": "Ayarlar",
   "ayarlarDunya": "Kamp yeri",
   "ayarlarYas": "Yaş modu",

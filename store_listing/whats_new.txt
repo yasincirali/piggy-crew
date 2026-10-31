@@ -1,5 +1,6 @@
 Bu sürümde denenecekler:
-• Nereden geldi?: Bir karaktere dokun, "Biraz daha besle"ye bas, bir tutar yaz. Altında "Nereden geldi? (istersen)" satırı var: Harçlık, Hediye ya da Kendim kazandım. "Kendim kazandım"ı seçip ver: karakter "Bunu sen kazandın, özenle saklıyorum!" demeli. Bayram harçlığı için "Hediye"yi dene.
-• Karakterin sayfasında "Beslemelerin" listesinde etiketli satırlar kendi ikonu ve yazısıyla görünmeli; etiketsiz beslemeler eskisi gibi ateş ikonuyla.
-• Seçili etikete yeniden dokununca seçim kalkmalı; hiç seçmeden beslemek eskisi gibi çalışmalı.
-• Telefonda yazı boyutunu büyüt: besle sayfası kaydırılabilmeli, çipler taşmadan alt satıra inmeli.
+• Kamp ekranı: "Besle" artık her karakterin altında; alttaki liste kalktı. Karakterin adının altında hangi para olduğu yazıyor (Altın, Dolar…). Bir karakterin "Besle"sine bas, besleme sayfası açılmalı. Fiyat saati sahnenin altında.
+• Telefonda yazı boyutunu en büyüğe çek: sahnedeki düğmeler kaybolmalı, yerine eski satır listesi gelmeli.
+• Besle sayfası: tutarı elindeki paralara dokunarak kur. 100, 20, 20, 5'e bas: alanda 145 yazmalı. "Geri al" son parayı çıkarır. Klavye artık kendiliğinden açılmıyor; yazmak için alana dokun.
+• Öğren: başlık "Yeni kavram" oldu, "3 / 10" sayacı kalktı. Bütün dersleri bitirince "Hatırlıyor musun?" kartı gelir: bir karakter eski bir dersi yeni bir soruyla sorar. Yanlış seçince dersin metni ipucu olarak açılmalı; doğruyu bulunca karakter "hatırladım" der. Uygulamayı kapatıp açınca sıradaki soru gelir.
+• Çıkartmalar: "5 / 12 açıldı" sayacı kalktı.

@@ -400,6 +400,24 @@ abstract class AppLocalizations {
   /// **'Ne kadar?'**
   String get besleTutar;
 
+  /// Besle sayfası: tutar başlığının altındaki ipucu (kupür çipleri).
+  ///
+  /// In tr, this message translates to:
+  /// **'Elindeki paralara dokun ya da yaz.'**
+  String get kupurIpucu;
+
+  /// Kupür çipinin ekran okuyucu etiketi.
+  ///
+  /// In tr, this message translates to:
+  /// **'{tutar} ekle'**
+  String kupurEkle(String tutar);
+
+  /// Son eklenen kupürü geri alır.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geri al'**
+  String get kupurGeriAl;
+
   /// No description provided for @besleBugunFiyat.
   ///
   /// In tr, this message translates to:
@@ -529,14 +547,8 @@ abstract class AppLocalizations {
   /// No description provided for @ogrenBaslik.
   ///
   /// In tr, this message translates to:
-  /// **'Bugünün kavramı'**
+  /// **'Yeni kavram'**
   String get ogrenBaslik;
-
-  /// No description provided for @ogrenSayac.
-  ///
-  /// In tr, this message translates to:
-  /// **'{n} / {toplam}'**
-  String ogrenSayac(int n, int toplam);
 
   /// No description provided for @ogrenSonraki.
   ///
@@ -556,6 +568,24 @@ abstract class AppLocalizations {
   /// **'Baştan oku'**
   String get ogrenBastan;
 
+  /// Öğren: dersler bitince geri getirme sorusunun başlığı.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hatırlıyor musun?'**
+  String get hatirlaBaslik;
+
+  /// Öğren: karakter eski bir dersi hatırlamaya çalışıyor; kavram ders adı.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter} {kavram} dersini hatırlamaya çalışıyor. Yardım eder misin?'**
+  String hatirlaSoruyor(String karakter, String kavram);
+
+  /// Öğren: geri getirme sorusu doğru cevaplanınca karakterin cümlesi.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: \"Evet, şimdi hatırladım!\"'**
+  String hatirlaDogru(String karakter);
+
   /// No description provided for @cikartmaBaslik.
   ///
   /// In tr, this message translates to:
@@ -573,12 +603,6 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Kilitli'**
   String get cikartmaKilitli;
-
-  /// No description provided for @cikartmaSayac.
-  ///
-  /// In tr, this message translates to:
-  /// **'{n} / {toplam} açıldı'**
-  String cikartmaSayac(int n, int toplam);
 
   /// No description provided for @ayarlarBaslik.
   ///

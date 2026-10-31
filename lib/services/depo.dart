@@ -26,6 +26,7 @@ class Depo {
   static const _cikartmalar = 'cikartmalar_v1';
   static const _dersIlerleme = 'ders_ilerleme_v1';
   static const _ogretilen = 'ogretilen_dersler_v1';
+  static const _hatirlaSira = 'hatirla_sira_v1';
   static const _sesAcik = 'ses_acik_v1';
   static const _titresimAcik = 'titresim_acik_v1';
   static const _karakter3d = 'karakter_3d_v1';
@@ -70,6 +71,10 @@ class Depo {
 
   int dersIlerlemeOku() => _sp.getInt(_dersIlerleme) ?? 0;
   Future<void> dersIlerlemeYaz(int n) => _sp.setInt(_dersIlerleme, n);
+
+  /// "Hatırlıyor musun?" sırası: kaçıncı öğretilmiş ders soruldu (artar, mod alınır).
+  int hatirlaSiraOku() => _sp.getInt(_hatirlaSira) ?? 0;
+  Future<void> hatirlaSiraYaz(int n) => _sp.setInt(_hatirlaSira, n);
 
   /// Çocuğun karakterlere öğrettiği derslerin id'leri. null: hiç yazılmadı
   /// (bu özellikten önceki kurulum; ilk okuyan ders ilerlemesinden tohumlar).
@@ -226,6 +231,7 @@ class Depo {
     await _sp.remove(_hareketler);
     await _sp.remove(_cikartmalar);
     await _sp.remove(_dersIlerleme);
+    await _sp.remove(_hatirlaSira);
     await _sp.remove(_ogretilen);
     await _sp.remove(_sonRuh);
     await _sp.remove(_evre);
