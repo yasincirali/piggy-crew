@@ -73,6 +73,22 @@ enum ParaBirimi {
 /// gelir, suçluluk değil).
 enum Ruh { mutlu, duz, bulutlu }
 
+/// Paranın nereden geldiği (yol haritası 2.3 "bayram / hediye harçlığı",
+/// Ar-Ge 23 Eki "Nereden geldi?"). İsteğe bağlı: seçilmezse etiket yok.
+///
+/// Neden ayrı bir bayram akışı değil: harçlık, hediye ve kendi emeği aynı
+/// "Besle" ile yazılıyordu; tek satır etiket hem bayramı hem emeği kapsar,
+/// yeni ekran açmaz. Etiket yalnız anlatır: ödül, sayaç, çıkartma ve
+/// kaynaklara göre toplam/kıyas YOK (tutar değil davranış; iki sayı kuralı).
+enum HareketKaynagi {
+  harclik(Icons.savings_rounded),
+  hediye(Icons.card_giftcard_rounded),
+  emek(Icons.handyman_rounded);
+
+  const HareketKaynagi(this.ikon);
+  final IconData ikon;
+}
+
 /// Bir besleme (yatırma) ya da kumbaradan alma. Fiyat o gün alınan birim
 /// fiyattır; sonradan değişmez. Çocuk tutarı EV para biriminde yazar,
 /// miktar = tutar / birimFiyat. Alan adlarındaki "Tl" tarihsel: "ev para
@@ -92,6 +108,7 @@ class Hareket {
     required this.tarih,
     required this.tutarTl,
     required this.birimFiyat,
+    this.kaynak,
   });
 
   final String id;
@@ -99,6 +116,9 @@ class Hareket {
   final DateTime tarih;
   final double tutarTl;
   final double birimFiyat;
+
+  /// Yalnız beslemede; eski kayıtlarda ve seçilmeyince null.
+  final HareketKaynagi? kaynak;
 
   double get miktar => birimFiyat > 0 ? tutarTl / birimFiyat : 0;
 
@@ -111,6 +131,7 @@ class Hareket {
         'tarih': tarih.toIso8601String(),
         'tutarTl': tutarTl,
         'birimFiyat': birimFiyat,
+        if (kaynak != null) 'kaynak': kaynak!.name,
       };
 
   static Hareket fromJson(Map<String, dynamic> j) => Hareket(
@@ -119,6 +140,8 @@ class Hareket {
         tarih: DateTime.parse(j['tarih'] as String),
         tutarTl: (j['tutarTl'] as num).toDouble(),
         birimFiyat: (j['birimFiyat'] as num).toDouble(),
+        // Bilinmeyen etiket (ileriki sürümden) yok sayılır, kayıt düşmez.
+        kaynak: HareketKaynagi.values.where((k) => k.name == j['kaynak']).firstOrNull,
       );
 }
 

@@ -212,5 +212,9 @@
   "cizimEtiket": "Dein Bild",
   "cizimRenk": "{renk, select, r0{Schwarz} r1{Rot} r2{Gelb} r3{Grün} r4{Blau} other{Schwarz}}",
   "ulastiklarimBaslik": "Erreichte Ziele",
-  "ulasilanCumle": "Geschafft: {ay}"
+  "ulasilanCumle": "Geschafft: {ay}",
+  "besleNereden": "Woher kommt es? (wenn du magst)",
+  "kaynakAdi": "{kaynak, select, harclik{Taschengeld} hediye{Geschenk} emek{Selbst verdient} other{Taschengeld}}",
+  "besleEmek": "{karakter}: Das hast du selbst verdient! Ich passe gut darauf auf.",
+  "besleHediye": "{karakter}: Ein Geschenk! Ich passe gut darauf auf."
 }

@@ -212,5 +212,9 @@
   "cizimEtiket": "Ton dessin",
   "cizimRenk": "{renk, select, r0{Noir} r1{Rouge} r2{Jaune} r3{Vert} r4{Bleu} other{Noir}}",
   "ulastiklarimBaslik": "Objectifs atteints",
-  "ulasilanCumle": "Objectif atteint : {ay}"
+  "ulasilanCumle": "Objectif atteint : {ay}",
+  "besleNereden": "D’où vient-il ? (si tu veux)",
+  "kaynakAdi": "{kaynak, select, harclik{Argent de poche} hediye{Cadeau} emek{Je l’ai gagné} other{Argent de poche}}",
+  "besleEmek": "{karakter} : Tu l’as gagné toi-même ! Je le garde bien.",
+  "besleHediye": "{karakter} : Un cadeau ! Je le garde bien."
 }

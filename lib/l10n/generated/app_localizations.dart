@@ -1383,6 +1383,30 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Ulaştın: {ay}'**
   String ulasilanCumle(String ay);
+
+  /// Besle sayfasında isteğe bağlı kaynak etiketi başlığı (yol haritası 2.3).
+  ///
+  /// In tr, this message translates to:
+  /// **'Nereden geldi? (istersen)'**
+  String get besleNereden;
+
+  /// Paranın kaynağı: harclik/hediye/emek.
+  ///
+  /// In tr, this message translates to:
+  /// **'{kaynak, select, harclik{Harçlık} hediye{Hediye} emek{Kendim kazandım} other{Harçlık}}'**
+  String kaynakAdi(String kaynak);
+
+  /// Kendi kazandığını besleyince karakterin sıcak cümlesi; ödül değil.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: Bunu sen kazandın, özenle saklıyorum!'**
+  String besleEmek(String karakter);
+
+  /// Hediye/bayram harçlığı beslenince karakterin cümlesi.
+  ///
+  /// In tr, this message translates to:
+  /// **'{karakter}: Hediye geldi, özenle saklıyorum!'**
+  String besleHediye(String karakter);
 }
 
 class _AppLocalizationsDelegate
