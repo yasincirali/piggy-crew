@@ -56,7 +56,7 @@ void main() {
     expect(find.text('Kamp ateşim'), findsOneWidget);
 
     // Tortu'yu besle: 250 ₺ → 0,043 g.
-    await t.tap(find.text('Besle').first);
+    await t.tap(find.byKey(const ValueKey('besle-altin')));
     await bekle(t);
     await t.enterText(find.byType(TextField), '250');
     await bekle(t);

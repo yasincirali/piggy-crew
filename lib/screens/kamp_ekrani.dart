@@ -325,9 +325,36 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
           // en fazla iki sayı, toplam ve fark. Değişimi yüz ve hava durumu anlatır;
           // tutar karakter ekranında.
           Text(l.karakter(t), style: context.t.labelLarge),
+          // Hangi karakter hangi varlık: eski besleme listesinde yazıyordu
+          // ("Tortu · Altın"), liste kalkınca bağ burada kalır (Ar-Ge 31 Eki 20:07).
+          Text(l.varlik(t), style: context.t.labelSmall?.copyWith(color: r.sub)),
         ]),
       );
     }
+
+    // Büyük yazıda (çıkartma ızgarasıyla aynı eşik) sahne küçülür ve düğmeler
+    // sığmaz: o zaman eski satır listesi döner, sahnede düğme olmaz.
+    final buyukYazi = MediaQuery.textScalerOf(context).scale(1) > 1.6;
+
+    // Sahne yeri: dar ekranda sığmazsa orantılı küçülür, sığıyorsa boyutu aynen
+    // kalır; [en] doğal genişlik, satırdaki pay buna oranla dağılır (eşit pay
+    // ateşi 140'tan küçültüyordu). Karakter FittedBox ile küçülebilir ama "Besle"
+    // düğmesi FittedBox'ın DIŞINDA durur ki dar ekranda 44 pt'nin altına inmesin.
+    Widget yer(int en, Widget w, {VarlikTuru? besle}) => Flexible(
+          flex: en,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            FittedBox(fit: BoxFit.scaleDown, child: w),
+            if (besle != null && !buyukYazi) ...[
+              const SizedBox(height: Bosluk.xs),
+              _BesleDugmesi(
+                key: ValueKey('besle-${besle.name}'),
+                metin: l.besle,
+                semantik: l.besleBaslik(l.karakter(besle), besle.name),
+                onTap: () => _besle(besle),
+              ),
+            ],
+          ]),
+        );
 
     return RefreshIndicator(
       onRefresh: () => ref.read(fiyatProvider.notifier).yenile(),
@@ -354,18 +381,21 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
               ),
             ),
           const SizedBox(height: Bosluk.l),
-          // Kamp sahnesi. Karakterler ve ateş sabit boyutlu bir sahne; altındaki
-          // ad/fark etiketleri en fazla 1,5× büyür ki sahne dar ekranda taşmasın.
-          // Aynı bilgi aşağıdaki besleme listesinde tam Dynamic Type ile var.
+          // Kamp sahnesi (Ar-Ge 31 Eki 20:07, "dünya = arayüz"): "Besle" her
+          // karakterin altında; ayrı besleme listesi büyük yazı yedeği olarak
+          // kaldı. Ad/varlık etiketleri en fazla 1,5× büyür ki sahne dar
+          // ekranda taşmasın.
           MediaQuery.withClampedTextScaling(
             maxScaleFactor: 1.5,
             child: Column(children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _sigdir(92, ust.isNotEmpty ? karakter(ust[0], gecikme: const Duration(milliseconds: 700)) : const SizedBox(width: 92)),
-                  _sigdir(140, KampAtesi(
+                  ust.isNotEmpty ? yer(92, karakter(ust[0], gecikme: const Duration(milliseconds: 700)), besle: ust[0]) : yer(92, const SizedBox(width: 92)),
+                  yer(
+                      140,
+                      KampAtesi(
                         // Ateş odunla büyür, tutarla değil: piyasa düşüşü de
                         // kumbaradan alma da onu küçültmez (bkz. [Odun]).
                         odun: ref.watch(odunProvider),
@@ -373,7 +403,9 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
                         boyut: 140,
                         parlamaTetik: _yeme.values.fold(0, (a, b) => a + b),
                       )),
-                  _sigdir(92, ust.length > 1 ? karakter(ust[1], gecikme: const Duration(milliseconds: 1400), donusYon: 1, donusGecikme: const Duration(milliseconds: 60)) : const SizedBox(width: 92)),
+                  ust.length > 1
+                      ? yer(92, karakter(ust[1], gecikme: const Duration(milliseconds: 1400), donusYon: 1, donusGecikme: const Duration(milliseconds: 60)), besle: ust[1])
+                      : yer(92, const SizedBox(width: 92)),
                 ],
               ),
               const SizedBox(height: Bosluk.s),
@@ -381,54 +413,56 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _sigdir(120, karakter(VarlikTuru.altin, boyut: 120, donusGecikme: const Duration(milliseconds: 120))),
+                  yer(120, karakter(VarlikTuru.altin, boyut: 120, donusGecikme: const Duration(milliseconds: 120)), besle: VarlikTuru.altin),
                   // Flex = kalan doğal genişlik (335 − 120 − 92); sahne öğeleriyle aynı ölçekte.
-                  Expanded(
-                    flex: 123,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Bosluk.m),
-                      child: Text(
-                        bos ? l.kampBos : _fiyatNotu(l, fiyat.valueOrNull?.zaman),
-                        textAlign: TextAlign.center,
-                        style: context.t.bodySmall?.copyWith(color: r.sub),
-                      ),
-                    ),
-                  ),
-                  _sigdir(92, alt.isNotEmpty ? karakter(alt[0], gecikme: const Duration(milliseconds: 2100), donusYon: 1, donusGecikme: const Duration(milliseconds: 180)) : const SizedBox(width: 92)),
+                  const Spacer(flex: 123),
+                  alt.isNotEmpty
+                      ? yer(92, karakter(alt[0], gecikme: const Duration(milliseconds: 2100), donusYon: 1, donusGecikme: const Duration(milliseconds: 180)), besle: alt[0])
+                      : yer(92, const SizedBox(width: 92)),
                 ],
               ),
             ]),
           ),
-          const SizedBox(height: Bosluk.xl),
-          // Besle düğmeleri: her karakter için bir satır (44 pt+).
-          Kart(
-            padding: const EdgeInsets.all(Bosluk.s),
-            child: Column(children: [
-              for (final t in gorunur)
-                Basilabilir(
-                  onTap: () => _besle(t),
-                  semantik: l.besleBaslik(l.karakter(t), t.name),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
-                    child: Row(children: [
-                      SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh, sembol: cocuk.para.sembol))),
-                      const SizedBox(width: Bosluk.m),
-                      Expanded(
-                        // Miktar karakter ekranında ("Elinde …"); burada yalnız ad.
-                        child: Text('${l.karakter(t)} · ${l.varlik(t)}', style: context.t.titleMedium),
-                      ),
-                      Container(
-                        height: 40,
-                        padding: const EdgeInsets.symmetric(horizontal: Bosluk.l),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(color: r.acc, borderRadius: BorderRadius.circular(999)),
-                        child: Text(l.besle, style: context.t.labelLarge?.copyWith(color: r.accInk)),
-                      ),
-                    ]),
-                  ),
-                ),
-            ]),
+          const SizedBox(height: Bosluk.m),
+          // Fiyat saati sahnenin ortasındaki boşluktan buraya indi: yardımcı
+          // bilgi, sahnenin parçası değil.
+          Text(
+            bos ? l.kampBos : _fiyatNotu(l, fiyat.valueOrNull?.zaman),
+            textAlign: TextAlign.center,
+            style: context.t.bodySmall?.copyWith(color: r.sub),
           ),
+          if (buyukYazi) ...[
+            const SizedBox(height: Bosluk.xl),
+            // Büyük yazı yedeği: her karakter için bir satır (44 pt+), tam Dynamic Type.
+            Kart(
+              padding: const EdgeInsets.all(Bosluk.s),
+              child: Column(children: [
+                for (final t in gorunur)
+                  Basilabilir(
+                    onTap: () => _besle(t),
+                    semantik: l.besleBaslik(l.karakter(t), t.name),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: Bosluk.s, vertical: Bosluk.xs),
+                      child: Row(children: [
+                        SizedBox.square(dimension: 44, child: CustomPaint(painter: KarakterPainter(tur: t, ruh: k[t]!.ruh, sembol: cocuk.para.sembol))),
+                        const SizedBox(width: Bosluk.m),
+                        Expanded(
+                          // Miktar karakter ekranında ("Elinde …"); burada yalnız ad.
+                          child: Text('${l.karakter(t)} · ${l.varlik(t)}', style: context.t.titleMedium),
+                        ),
+                        Container(
+                          constraints: const BoxConstraints(minHeight: 44),
+                          padding: const EdgeInsets.symmetric(horizontal: Bosluk.l),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(color: r.acc, borderRadius: BorderRadius.circular(999)),
+                          child: Text(l.besle, style: context.t.labelLarge?.copyWith(color: r.accInk)),
+                        ),
+                      ]),
+                    ),
+                  ),
+              ]),
+            ),
+          ],
         ],
       ),
     );
@@ -442,7 +476,35 @@ class _KampState extends ConsumerState<KampEkrani> with WidgetsBindingObserver {
   }
 }
 
-/// Sahne öğesi dar ekranda sığmazsa orantılı küçülür, sığıyorsa boyutu aynen kalır.
-/// [en] öğenin doğal genişliği: satırdaki pay buna oranla dağılır, böylece
-/// normal ekranda hiçbir öğe küçülmez (eşit pay ateşi 140'tan küçültüyordu).
-Widget _sigdir(int en, Widget w) => Flexible(flex: en, child: FittedBox(fit: BoxFit.scaleDown, child: w));
+/// Sahnedeki "Besle": karakterin altında küçük hap düğme. En az 44 pt yükseklik
+/// ve genişlik; uzun dillerde ("Dar de comer") metin hapın içinde küçülür,
+/// hap küçülmez.
+class _BesleDugmesi extends StatelessWidget {
+  const _BesleDugmesi({super.key, required this.metin, required this.semantik, required this.onTap});
+  final String metin;
+  final String semantik;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = context.r;
+    return Basilabilir(
+      onTap: onTap,
+      semantik: semantik,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+        // Hizalama yok: hap metne göre boyutlanır, sütunun tamamına yayılmaz.
+        padding: const EdgeInsets.symmetric(horizontal: Bosluk.m, vertical: Bosluk.s),
+        decoration: BoxDecoration(color: r.acc, borderRadius: BorderRadius.circular(999)),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.add_rounded, size: 18, color: r.accInk),
+            const SizedBox(width: Bosluk.xs),
+            Text(metin, style: context.t.labelLarge?.copyWith(color: r.accInk)),
+          ]),
+        ),
+      ),
+    );
+  }
+}

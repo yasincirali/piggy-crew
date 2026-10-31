@@ -42,29 +42,7 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
       Future.microtask(() => ref.read(ogretilenProvider.notifier).tohumla(dersler.take(ilerleme).map((d) => d.id)));
     }
 
-    if (ilerleme >= dersler.length) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(Bosluk.xxl),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Karakter(tur: VarlikTuru.euro, ruh: Ruh.mutlu, boyut: 140),
-            const SizedBox(height: Bosluk.l),
-            Text(l.ogrenBitti, textAlign: TextAlign.center, style: context.t.titleLarge),
-            const SizedBox(height: Bosluk.l),
-            AnaDugme(
-              metin: l.ogrenBastan,
-              ikincil: true,
-              onTap: () async {
-                // Sıfırlamadan önce: hiç tohumlanmamış eski kurulumda bütün
-                // dersler öğretilmiş sayılır; ilerleme sıfırlanır, raf kalır.
-                await ref.read(ogretilenProvider.notifier).tohumla(dersler.map((d) => d.id));
-                await ref.read(dersIlerlemeProvider.notifier).ilerleSifirla();
-              },
-            ),
-          ]),
-        ),
-      );
-    }
+    if (ilerleme >= dersler.length) return _Hatirla(dersler: dersler);
 
     final ders = dersler[ilerleme];
     String p(String s) => Ders.paraYerlestir(s, cocuk.para);
@@ -73,11 +51,9 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
       children: [
-        // Wrap: büyük yazıda başlık ile sayaç yan yana sığmazsa alt alta iner.
-        Wrap(alignment: WrapAlignment.spaceBetween, spacing: Bosluk.s, runSpacing: Bosluk.xs, children: [
-          BolumBasligi(l.ogrenBaslik),
-          Text(l.ogrenSayac(ilerleme + 1, dersler.length), style: context.t.labelLarge?.copyWith(color: r.sub)),
-        ]),
+        // Sayaç ("3 / 10") yok: çocuğa eksiğini sayıyordu (Ar-Ge 31 Eki 11:07 #3).
+        // Başlık zamansız: günlük kapı yok, "Bugünün" yanlış söz veriyordu.
+        BolumBasligi(l.ogrenBaslik),
         const SizedBox(height: Bosluk.s),
         Kart(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -164,6 +140,123 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
                   });
                 }
               : null,
+        ),
+      ],
+    );
+  }
+}
+
+/// Dersler bitince: "Hatırlıyor musun?" (Ar-Ge 31 Eki, yasin "yap"). Eskiden
+/// yalnız "Baştan oku" vardı, aynı metin ve soru; sekme ilk haftadan sonra
+/// boş kalıyordu. Karakter öğretilmiş bir dersi **metni göstermeden** yeni bir
+/// soruyla sorar; yanlışta ders metni ipucu olarak açılır. Açılışta tek soru:
+/// sıra durum kurulurken bir kez okunur, doğru cevapla bir sonrakine geçer ama
+/// yeni soru ancak uygulama yeniden açılınca gelir (ardı ardına sorgu test
+/// hissi verir). Puan, sayaç, çıkartma yok.
+class _Hatirla extends ConsumerStatefulWidget {
+  const _Hatirla({required this.dersler});
+  final List<Ders> dersler;
+  @override
+  ConsumerState<_Hatirla> createState() => _HatirlaState();
+}
+
+class _HatirlaState extends ConsumerState<_Hatirla> {
+  late final int _sira = ref.read(depoProvider).hatirlaSiraOku();
+  int? _secim;
+  bool _dogru = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final r = context.r;
+    final cocuk = ref.watch(cocukProvider)!;
+    final ogretilen = ref.watch(ogretilenProvider) ?? const <String>{};
+    final adaylar = [
+      for (final d in widget.dersler)
+        if (d.hatirla != null && ogretilen.contains(d.id)) d,
+    ];
+    final ders = adaylar.isEmpty ? null : adaylar[_sira % adaylar.length];
+    String p(String s) => Ders.paraYerlestir(s, cocuk.para);
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.dev),
+      children: [
+        Text(l.ogrenBitti, style: context.t.titleLarge),
+        const SizedBox(height: Bosluk.l),
+        if (ders != null) ...[
+          Builder(builder: (context) {
+            final h = ders.hatirla!;
+            final karakter = ders.karakter ?? VarlikTuru.euro;
+            return Kart(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Row(children: [
+                  Karakter(tur: karakter, ruh: _dogru ? Ruh.mutlu : Ruh.duz, boyut: 56),
+                  const SizedBox(width: Bosluk.m),
+                  Expanded(child: BolumBasligi(l.hatirlaBaslik)),
+                ]),
+                const SizedBox(height: Bosluk.s),
+                Text(l.hatirlaSoruyor(l.karakter(karakter), p(ders.kavram)), style: context.t.bodyLarge?.copyWith(color: r.sub)),
+                const SizedBox(height: Bosluk.s),
+                Text(p(h.soru), style: context.t.titleMedium),
+                const SizedBox(height: Bosluk.m),
+                for (final (i, s) in h.secenekler.indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Bosluk.s),
+                    child: _Secenek(
+                      metin: p(s),
+                      durum: _secim != i
+                          ? _SecenekDurumu.bos
+                          : (i == h.dogru ? _SecenekDurumu.dogru : _SecenekDurumu.yanlis),
+                      onTap: _dogru
+                          ? null
+                          : () {
+                              final dogru = i == h.dogru;
+                              ref.read(dokunsalProvider).cal(dogru ? Dokunus.onay : Dokunus.secim);
+                              setState(() {
+                                _secim = i;
+                                _dogru = dogru;
+                              });
+                              // Sıra yalnız doğruda ilerler: yanlışta aynı soru bir
+                              // sonraki açılışta yine gelir, ceza değil tekrar.
+                              if (dogru) ref.read(depoProvider).hatirlaSiraYaz(_sira + 1);
+                            },
+                    ),
+                  ),
+                AnimatedSwitcher(
+                  duration: Devinim.sure(context, Devinim.normal),
+                  child: _secim == null
+                      ? const SizedBox.shrink()
+                      : _dogru
+                          ? Text(
+                              l.hatirlaDogru(l.karakter(karakter)),
+                              key: const ValueKey('dogru'),
+                              style: context.t.titleMedium?.copyWith(color: r.acc),
+                            )
+                          // Rehberli geri getirme: yanlışta ders metni ipucu olur.
+                          : Column(
+                              key: ValueKey('ipucu$_secim'),
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(l.ogrenBirlikte(l.karakter(karakter)), style: context.t.titleMedium?.copyWith(color: r.sub)),
+                                const SizedBox(height: Bosluk.s),
+                                Text(p(ders.metin(cocuk.yas)), style: context.t.bodyLarge),
+                              ],
+                            ),
+                ),
+              ]),
+            );
+          }),
+          const SizedBox(height: Bosluk.xl),
+        ],
+        AnaDugme(
+          metin: l.ogrenBastan,
+          ikincil: true,
+          onTap: () async {
+            // Sıfırlamadan önce: hiç tohumlanmamış eski kurulumda bütün
+            // dersler öğretilmiş sayılır; ilerleme sıfırlanır, raf kalır.
+            await ref.read(ogretilenProvider.notifier).tohumla(widget.dersler.map((d) => d.id));
+            await ref.read(dersIlerlemeProvider.notifier).ilerleSifirla();
+          },
         ),
       ],
     );

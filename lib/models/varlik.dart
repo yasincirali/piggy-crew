@@ -52,6 +52,18 @@ enum ParaBirimi {
   static ParaBirimi fromKod(String? k) =>
       ParaBirimi.values.firstWhere((p) => p.kod == k, orElse: () => ParaBirimi.tryy);
 
+  /// Çocuğun elinde en sık olan banknot ve bozuk paralar ("Elindekini say",
+  /// Ar-Ge 30 Eki): Besle'de her dokunuş tutara eklenir. Kuruş/cent yok; o
+  /// klavyeyle yazılır. TR'ye özgü varsayım yalnız burada ve `bicim.dart`'ta
+  /// (global kuralı). Kaynak: TCMB E9 serisi (5–200 ₺), Fed ($1–20 banknot),
+  /// ECB (€5–50 banknot), Bank of England + Royal Mint (£1, £2 madeni; £5–20).
+  List<int> get kupurler => switch (this) {
+        ParaBirimi.tryy => const [5, 10, 20, 50, 100, 200],
+        ParaBirimi.usd => const [1, 5, 10, 20],
+        ParaBirimi.eur => const [5, 10, 20, 50],
+        ParaBirimi.gbp => const [1, 2, 5, 10, 20],
+      };
+
   /// Cihaz yerelinden tahmin: ülke kodu → birim; bilinmeyen → USD (global varsayılan).
   static ParaBirimi yerelden(String? ulke) => switch (ulke) {
         'TR' => ParaBirimi.tryy,

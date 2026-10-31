@@ -12,7 +12,16 @@
    "{p:5000}"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Which gives you more money by the end of the month?",
+   "secenekler": [
+    "Putting in {p:20} every week",
+    "Putting in {p:20} once",
+    "Never putting anything in"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "enflasyon",
@@ -27,7 +36,16 @@
    "More, my money grew"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Ice cream cost {p:10} last year and {p:15} today. What is this called?",
+   "secenekler": [
+    "Inflation: prices went up",
+    "Saving",
+    "Sharing"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "altin",
@@ -42,7 +60,16 @@
    "Never changes"
   ],
   "dogru": 1,
-  "karakter": "altin"
+  "karakter": "altin",
+  "hatirla": {
+   "soru": "How does gold usually change?",
+   "secenekler": [
+    "It doubles every day",
+    "It never changes",
+    "Slowly; sometimes down, sometimes up"
+   ],
+   "dogru": 2
+  }
  },
  {
   "id": "doviz",
@@ -57,7 +84,16 @@
    "Sell everything"
   ],
   "dogru": 1,
-  "karakter": "dolar"
+  "karakter": "dolar",
+  "hatirla": {
+   "soru": "The dollar dropped a little today. What does it mean?",
+   "secenekler": [
+    "My money is gone",
+    "Prices go up and down, waiting helps",
+    "I should spend it all now"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "cesitlendirme",
@@ -72,7 +108,16 @@
    "Doesn't matter"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "Why is it good to split your money between characters?",
+   "secenekler": [
+    "If one falls, the others stay",
+    "It makes more money",
+    "It doesn't matter"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "fiyat",
@@ -87,7 +132,16 @@
    "Disappeared"
   ],
   "dogru": 1,
-  "karakter": "altin"
+  "karakter": "altin",
+  "hatirla": {
+   "soru": "You have 1 gram of gold and gold got cheaper. How many grams do you have?",
+   "secenekler": [
+    "Half a gram",
+    "Still 1 gram, only worth less",
+    "2 grams"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "hedef",
@@ -102,7 +156,16 @@
    "30 weeks"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "For a {p:100} goal, if you put in {p:25} a week, how many weeks will it take?",
+   "secenekler": [
+    "4 weeks",
+    "2 weeks",
+    "10 weeks"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "ihtiyac",
@@ -117,7 +180,16 @@
    "Lunch"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Which one is a need?",
+   "secenekler": [
+    "A new toy",
+    "A coat in winter",
+    "A third ball"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "paylasim",
@@ -132,7 +204,16 @@
    "{p:300}"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "What is 10% of {p:100}?",
+   "secenekler": [
+    "{p:1}",
+    "{p:50}",
+    "{p:10}"
+   ],
+   "dogru": 2
+  }
  },
  {
   "id": "sabir",
@@ -147,6 +228,15 @@
    "Never waiting"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "What does waiting a day before buying something give you?",
+   "secenekler": [
+    "I find out if I really want it",
+    "The price always drops",
+    "Nothing"
+   ],
+   "dogru": 0
+  }
  }
 ]

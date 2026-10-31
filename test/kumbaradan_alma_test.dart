@@ -124,7 +124,7 @@ void main() {
       kap.invalidate(cikartmalarProvider);
       await bekle(t);
       expect(kap.read(odunProvider), 1);
-      await t.tap(find.text('Besle').last);
+      await t.tap(find.byKey(const ValueKey('besle-nakit')));
       await bekle(t);
       await t.enterText(find.byType(TextField), '10');
       await bekle(t);

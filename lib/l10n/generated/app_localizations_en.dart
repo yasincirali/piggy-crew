@@ -174,6 +174,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get besleTutar => 'How much?';
 
   @override
+  String get kupurIpucu => 'Tap the money in your hand, or type it.';
+
+  @override
+  String kupurEkle(String tutar) {
+    return 'Add $tutar';
+  }
+
+  @override
+  String get kupurGeriAl => 'Undo';
+
+  @override
   String besleBugunFiyat(String birim, String fiyat) {
     return 'Today 1 $birim = $fiyat';
   }
@@ -259,12 +270,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sil => 'Delete';
 
   @override
-  String get ogrenBaslik => 'Today\'s idea';
-
-  @override
-  String ogrenSayac(int n, int toplam) {
-    return '$n / $toplam';
-  }
+  String get ogrenBaslik => 'A new idea';
 
   @override
   String get ogrenSonraki => 'Next lesson';
@@ -276,6 +282,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ogrenBastan => 'Read again';
 
   @override
+  String get hatirlaBaslik => 'Do you remember?';
+
+  @override
+  String hatirlaSoruyor(String karakter, String kavram) {
+    return '$karakter is trying to remember the $kavram lesson. Can you help?';
+  }
+
+  @override
+  String hatirlaDogru(String karakter) {
+    return '$karakter: \"Yes, now I remember!\"';
+  }
+
+  @override
   String get cikartmaBaslik => 'My stickers';
 
   @override
@@ -283,11 +302,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cikartmaKilitli => 'Locked';
-
-  @override
-  String cikartmaSayac(int n, int toplam) {
-    return '$n / $toplam unlocked';
-  }
 
   @override
   String get ayarlarBaslik => 'Settings';

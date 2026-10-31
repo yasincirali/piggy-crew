@@ -48,6 +48,10 @@ class _BesleSayfasi extends ConsumerStatefulWidget {
 
 class _BesleState extends ConsumerState<_BesleSayfasi> {
   final _tutar = TextEditingController();
+
+  /// Dokunulan kupürler, sırayla: "Geri al" sonuncuyu çıkarır. Çocuk elle
+  /// yazınca liste silinir (artık yazdığı sayı geçerli).
+  final _kupurler = <int>[];
   bool _gonderiliyor = false;
   HareketKaynagi? _kaynak;
 
@@ -154,14 +158,16 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
           ]),
           const SizedBox(height: Bosluk.xl),
           Text(l.besleTutar, style: context.t.titleMedium),
+          Text(l.kupurIpucu, style: context.t.bodyMedium?.copyWith(color: r.sub)),
           const SizedBox(height: Bosluk.s),
           TextField(
             controller: _tutar,
-            autofocus: true,
+            // Klavye kendiliğinden açılmaz: açılınca kupürleri örtüyordu
+            // (küçük ekran). Yazmak isteyen alana dokunur.
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
             style: context.t.displaySmall,
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => setState(_kupurler.clear),
             onSubmitted: (_) => fiyat != null ? _ver(fiyat) : null,
             decoration: InputDecoration(
               prefixText: '${cocuk.para.sembol} ',
@@ -175,14 +181,29 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
             ),
           ),
           const SizedBox(height: Bosluk.s),
+          // "Elindekini say" (Ar-Ge 30 Eki, yasin "yap" 31 Eki): elindeki
+          // banknot ve bozuk paraların eşine dokun, her dokunuş EKLER. 7 yaş
+          // 145'i yazamaz ama 100'ü ve 20'yi tanır (somut → temsil → soyut).
+          // Eski dört hızlı tutar (50/100/250/500) tutarı değiştiriyordu ve
+          // 250 diye banknot yoktu. Ödül, sayaç, süre yok.
           Wrap(
             spacing: Bosluk.s,
+            runSpacing: Bosluk.s,
             children: [
-              for (final v in _hizliTutarlar(cocuk.para))
+              for (final v in cocuk.para.kupurler)
+                _Kupur(
+                  key: ValueKey('kupur-$v'),
+                  metin: fmtPara(v.toDouble(), cocuk.para),
+                  semantik: l.kupurEkle(fmtPara(v.toDouble(), cocuk.para)),
+                  onTap: () => _kupurEkle(v),
+                ),
+              if (_kupurler.isNotEmpty)
                 SecimCipi(
-                  metin: fmtPara(v, cocuk.para),
-                  secili: tutar == v,
-                  onTap: () => setState(() => _tutar.text = v.toInt().toString()),
+                  key: const ValueKey('kupur-geri'),
+                  metin: l.kupurGeriAl,
+                  secili: false,
+                  onIkon: Icon(Icons.undo_rounded, size: 18, color: r.fg),
+                  onTap: _kupurGeriAl,
                 ),
             ],
           ),
@@ -229,7 +250,60 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     );
   }
 
-  /// Hızlı tutarlar ev birimine göre: TRY için 50/100/250/500, diğerleri 5/10/25/50.
-  List<double> _hizliTutarlar(ParaBirimi p) =>
-      p == ParaBirimi.tryy ? const [50, 100, 250, 500] : const [5, 10, 25, 50];
+  /// Kupürden önce elle yazılmış tutar (varsa); kupürler bunun üstüne eklenir.
+  double _taban = 0;
+
+  void _kupurEkle(int v) {
+    if (_kupurler.isEmpty) _taban = parseSayi(_tutar.text) ?? 0;
+    setState(() {
+      _kupurler.add(v);
+      _tutar.text = _yaz(_taban + _kupurler.fold(0, (a, b) => a + b));
+    });
+    ref.read(dokunsalProvider).cal(Dokunus.secim);
+  }
+
+  void _kupurGeriAl() {
+    if (_kupurler.isEmpty) return;
+    setState(() {
+      _kupurler.removeLast();
+      final t = _taban + _kupurler.fold(0, (a, b) => a + b);
+      _tutar.text = t > 0 ? _yaz(t) : '';
+    });
+  }
+
+  /// Alan ham sayı tutar (binlik ayırıcı yok): parseSayi "1.500"ü de okur ama
+  /// ham yazım ondalıkla karışmaz.
+  String _yaz(double v) => v == v.roundToDouble() ? v.toInt().toString() : v.toString();
+}
+
+/// Kupür: elindeki paranın eşi. Banknot gibi köşeli kart, üstte artı; en az
+/// 44 pt. Ekran okuyucu "20 ₺ ekle" okur.
+class _Kupur extends StatelessWidget {
+  const _Kupur({super.key, required this.metin, required this.semantik, required this.onTap});
+  final String metin;
+  final String semantik;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = context.r;
+    return Basilabilir(
+      onTap: onTap,
+      semantik: semantik,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 44, minWidth: 64),
+        padding: const EdgeInsets.symmetric(horizontal: Bosluk.m, vertical: Bosluk.s),
+        decoration: BoxDecoration(
+          color: r.card,
+          borderRadius: BorderRadius.circular(Kose.s),
+          border: Border.all(color: r.acc.withValues(alpha: .6), width: 1.5),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.add_rounded, size: 16, color: r.acc),
+          const SizedBox(width: Bosluk.xs),
+          Text(metin, style: context.t.titleMedium),
+        ]),
+      ),
+    );
+  }
 }

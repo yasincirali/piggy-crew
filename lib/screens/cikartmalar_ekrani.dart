@@ -24,8 +24,9 @@ class CikartmalarEkrani extends ConsumerWidget {
         Text(l.cikartmaBaslik, style: context.t.headlineMedium),
         const SizedBox(height: Bosluk.xs),
         Text(l.cikartmaAlt, style: context.t.bodyMedium),
-        const SizedBox(height: Bosluk.s),
-        Text(l.cikartmaSayac(acik.length, Cikartma.hepsi.length), style: context.t.labelLarge?.copyWith(color: r.sub)),
+        // "5 / 12 açıldı" sayacı yok (Ar-Ge 30 Eki 20:07 #2): kilitliler zaten
+        // soluk ve görünür; sayaç çocuğa yalnız eksiğini sayıyordu. Sayı veliye
+        // Veli köşesinde kalır.
         const SizedBox(height: Bosluk.l),
         // Sabit en-boy oranlı ızgara yerine satırlar: kart yüksekliği metne göre
         // büyür, aynı satırdaki iki kart eşit boyda kalır (Dynamic Type 3×'te

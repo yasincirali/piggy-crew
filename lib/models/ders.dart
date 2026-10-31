@@ -25,12 +25,17 @@ class Ders {
     required this.secenekler,
     required this.dogru,
     required this.karakter,
+    this.hatirla,
   });
 
   final String id, kavram, baslik, metinKucuk, metinBuyuk, soru;
   final List<String> secenekler;
   final int dogru;
   final VarlikTuru? karakter;
+
+  /// Dersler bitince sorulan "Hatırlıyor musun?" sorusu (Ar-Ge 31 Eki, yasin
+  /// "yap"): aynı kavram, yeni durum. Eski içerikte yoksa ders atlanır.
+  final HatirlaSorusu? hatirla;
 
   String metin(YasModu y) => y == YasModu.kucuk ? metinKucuk : metinBuyuk;
 
@@ -51,6 +56,7 @@ class Ders {
         secenekler: (j['secenekler'] as List).cast<String>(),
         dogru: j['dogru'] as int,
         karakter: j['karakter'] == null ? null : VarlikTuru.fromAnahtar(j['karakter'] as String),
+        hatirla: j['hatirla'] == null ? null : HatirlaSorusu.fromJson(j['hatirla'] as Map<String, dynamic>),
       );
 
   static Future<List<Ders>> yukle(String dil) async {
@@ -58,4 +64,22 @@ class Ders {
     final s = await rootBundle.loadString('assets/dersler/$d.json');
     return (jsonDecode(s) as List).cast<Map<String, dynamic>>().map(Ders.fromJson).toList();
   }
+}
+
+/// Geri getirme sorusu: açıklama metni gösterilmeden sorulur, yanlışta ders
+/// metni ipucu olarak açılır (Karpicke, Blunt ve Smith 2016: ilkokul
+/// çocuklarında geri getirme pratiği; küçük çocukta rehberli geri getirme,
+/// yani seçenekler ve ipucu). Puan, sayaç, seri yok.
+@immutable
+class HatirlaSorusu {
+  const HatirlaSorusu({required this.soru, required this.secenekler, required this.dogru});
+  final String soru;
+  final List<String> secenekler;
+  final int dogru;
+
+  static HatirlaSorusu fromJson(Map<String, dynamic> j) => HatirlaSorusu(
+        soru: j['soru'] as String,
+        secenekler: (j['secenekler'] as List).cast<String>(),
+        dogru: j['dogru'] as int,
+      );
 }

@@ -12,7 +12,16 @@
    "{p:5000}"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Womit hast du am Monatsende mehr Geld?",
+   "secenekler": [
+    "Jede Woche {p:20} hineinlegen",
+    "Einmal {p:20} hineinlegen",
+    "Nie etwas hineinlegen"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "enflasyon",
@@ -27,7 +36,16 @@
    "Mehr, mein Geld ist gewachsen"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Ein Eis kostete letztes Jahr {p:10}, heute {p:15}. Wie heißt das?",
+   "secenekler": [
+    "Inflation: die Preise sind gestiegen",
+    "Sparen",
+    "Teilen"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "altin",
@@ -42,7 +60,16 @@
    "Ändert sich nie"
   ],
   "dogru": 1,
-  "karakter": "altin"
+  "karakter": "altin",
+  "hatirla": {
+   "soru": "Wie verändert sich Gold meistens?",
+   "secenekler": [
+    "Es verdoppelt sich jeden Tag",
+    "Es verändert sich nie",
+    "Langsam; mal runter, mal rauf"
+   ],
+   "dogru": 2
+  }
  },
  {
   "id": "doviz",
@@ -57,7 +84,16 @@
    "Alles verkaufen"
   ],
   "dogru": 1,
-  "karakter": "dolar"
+  "karakter": "dolar",
+  "hatirla": {
+   "soru": "Der Dollar ist heute ein bisschen gefallen. Was heißt das?",
+   "secenekler": [
+    "Mein Geld ist weg",
+    "Preise gehen rauf und runter, Warten hilft",
+    "Ich sollte sofort alles ausgeben"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "cesitlendirme",
@@ -72,7 +108,16 @@
    "Egal"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "Warum ist es gut, dein Geld auf verschiedene Figuren zu verteilen?",
+   "secenekler": [
+    "Fällt eine, bleiben die anderen",
+    "Es bringt mehr Geld",
+    "Es ist egal"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "fiyat",
@@ -87,7 +132,16 @@
    "sind verschwunden"
   ],
   "dogru": 1,
-  "karakter": "altin"
+  "karakter": "altin",
+  "hatirla": {
+   "soru": "Du hast 1 Gramm Gold und Gold wurde billiger. Wie viele Gramm hast du?",
+   "secenekler": [
+    "Ein halbes Gramm",
+    "Immer noch 1 Gramm, nur weniger wert",
+    "2 Gramm"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "hedef",
@@ -102,7 +156,16 @@
    "30 Wochen"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "Für ein Ziel von {p:100}: Wenn du jede Woche {p:25} hineinlegst, wie viele Wochen dauert es?",
+   "secenekler": [
+    "4 Wochen",
+    "2 Wochen",
+    "10 Wochen"
+   ],
+   "dogru": 0
+  }
  },
  {
   "id": "ihtiyac",
@@ -117,7 +180,16 @@
    "Das Mittagessen"
   ],
   "dogru": 1,
-  "karakter": "tl"
+  "karakter": "tl",
+  "hatirla": {
+   "soru": "Was davon brauchst du wirklich?",
+   "secenekler": [
+    "Ein neues Spielzeug",
+    "Eine Jacke im Winter",
+    "Einen dritten Ball"
+   ],
+   "dogru": 1
+  }
  },
  {
   "id": "paylasim",
@@ -132,7 +204,16 @@
    "{p:300}"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "Wie viel sind 10 % von {p:100}?",
+   "secenekler": [
+    "{p:1}",
+    "{p:50}",
+    "{p:10}"
+   ],
+   "dogru": 2
+  }
  },
  {
   "id": "sabir",
@@ -147,6 +228,15 @@
    "Nie warten"
   ],
   "dogru": 1,
-  "karakter": null
+  "karakter": null,
+  "hatirla": {
+   "soru": "Was bringt es, vor einem Kauf einen Tag zu warten?",
+   "secenekler": [
+    "Ich merke, ob ich es wirklich will",
+    "Der Preis sinkt immer",
+    "Nichts"
+   ],
+   "dogru": 0
+  }
  }
 ]

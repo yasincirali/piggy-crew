@@ -52,7 +52,7 @@ void main() {
 
   /// Zıpzıp'i (ikinci satır) besler: 100 ₺ ver. Avuç açılır.
   Future<void> zipzipiBesle(WidgetTester t) async {
-    await t.tap(find.text('Besle').at(1));
+    await t.tap(find.byKey(const ValueKey('besle-dolar')));
     await bekle(t);
     await t.enterText(find.byType(TextField), '100');
     await bekle(t);
