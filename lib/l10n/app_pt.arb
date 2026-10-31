@@ -212,5 +212,9 @@
   "cizimEtiket": "Seu desenho",
   "cizimRenk": "{renk, select, r0{Preto} r1{Vermelho} r2{Amarelo} r3{Verde} r4{Azul} other{Preto}}",
   "ulastiklarimBaslik": "Metas alcançadas",
-  "ulasilanCumle": "Você conseguiu: {ay}"
+  "ulasilanCumle": "Você conseguiu: {ay}",
+  "besleNereden": "De onde veio? (se quiser)",
+  "kaynakAdi": "{kaynak, select, harclik{Mesada} hediye{Presente} emek{Eu ganhei} other{Mesada}}",
+  "besleEmek": "{karakter}: Foi você que ganhou! Vou guardar com cuidado.",
+  "besleHediye": "{karakter}: Um presente! Vou guardar com cuidado."
 }

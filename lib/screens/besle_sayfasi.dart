@@ -15,14 +15,23 @@ import '../services/dokunsal.dart';
 /// Besleme sonucu: hareket eklendi; varsa yeni açılan çıkartmanın adı ve
 /// haftanın ilk beslemesiyle ateşe odun gelip gelmediği.
 class BeslemeSonucu {
-  const BeslemeSonucu(this.yeniCikartma, {this.yeniOdun = false});
+  const BeslemeSonucu(this.yeniCikartma, {this.yeniOdun = false, this.kaynak});
   final String? yeniCikartma;
   final bool yeniOdun;
+  final HareketKaynagi? kaynak;
 
-  /// Gösterilecek tek mesaj: çıkartma > odun > doydu (üst üste mesaj yok).
-  String mesaj(AppLocalizations l, VarlikTuru t) => yeniCikartma != null
-      ? l.cikartmaAcildi(yeniCikartma!)
-      : (yeniOdun ? l.odunEklendi : l.besleDoydu(l.karakter(t)));
+  /// Gösterilecek tek mesaj: çıkartma > odun > kaynak cümlesi > doydu (üst
+  /// üste mesaj yok). Kaynak cümlesi sıcak bir söz, ödül değil.
+  String mesaj(AppLocalizations l, VarlikTuru t) {
+    if (yeniCikartma != null) return l.cikartmaAcildi(yeniCikartma!);
+    if (yeniOdun) return l.odunEklendi;
+    final ad = l.karakter(t);
+    return switch (kaynak) {
+      HareketKaynagi.emek => l.besleEmek(ad),
+      HareketKaynagi.hediye => l.besleHediye(ad),
+      _ => l.besleDoydu(ad),
+    };
+  }
 }
 
 /// Besle alt sayfası: tutar yaz → bugünkü fiyatla miktar görünür → ver.
@@ -40,6 +49,7 @@ class _BesleSayfasi extends ConsumerStatefulWidget {
 class _BesleState extends ConsumerState<_BesleSayfasi> {
   final _tutar = TextEditingController();
   bool _gonderiliyor = false;
+  HareketKaynagi? _kaynak;
 
   @override
   void dispose() {
@@ -57,13 +67,14 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
       tarih: DateTime.now(),
       tutarTl: v,
       birimFiyat: fiyat,
+      kaynak: _kaynak,
     );
     final odunOnce = ref.read(odunProvider);
     await ref.read(hareketlerProvider.notifier).ekle(h);
     final yeni = await _cikartmalariKontrolEt();
     final yeniOdun = ref.read(odunProvider) > odunOnce;
     ref.read(dokunsalProvider).cal(Dokunus.onay);
-    if (mounted) Navigator.of(context).pop(BeslemeSonucu(yeni, yeniOdun: yeniOdun));
+    if (mounted) Navigator.of(context).pop(BeslemeSonucu(yeni, yeniOdun: yeniOdun, kaynak: _kaynak));
   }
 
   /// Davranış çıkartmaları — tek yerden, besleme sonrası. İlk yeni açılanın
@@ -114,7 +125,8 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     final tutar = parseSayi(_tutar.text);
     final birim = l.birim(widget.tur, cocuk.para);
 
-    return Padding(
+    // Kaydırılır: "Nereden geldi?" satırıyla büyük yazıda klavyeyle sığmaz.
+    return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(Bosluk.xl, Bosluk.m, Bosluk.xl, Bosluk.xl),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -174,6 +186,20 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
                 ),
             ],
           ),
+          const SizedBox(height: Bosluk.l),
+          // İsteğe bağlı: seçilmezse akış eskisi gibi. Seçili çipe yeniden
+          // dokunmak etiketi kaldırır.
+          Text(l.besleNereden, style: context.t.titleMedium),
+          const SizedBox(height: Bosluk.s),
+          Wrap(spacing: Bosluk.s, runSpacing: Bosluk.s, children: [
+            for (final k in HareketKaynagi.values)
+              SecimCipi(
+                metin: l.kaynakAdi(k.name),
+                secili: _kaynak == k,
+                onIkon: _kaynak == k ? null : Icon(k.ikon, size: 20, color: r.fg),
+                onTap: () => setState(() => _kaynak = _kaynak == k ? null : k),
+              ),
+          ]),
           const SizedBox(height: Bosluk.l),
           AnimatedSwitcher(
             duration: Devinim.sure(context, Devinim.normal),

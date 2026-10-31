@@ -812,4 +812,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String ulasilanCumle(String ay) {
     return 'Você conseguiu: $ay';
   }
+
+  @override
+  String get besleNereden => 'De onde veio? (se quiser)';
+
+  @override
+  String kaynakAdi(String kaynak) {
+    String _temp0 = intl.Intl.selectLogic(kaynak, {
+      'harclik': 'Mesada',
+      'hediye': 'Presente',
+      'emek': 'Eu ganhei',
+      'other': 'Mesada',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String besleEmek(String karakter) {
+    return '$karakter: Foi você que ganhou! Vou guardar com cuidado.';
+  }
+
+  @override
+  String besleHediye(String karakter) {
+    return '$karakter: Um presente! Vou guardar com cuidado.';
+  }
 }

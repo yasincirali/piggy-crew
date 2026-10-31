@@ -1,5 +1,5 @@
 Bu sürümde denenecekler:
-• Yarım çizim kaybolmaz: "Hedef seç" > "Kendin çiz"e dokun, bir şey çizmeye başla. Sonra "Kapat"a bas ya da sayfanın dışına dokun. Tekrar "Kendin çiz"e dokununca çizimin kaldığı yerden açılmalı. Yalnız "Temizle" silmeli.
-• Ulaştıklarım: bir hedefi doldur (küçük bir fiyat yazıp besle). Sonra "Yeni hedef"e bas ve başka bir hedef koy. Karakter ekranında hedef kartının altında "Ulaştıklarım" kartı çıkmalı: eski hedefin resmi ve altında ay adı. Dokununca büyük hâli ve "Ulaştın: Ekim 2026" gibi bir yazı açılmalı.
-• Ulaştıklarım kartında sayı, rozet ya da "kaç tane" yazısı olmamalı. Hiç hedefe ulaşmamış karakterde kart görünmemeli.
-• Anne baba köşesinden tüm veriyi silince Ulaştıklarım da gitmeli.
+• Nereden geldi?: Bir karaktere dokun, "Biraz daha besle"ye bas, bir tutar yaz. Altında "Nereden geldi? (istersen)" satırı var: Harçlık, Hediye ya da Kendim kazandım. "Kendim kazandım"ı seçip ver: karakter "Bunu sen kazandın, özenle saklıyorum!" demeli. Bayram harçlığı için "Hediye"yi dene.
+• Karakterin sayfasında "Beslemelerin" listesinde etiketli satırlar kendi ikonu ve yazısıyla görünmeli; etiketsiz beslemeler eskisi gibi ateş ikonuyla.
+• Seçili etikete yeniden dokununca seçim kalkmalı; hiç seçmeden beslemek eskisi gibi çalışmalı.
+• Telefonda yazı boyutunu büyüt: besle sayfası kaydırılabilmeli, çipler taşmadan alt satıra inmeli.

@@ -382,5 +382,9 @@
   "cizimEtiket": "Your drawing",
   "cizimRenk": "{renk, select, r0{Black} r1{Red} r2{Yellow} r3{Green} r4{Blue} other{Black}}",
   "ulastiklarimBaslik": "Goals you reached",
-  "ulasilanCumle": "You got there: {ay}"
+  "ulasilanCumle": "You got there: {ay}",
+  "besleNereden": "Where did it come from? (optional)",
+  "kaynakAdi": "{kaynak, select, harclik{Allowance} hediye{Gift} emek{I earned it} other{Allowance}}",
+  "besleEmek": "{karakter}: You earned this! I'll keep it safe.",
+  "besleHediye": "{karakter}: A gift! I'll keep it safe."
 }

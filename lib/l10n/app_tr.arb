@@ -722,5 +722,36 @@
         "type": "String"
       }
     }
+  },
+  "besleNereden": "Nereden geldi? (istersen)",
+  "@besleNereden": {
+    "description": "Besle sayfasında isteğe bağlı kaynak etiketi başlığı (yol haritası 2.3)."
+  },
+  "kaynakAdi": "{kaynak, select, harclik{Harçlık} hediye{Hediye} emek{Kendim kazandım} other{Harçlık}}",
+  "@kaynakAdi": {
+    "description": "Paranın kaynağı: harclik/hediye/emek.",
+    "placeholders": {
+      "kaynak": {
+        "type": "String"
+      }
+    }
+  },
+  "besleEmek": "{karakter}: Bunu sen kazandın, özenle saklıyorum!",
+  "@besleEmek": {
+    "description": "Kendi kazandığını besleyince karakterin sıcak cümlesi; ödül değil.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
+  },
+  "besleHediye": "{karakter}: Hediye geldi, özenle saklıyorum!",
+  "@besleHediye": {
+    "description": "Hediye/bayram harçlığı beslenince karakterin cümlesi.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      }
+    }
   }
 }

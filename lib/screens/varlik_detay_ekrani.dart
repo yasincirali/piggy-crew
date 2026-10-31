@@ -158,7 +158,7 @@ class VarlikDetayEkrani extends ConsumerWidget {
                           onTap: () => _silSor(context, ref, h),
                           // Alma satırı ikon + yazıyla ayrılır, yalnız renkle değil.
                           child: Row(children: [
-                            Icon(h.cikis ? Icons.waving_hand_rounded : Icons.local_fire_department_rounded,
+                            Icon(h.cikis ? Icons.waving_hand_rounded : (h.kaynak?.ikon ?? Icons.local_fire_department_rounded),
                                 color: h.cikis ? r.sub : r.petal),
                             const SizedBox(width: Bosluk.m),
                             Expanded(
@@ -166,6 +166,8 @@ class VarlikDetayEkrani extends ConsumerWidget {
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Text(tarihF.format(h.tarih), style: context.t.titleMedium),
                                 if (h.cikis) Text(l.cikisSatir, style: context.t.bodyMedium),
+                                // Kaynak ikonla birlikte yazıyla da (yalnız ikona anlam yüklenmez).
+                                if (h.kaynak != null) Text(l.kaynakAdi(h.kaynak!.name), style: context.t.bodyMedium),
                                 if (!tur.nakitMi) Text(fmtMiktar(h.miktar.abs(), birim, cocuk.para), style: context.t.bodyMedium),
                               ]),
                             ),
