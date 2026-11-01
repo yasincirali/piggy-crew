@@ -774,6 +774,26 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get ogrenDeneBaslik => 'Experimente';
+
+  @override
+  String get ogrenDeneBuYil => 'Este ano';
+
+  @override
+  String get ogrenDeneGelecekYil => 'No próximo ano';
+
+  @override
+  String get ogrenDeneDondurmaSimdi =>
+      'Com esta moeda você compra uma bola grande de sorvete.';
+
+  @override
+  String get ogrenDeneDondurmaSonra =>
+      'A mesma moeda, um sorvete menor. Os preços subiram.';
+
+  @override
+  String get ogrenDeneIpucu => 'Troque o ano e veja o sorvete.';
+
+  @override
   String get planBaslik => 'Meu plano';
 
   @override

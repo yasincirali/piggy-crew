@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Enflasyon",
   "baslik": "Para küçülür mü?",
   "metin_k": "Geçen yıl bir simit {p:10}'ydi, bu yıl {p:15}. Paran aynı kaldı ama aldığı şey azaldı.",

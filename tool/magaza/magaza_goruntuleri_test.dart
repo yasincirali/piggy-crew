@@ -46,7 +46,7 @@ const demolar = {
 /// Sahte günün fiyatları (TRY): truncgil v4 biçimi.
 const _usd = 41.2, _eur = 48.0, _gram = 5800.0;
 
-Future<void> _fontYukle() async {
+Future<void> fontYukle() async {
   for (final e in {'Baloo2': ['600', '700', '800'], 'Nunito': ['400', '600', '700', '800']}.entries) {
     final f = FontLoader(e.key);
     for (final w in e.value) {
@@ -72,7 +72,7 @@ Future<void> _bekle(WidgetTester t) async {
 void main() {
   for (final MapEntry(key: dil, value: (ad, para)) in demolar.entries) {
     testWidgets('mağaza $dil', (t) async {
-      await t.runAsync(_fontYukle);
+      await t.runAsync(fontYukle);
       t.platformDispatcher.localeTestValue = Locale(dil);
       t.platformDispatcher.localesTestValue = [Locale(dil)];
       t.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
@@ -119,6 +119,9 @@ void main() {
         'cikartmalar_v1': ['ilk_besleme', 'sabir_30', 'tortu_sapka', 'zipzip_atki', 'baykus_gozluk', 'sincap_fular'],
         // "Geri döndün" karşılaması vitrine girmez (açılış sahnesi testte zaten oynamaz).
         'son_gorulme_v1': bugun.millisecondsSinceEpoch,
+        // Öğren vitrini enflasyon dersinde: "Dokunarak dene" dondurma kartı
+        // görünsün (Ar-Ge 1 Kas; hareketli ders anı durağan görüntüde de okunur).
+        'ders_ilerleme_v1': 1,
       });
       rootBundle.clear();
       final sp = await SharedPreferences.getInstance();

@@ -6,6 +6,7 @@ import '../models/ders.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../theme/dunya.dart';
+import '../widgets/dene_dondurma.dart';
 import '../widgets/karakter.dart';
 import '../widgets/ortak.dart';
 import '../services/dokunsal.dart';
@@ -76,6 +77,11 @@ class _OgrenState extends ConsumerState<OgrenEkrani> {
             Text(p(ders.metin(cocuk.yas)), style: context.t.bodyLarge),
           ]),
         ),
+        // Metinden sonra, sorudan önce: önce nesneyle dener, sonra cevaplar.
+        if (ders.etkilesim == 'dondurma') ...[
+          const SizedBox(height: Bosluk.m),
+          DeneDondurma(key: ValueKey('dene-${ders.id}'), para: cocuk.para),
+        ],
         const SizedBox(height: Bosluk.l),
         Row(children: [
           Karakter(tur: karakter, ruh: _dogru ? Ruh.mutlu : Ruh.duz, boyut: 44),
