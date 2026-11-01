@@ -46,7 +46,7 @@ const demolar = {
 /// Sahte günün fiyatları (TRY): truncgil v4 biçimi.
 const _usd = 41.2, _eur = 48.0, _gram = 5800.0;
 
-Future<void> _fontYukle() async {
+Future<void> fontYukle() async {
   for (final e in {'Baloo2': ['600', '700', '800'], 'Nunito': ['400', '600', '700', '800']}.entries) {
     final f = FontLoader(e.key);
     for (final w in e.value) {
@@ -72,7 +72,7 @@ Future<void> _bekle(WidgetTester t) async {
 void main() {
   for (final MapEntry(key: dil, value: (ad, para)) in demolar.entries) {
     testWidgets('mağaza $dil', (t) async {
-      await t.runAsync(_fontYukle);
+      await t.runAsync(fontYukle);
       t.platformDispatcher.localeTestValue = Locale(dil);
       t.platformDispatcher.localesTestValue = [Locale(dil)];
       t.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
