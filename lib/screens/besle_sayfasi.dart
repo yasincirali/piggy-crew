@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/l10n.dart';
 import '../models/cikartma.dart';
+import '../models/cocuk.dart';
 import '../models/varlik.dart';
 import '../providers/saglayicilar.dart';
 import '../theme/dunya.dart';
@@ -126,6 +127,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
     final fiyatlar = ref.watch(fiyatProvider).valueOrNull;
     final fiyat = fiyatlar?.fiyat(widget.tur, cocuk.para);
     final ad = l.karakter(widget.tur);
+    final kucuk = cocuk.yas == YasModu.kucuk;
     final tutar = parseSayi(_tutar.text);
     final birim = l.birim(widget.tur, cocuk.para);
 
@@ -150,8 +152,13 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(l.besleBaslik(ad, widget.tur.name), style: context.t.titleLarge),
-                if (fiyat != null && !widget.tur.nakitMi)
+                // Küçük yaşta (7–10) fiyat ve gram satırı yerine karakter
+                // cümlesi (Ar-Ge 1 Kas 11:07, tasarım #2): "0,009 g" 7 yaşa
+                // anlamsızdı, ekranda sayı çoktu. 11–15'te iki satır kalır.
+                if (fiyat != null && !widget.tur.nakitMi && !kucuk)
                   Text(l.besleBugunFiyat(birim, fmtPara(fiyat, cocuk.para)), style: context.t.bodyMedium),
+                if (fiyat != null && !widget.tur.nakitMi && kucuk)
+                  Text(l.besleSaklar(ad, widget.tur.name), style: context.t.bodyMedium),
                 if (fiyat == null) Text(l.besleFiyatYok, style: context.t.bodyMedium?.copyWith(color: r.loss)),
               ]),
             ),
@@ -195,6 +202,7 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
                   key: ValueKey('kupur-$v'),
                   metin: fmtPara(v.toDouble(), cocuk.para),
                   semantik: l.kupurEkle(fmtPara(v.toDouble(), cocuk.para)),
+                  renk: cocuk.para.kupurRengi(v),
                   onTap: () => _kupurEkle(v),
                 ),
               if (_kupurler.isNotEmpty)
@@ -224,13 +232,13 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
           const SizedBox(height: Bosluk.l),
           AnimatedSwitcher(
             duration: Devinim.sure(context, Devinim.normal),
-            child: (tutar != null && fiyat != null && !widget.tur.nakitMi)
+            child: (tutar != null && fiyat != null && !widget.tur.nakitMi && !kucuk)
                 ? Text(
                     l.besleAlir(fmtPara(tutar, cocuk.para), fmtMiktar(tutar / fiyat, birim, cocuk.para)),
                     key: ValueKey(tutar),
                     style: context.t.titleMedium?.copyWith(color: r.acc),
                   )
-                // Nakitte miktar satırı yok; büyük tutar yine biçimli yankılanır
+                // Nakitte ve küçük yaşta miktar satırı yok; büyük tutar yine biçimli yankılanır
                 // ki fazladan sıfır ya da "1.500" yanlış okunmuşsa görünsün.
                 : (tutar != null && tutar >= 1000)
                     ? Text(
@@ -279,30 +287,45 @@ class _BesleState extends ConsumerState<_BesleSayfasi> {
 /// Kupür: elindeki paranın eşi. Banknot gibi köşeli kart, üstte artı; en az
 /// 44 pt. Ekran okuyucu "20 ₺ ekle" okur.
 class _Kupur extends StatelessWidget {
-  const _Kupur({super.key, required this.metin, required this.semantik, required this.onTap});
+  const _Kupur({super.key, required this.metin, required this.semantik, required this.renk, required this.onTap});
   final String metin;
   final String semantik;
+
+  /// Kâğıdın baskın rengi (sol bant). Değer her zaman yazılı.
+  final Color renk;
   final VoidCallback onTap;
 
+  /// Banknot görünümü (Ar-Ge 1 Kas 11:07, tasarım #1): çerçeveli düğme yerine
+  /// kâğıt; çocuk cebindeki parayı tanısın. Kâğıt açık renk, bant sol kenarda,
+  /// alt kenarda koyu "kalınlık" çizgisi. Büyük yazıda kâğıt uzar (sabit boy yok).
   @override
   Widget build(BuildContext context) {
     final r = context.r;
+    // Kâğıt her dünyada zeminden ayrışsın: koyu dünyada açık kâğıt + koyu
+    // mürekkep, açık dünyada tersi değil, zemin rengi kâğıt + metin mürekkep.
+    final kagit = r.koyu ? r.fg : r.bg1;
+    final murekkep = r.koyu ? r.bg1 : r.fg;
     return Basilabilir(
       onTap: onTap,
       semantik: semantik,
       child: Container(
-        constraints: const BoxConstraints(minHeight: 44, minWidth: 64),
-        padding: const EdgeInsets.symmetric(horizontal: Bosluk.m, vertical: Bosluk.s),
+        constraints: const BoxConstraints(minHeight: 48, minWidth: 84),
         decoration: BoxDecoration(
-          color: r.card,
+          color: kagit,
           borderRadius: BorderRadius.circular(Kose.s),
-          border: Border.all(color: r.acc.withValues(alpha: .6), width: 1.5),
+          border: Border.all(color: murekkep, width: 1.5),
+          boxShadow: [BoxShadow(color: murekkep, offset: const Offset(0, 3))],
         ),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.add_rounded, size: 16, color: r.acc),
-          const SizedBox(width: Bosluk.xs),
-          Text(metin, style: context.t.titleMedium),
-        ]),
+        clipBehavior: Clip.antiAlias,
+        child: IntrinsicHeight(
+          child: Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Container(width: 16, color: renk),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Bosluk.m, vertical: Bosluk.s),
+              child: Center(child: Text(metin, style: context.t.titleMedium?.copyWith(color: murekkep))),
+            ),
+          ]),
+        ),
       ),
     );
   }

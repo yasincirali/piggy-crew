@@ -1,5 +1,5 @@
 Bu sürümde denenecekler:
-• Kostümler artık karakterin üstünde: açılan kostüm karakterde görünür. Tortu'nun şapkası (Tortu'yu 3 kez besle), Zıpzıp'ın atkısı, Baykuş'un gözlüğü, Sincap'ın fuları. Kostümü açtıktan sonra Kamp'a dön: karakter kostümüyle durmalı, zıplarken ve dans ederken kostüm onunla birlikte hareket etmeli.
-• Karaktere dokunup detayına gir: kostüm orada da görünmeli. Besle sayfasının üstündeki küçük karakterde de.
-• Çıkartmalar sayfası: açtığın kostümün kartında karakter o kostümü giymeli; açılmamış kostüm görünmemeli.
-• Ayarlar'da karakter görünümünü "Klasik"e al: kostümler çizim hâlinde de görünmeli.
+• Besle'deki para düğmeleri artık gerçek banknot gibi: her birinin solunda kendi rengi var (5 ₺ mor, 10 ₺ kırmızı, 20 ₺ yeşil, 50 ₺ turuncu, 100 ₺ mavi, 200 ₺ pembe). Nakit karakterini besle, düğmelere dokun: tutar eskisi gibi toplanmalı.
+• 7–10 yaş modunda Altın, Dolar ya da Euro karakterini besle: üstte fiyat ve gram satırı yerine "Tortu bunu altın olarak saklar." gibi tek cümle görmelisin. Tutar yazınca gram satırı da çıkmamalı.
+• Anne baba köşesinde yaş modunu 11–15 yap ve tekrar besle: fiyat ve gram satırları geri gelmeli.
+• Birkaç beslemede "Kendim kazandım"ı seç, sonra anne baba köşesine gir: "son 30 günde n kez kendi kazandığından koydu" cümlesi görünmeli. Hiç seçmediysen cümle hiç çıkmamalı.

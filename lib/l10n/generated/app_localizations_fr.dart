@@ -192,6 +192,17 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String besleSaklar(String karakter, String tur) {
+    String _temp0 = intl.Intl.selectLogic(tur, {
+      'altin': '$karakter le garde en or.',
+      'dolar': '$karakter le garde en dollars.',
+      'euro': '$karakter le garde en euros.',
+      'other': '$karakter le garde.',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String besleAlir(String tutar, String miktar) {
     return 'Avec $tutar, tu as $miktar';
   }
@@ -387,6 +398,19 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String veliOzet(String ad, int n, String toplam) {
     return '$ad a nourri l\'équipe $n fois au total. Feu de camp : $toplam.';
+  }
+
+  @override
+  String veliKendimKazandi(String ad, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          'Ces 30 derniers jours, $ad a mis $n fois de l\'argent gagné par lui-même.',
+      one:
+          'Ces 30 derniers jours, $ad a mis une fois de l\'argent gagné par lui-même.',
+    );
+    return '$_temp0';
   }
 
   @override

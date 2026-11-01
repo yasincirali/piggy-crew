@@ -111,6 +111,7 @@
       }
     }
   },
+  "besleSaklar": "{tur, select, altin{{karakter} keeps this as gold.} dolar{{karakter} keeps this as dollars.} euro{{karakter} keeps this as euros.} other{{karakter} keeps this safe.}}",
   "besleAlir": "{tutar} buys {miktar}",
   "@besleAlir": {
     "placeholders": {
@@ -258,6 +259,7 @@
       }
     }
   },
+  "veliKendimKazandi": "{n, plural, one{In the last 30 days {ad} once put in money they earned themselves.} other{In the last 30 days {ad} put in money they earned themselves {n} times.}}",
   "veliNot": "Kids' screens have no notifications, ads or purchases. Data stays on this device only.",
   "dunyaBahce": "Garden",
   "dunyaUzay": "Space",
