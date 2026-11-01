@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Inflação",
   "baslik": "O dinheiro pode encolher?",
   "metin_k": "No ano passado, um pão de queijo custava {p:10}; neste ano custa {p:15}. Seu dinheiro continuou o mesmo, mas compra menos.",

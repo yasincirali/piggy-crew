@@ -119,6 +119,9 @@ void main() {
         'cikartmalar_v1': ['ilk_besleme', 'sabir_30', 'tortu_sapka', 'zipzip_atki', 'baykus_gozluk', 'sincap_fular'],
         // "Geri döndün" karşılaması vitrine girmez (açılış sahnesi testte zaten oynamaz).
         'son_gorulme_v1': bugun.millisecondsSinceEpoch,
+        // Öğren vitrini enflasyon dersinde: "Dokunarak dene" dondurma kartı
+        // görünsün (Ar-Ge 1 Kas; hareketli ders anı durağan görüntüde de okunur).
+        'ders_ilerleme_v1': 1,
       });
       rootBundle.clear();
       final sp = await SharedPreferences.getInstance();

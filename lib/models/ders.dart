@@ -26,6 +26,7 @@ class Ders {
     required this.dogru,
     required this.karakter,
     this.hatirla,
+    this.etkilesim,
   });
 
   final String id, kavram, baslik, metinKucuk, metinBuyuk, soru;
@@ -36,6 +37,13 @@ class Ders {
   /// Dersler bitince sorulan "Hatırlıyor musun?" sorusu (Ar-Ge 31 Eki, yasin
   /// "yap"): aynı kavram, yeni durum. Eski içerikte yoksa ders atlanır.
   final HatirlaSorusu? hatirla;
+
+  /// "Dokunarak dene" kartı (Ar-Ge 1 Kas 11:07 #1, yasin "yap"): metnin altında
+  /// elle oynanan tek an. Önce yalnız enflasyon (`dondurma`); TestFlight
+  /// ailesinden tepki gelirse birikim ve çeşitlendirme. Bilinmeyen değer
+  /// (ileriki içerik) yok sayılır, ders kart olmadan açılır. Kart ödül değildir:
+  /// soru yine sonra gelir, yanlış yapılamaz, sayaç yok.
+  final String? etkilesim;
 
   String metin(YasModu y) => y == YasModu.kucuk ? metinKucuk : metinBuyuk;
 
@@ -57,6 +65,7 @@ class Ders {
         dogru: j['dogru'] as int,
         karakter: j['karakter'] == null ? null : VarlikTuru.fromAnahtar(j['karakter'] as String),
         hatirla: j['hatirla'] == null ? null : HatirlaSorusu.fromJson(j['hatirla'] as Map<String, dynamic>),
+        etkilesim: j['etkilesim'] as String?,
       );
 
   static Future<List<Ders>> yukle(String dil) async {

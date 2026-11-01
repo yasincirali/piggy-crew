@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Inflation",
   "baslik": "L'argent peut-il rétrécir ?",
   "metin_k": "L'an dernier, un croissant coûtait {p:10}, cette année il coûte {p:15}. Ton argent est resté le même, mais il achète moins.",

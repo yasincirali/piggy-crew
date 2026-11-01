@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Inflation",
   "baslik": "Can money shrink?",
   "metin_k": "Last year a sandwich cost {p:10}, this year it costs {p:15}. Your money stayed the same, but it buys less.",

@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Inflation",
   "baslik": "Kann Geld schrumpfen?",
   "metin_k": "Letztes Jahr kostete eine Brezel {p:10}, dieses Jahr kostet sie {p:15}. Dein Geld ist gleich geblieben, aber du bekommst weniger dafür.",

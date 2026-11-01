@@ -25,6 +25,7 @@
  },
  {
   "id": "enflasyon",
+  "etkilesim": "dondurma",
   "kavram": "Inflación",
   "baslik": "¿El dinero puede encogerse?",
   "metin_k": "El año pasado un helado costaba {p:10}, este año cuesta {p:15}. Tu dinero es el mismo, pero compra menos.",

@@ -653,6 +653,30 @@
       }
     }
   },
+  "ogrenDeneBaslik": "Dokunarak dene",
+  "@ogrenDeneBaslik": {
+    "description": "Öğren'de derse eklenen elle oynanan kartın başlığı (Ar-Ge 1 Kas)."
+  },
+  "ogrenDeneBuYil": "Bu yıl",
+  "@ogrenDeneBuYil": {
+    "description": "Dondurma kartında yıl seçimi."
+  },
+  "ogrenDeneGelecekYil": "Gelecek yıl",
+  "@ogrenDeneGelecekYil": {
+    "description": "Dondurma kartında yıl seçimi."
+  },
+  "ogrenDeneDondurmaSimdi": "Bu para koca bir top dondurmaya yeter.",
+  "@ogrenDeneDondurmaSimdi": {
+    "description": "Bu yıl seçiliyken; sayı yok."
+  },
+  "ogrenDeneDondurmaSonra": "Aynı para, daha küçük dondurma. Fiyatlar arttı.",
+  "@ogrenDeneDondurmaSonra": {
+    "description": "Gelecek yıl seçiliyken; dondurma küçülür."
+  },
+  "ogrenDeneIpucu": "Yılı değiştir, dondurmaya bak.",
+  "@ogrenDeneIpucu": {
+    "description": "Kartın üstünde kısa yönerge."
+  },
   "@ogrenOgretti": {
     "description": "Öğren: doğru cevapta karakter öğrenir; övgü çocuğa değil.",
     "placeholders": {

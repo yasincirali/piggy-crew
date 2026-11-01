@@ -775,6 +775,26 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get ogrenDeneBaslik => 'Probier es aus';
+
+  @override
+  String get ogrenDeneBuYil => 'Dieses Jahr';
+
+  @override
+  String get ogrenDeneGelecekYil => 'Nächstes Jahr';
+
+  @override
+  String get ogrenDeneDondurmaSimdi =>
+      'Für diese Münze gibt es eine große Kugel Eis.';
+
+  @override
+  String get ogrenDeneDondurmaSonra =>
+      'Gleiche Münze, kleineres Eis. Die Preise sind gestiegen.';
+
+  @override
+  String get ogrenDeneIpucu => 'Wechsle das Jahr und schau aufs Eis.';
+
+  @override
   String get planBaslik => 'Mein Plan';
 
   @override

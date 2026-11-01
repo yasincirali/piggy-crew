@@ -773,6 +773,25 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get ogrenDeneBaslik => 'Dokunarak dene';
+
+  @override
+  String get ogrenDeneBuYil => 'Bu yıl';
+
+  @override
+  String get ogrenDeneGelecekYil => 'Gelecek yıl';
+
+  @override
+  String get ogrenDeneDondurmaSimdi => 'Bu para koca bir top dondurmaya yeter.';
+
+  @override
+  String get ogrenDeneDondurmaSonra =>
+      'Aynı para, daha küçük dondurma. Fiyatlar arttı.';
+
+  @override
+  String get ogrenDeneIpucu => 'Yılı değiştir, dondurmaya bak.';
+
+  @override
   String get planBaslik => 'Benim planım';
 
   @override

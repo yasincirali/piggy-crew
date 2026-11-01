@@ -1312,6 +1312,42 @@ abstract class AppLocalizations {
   /// **'{karakter} senden öğrendi'**
   String detayOgrettiklerin(String karakter);
 
+  /// Öğren'de derse eklenen elle oynanan kartın başlığı (Ar-Ge 1 Kas).
+  ///
+  /// In tr, this message translates to:
+  /// **'Dokunarak dene'**
+  String get ogrenDeneBaslik;
+
+  /// Dondurma kartında yıl seçimi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu yıl'**
+  String get ogrenDeneBuYil;
+
+  /// Dondurma kartında yıl seçimi.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gelecek yıl'**
+  String get ogrenDeneGelecekYil;
+
+  /// Bu yıl seçiliyken; sayı yok.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu para koca bir top dondurmaya yeter.'**
+  String get ogrenDeneDondurmaSimdi;
+
+  /// Gelecek yıl seçiliyken; dondurma küçülür.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aynı para, daha küçük dondurma. Fiyatlar arttı.'**
+  String get ogrenDeneDondurmaSonra;
+
+  /// Kartın üstünde kısa yönerge.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yılı değiştir, dondurmaya bak.'**
+  String get ogrenDeneIpucu;
+
   /// Karakter ekranındaki plan kartının ve alt sayfanın başlığı (Ar-Ge 26 Eki, uygulama niyetleri): çocuğun kendi seçtiği 'olunca, yaparım' cümlesi.
   ///
   /// In tr, this message translates to:
