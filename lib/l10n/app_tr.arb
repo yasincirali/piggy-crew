@@ -129,6 +129,18 @@
       }
     }
   },
+  "besleSaklar": "{tur, select, altin{{karakter} bunu altın olarak saklar.} dolar{{karakter} bunu dolar olarak saklar.} euro{{karakter} bunu euro olarak saklar.} other{{karakter} bunu saklar.}}",
+  "@besleSaklar": {
+    "description": "Küçük yaşta (7–10) Besle'de fiyat ve gram satırı yerine.",
+    "placeholders": {
+      "karakter": {
+        "type": "String"
+      },
+      "tur": {
+        "type": "String"
+      }
+    }
+  },
   "besleAlir": "{tutar} ile {miktar} alırsın",
   "@besleAlir": {
     "placeholders": {
@@ -310,6 +322,18 @@
       },
       "toplam": {
         "type": "String"
+      }
+    }
+  },
+  "veliKendimKazandi": "{n, plural, one{{ad} son 30 günde bir kez kendi kazandığından koydu.} other{{ad} son 30 günde {n} kez kendi kazandığından koydu.}}",
+  "@veliKendimKazandi": {
+    "description": "Veli köşesi: son 30 günde 'Kendim kazandım' etiketli besleme sayısı (0 ise gösterilmez).",
+    "placeholders": {
+      "ad": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
       }
     }
   },

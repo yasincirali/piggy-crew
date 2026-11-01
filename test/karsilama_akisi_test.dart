@@ -55,12 +55,14 @@ void main() {
     expect(find.text('Merhaba Deniz'), findsOneWidget);
     expect(find.text('Kamp ateşim'), findsOneWidget);
 
-    // Tortu'yu besle: 250 ₺ → 0,043 g.
+    // Tortu'yu besle: varsayılan küçük yaş (7–10) gram satırı göstermez,
+    // karakter cümlesi gösterir (Ar-Ge 1 Kas 11:07 #2).
     await t.tap(find.byKey(const ValueKey('besle-altin')));
     await bekle(t);
     await t.enterText(find.byType(TextField), '250');
     await bekle(t);
-    expect(find.textContaining('alırsın'), findsOneWidget);
+    expect(find.textContaining('alırsın'), findsNothing);
+    expect(find.text('Tortu bunu altın olarak saklar.'), findsOneWidget);
     await t.tap(find.text("Tortu'ya ver"));
     await bekle(t);
     // Yiyecek avuçta bekler; çocuk uzatır (burada dokunur).

@@ -424,6 +424,12 @@ abstract class AppLocalizations {
   /// **'Bugün 1 {birim} = {fiyat}'**
   String besleBugunFiyat(String birim, String fiyat);
 
+  /// Küçük yaşta (7–10) Besle'de fiyat ve gram satırı yerine.
+  ///
+  /// In tr, this message translates to:
+  /// **'{tur, select, altin{{karakter} bunu altın olarak saklar.} dolar{{karakter} bunu dolar olarak saklar.} euro{{karakter} bunu euro olarak saklar.} other{{karakter} bunu saklar.}}'**
+  String besleSaklar(String karakter, String tur);
+
   /// No description provided for @besleAlir.
   ///
   /// In tr, this message translates to:
@@ -753,6 +759,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'{ad} toplam {n} kez besledi. Kamp ateşi: {toplam}.'**
   String veliOzet(String ad, int n, String toplam);
+
+  /// Veli köşesi: son 30 günde 'Kendim kazandım' etiketli besleme sayısı (0 ise gösterilmez).
+  ///
+  /// In tr, this message translates to:
+  /// **'{n, plural, one{{ad} son 30 günde bir kez kendi kazandığından koydu.} other{{ad} son 30 günde {n} kez kendi kazandığından koydu.}}'**
+  String veliKendimKazandi(String ad, int n);
 
   /// No description provided for @veliNot.
   ///

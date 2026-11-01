@@ -64,6 +64,32 @@ enum ParaBirimi {
         ParaBirimi.gbp => const [1, 2, 5, 10, 20],
       };
 
+  /// Kupürün baskın rengi (Besle'de banknot görünümü, Ar-Ge 1 Kas 11:07).
+  /// Çocuk ekrandaki düğmeyi cebindeki kâğıtla eşlesin diye. Renk tek başına
+  /// anlam taşımaz: değer her zaman yazılı. Kaynak: TCMB "Paralarımızı tanıyor
+  /// musun" (5 mor, 10 kırmızı, 20 yeşil, 50 turuncu, 100 mavi, 200 pembe);
+  /// ECB Europa serisi (5 gri, 10 kırmızı, 20 mavi, 50 turuncu); ABD
+  /// banknotları yeşil; BoE polimer (5 yeşil-turkuaz, 10 turuncu, 20 mor),
+  /// £1/£2 madeni (altın/gümüş). Tonlar kâğıdın baskın rengine yakın, birebir değil.
+  Color kupurRengi(int v) => Color(switch ((this, v)) {
+        (ParaBirimi.tryy, 5) => 0xFF8E6BB0,
+        (ParaBirimi.tryy, 10) => 0xFFD9534F,
+        (ParaBirimi.tryy, 20) => 0xFF3FA36B,
+        (ParaBirimi.tryy, 50) => 0xFFE8893A,
+        (ParaBirimi.tryy, 100) => 0xFF3C7BD6,
+        (ParaBirimi.tryy, 200) => 0xFFD06FA8,
+        (ParaBirimi.eur, 5) => 0xFF9AA0A6,
+        (ParaBirimi.eur, 10) => 0xFFD9534F,
+        (ParaBirimi.eur, 20) => 0xFF3C7BD6,
+        (ParaBirimi.eur, 50) => 0xFFE8893A,
+        (ParaBirimi.gbp, 1) => 0xFFD9B44A,
+        (ParaBirimi.gbp, 2) => 0xFFB8BCC2,
+        (ParaBirimi.gbp, 5) => 0xFF3AA99F,
+        (ParaBirimi.gbp, 10) => 0xFFE8893A,
+        (ParaBirimi.gbp, 20) => 0xFF8E6BB0,
+        _ => 0xFF6E9B6A, // USD: bütün banknotlar yeşil
+      });
+
   /// Cihaz yerelinden tahmin: ülke kodu → birim; bilinmeyen → USD (global varsayılan).
   static ParaBirimi yerelden(String? ulke) => switch (ulke) {
         'TR' => ParaBirimi.tryy,
@@ -160,6 +186,15 @@ class Hareket {
 extension Beslemeler on Iterable<Hareket> {
   /// Yalnız beslemeler (kumbaradan almalar hariç): ödül hesapları bunu kullanır.
   Iterable<Hareket> get beslemeler => where((h) => !h.cikis);
+
+  /// Son 30 günde "Kendim kazandım" etiketli besleme sayısı (Veli köşesi,
+  /// Ar-Ge 1 Kas 11:07 #5). Yalnız veliye bir cümle; çocuğa gösterilmez,
+  /// ödül/eşik bağlanmaz. 30 gün kayan pencere: takvim ayı başında sıfırlanan
+  /// bir sayaç "bu ay az" kıyası kurardı.
+  int kendiKazandigiSon30Gun(DateTime simdi) {
+    final sinir = simdi.subtract(const Duration(days: 30));
+    return beslemeler.where((h) => h.kaynak == HareketKaynagi.emek && h.tarih.isAfter(sinir)).length;
+  }
 }
 
 /// Bir karakterin bugünkü durumu (hesap model katmanında, build() içinde değil).

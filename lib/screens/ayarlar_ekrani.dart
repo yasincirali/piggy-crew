@@ -229,6 +229,7 @@ class _VeliKosesi extends ConsumerWidget {
     if (cocuk == null) return const SizedBox.shrink();
     final hareketler = ref.watch(hareketlerProvider);
     final toplam = ref.watch(toplamProvider);
+    final kendiKazandi = hareketler.kendiKazandigiSon30Gun(DateTime.now());
     // Kaydırılır: büyük yazıda (Dynamic Type 2×+) sayfa ekrana sığmıyordu.
     return SingleChildScrollView(
       padding: const EdgeInsets.all(Bosluk.xl),
@@ -239,6 +240,11 @@ class _VeliKosesi extends ConsumerWidget {
           l.veliOzet(cocuk.ad, hareketler.beslemeler.length, fmtPara(toplam.degerTl ?? toplam.maliyetTl, cocuk.para)),
           style: context.t.bodyLarge,
         ),
+        // Sıfırsa cümle yok: "0 kez" veliye eksiklik gibi okunur.
+        if (kendiKazandi > 0) ...[
+          const SizedBox(height: Bosluk.xs),
+          Text(l.veliKendimKazandi(cocuk.ad, kendiKazandi), style: context.t.bodyMedium),
+        ],
         const SizedBox(height: Bosluk.s),
         Text(l.veliNot, style: context.t.bodyMedium),
         const SizedBox(height: Bosluk.xl),
