@@ -20,7 +20,7 @@ sandık `CLAUDE.md` ile aynıdır; burada yalnız farklar ve bu repoya özgü ka
 - **Fiyat kaynağı** sandık ile aynı (truncgil v4). Kaynak değişirse yalnız
   `fiyat_servisi.dart`; "uydurma sayı yasak" kuralı korunur.
 - TestFlight: `main`'e birleşme → `ios-testflight.yml`. Push saatleri kuralı
-  (hafta içi 09:00–18:30 TR push/PR/merge yok) bu repoda da geçerli.
+  (hafta içi 08:00–18:30 TR push/PR/merge yok) bu repoda da geçerli.
 - Doğrulama: `flutter gen-l10n && flutter analyze && flutter test`.
 
 ## Skill ve MCP (sandık ile aynı set, yasin 2026-10-14)
